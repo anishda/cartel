@@ -1,5 +1,5 @@
 {
-  "next_id": 2,
+  "next_id": 3,
   "tasks": {
     "T1": {
       "after": [],
@@ -19,6 +19,27 @@
       "priority": 1,
       "state": "todo",
       "title": "Essai sur appareil r\u00e9el (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte"
+    },
+    "T2": {
+      "after": [
+        "T1"
+      ],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:23.741224+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T2-d-cider-du-scan-photo-plein-format-via-labelreader-ou-scanne",
+      "id": "T2",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 2,
+      "state": "todo",
+      "title": "D\u00e9cider du scan : photo plein format via LabelReader ou scanner de documents natif"
     }
   },
   "version": 1

@@ -17,7 +17,7 @@ Doing:
 - (none)
 
 Blocked:
-- (none)
+- T2: Décider du scan : photo plein format via LabelReader ou scanner de documents natif (waits for T1)
 
 Todo:
 - T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
