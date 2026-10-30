@@ -1,5 +1,5 @@
 {
-  "next_id": 4,
+  "next_id": 5,
   "tasks": {
     "T1": {
       "after": [],
@@ -61,6 +61,25 @@
       "priority": 3,
       "state": "todo",
       "title": "D\u00e9cider des voix : voix neuronale embarqu\u00e9e (Piper/sherpa-onnx) si voix syst\u00e8me insuffisantes"
+    },
+    "T4": {
+      "after": [],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:24.509600+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T4-h-berger-les-packs-en-https-vps-hda-ynh-fr-ou-release-github",
+      "id": "T4",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 2,
+      "state": "todo",
+      "title": "H\u00e9berger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse"
     }
   },
   "version": 1

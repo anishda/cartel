@@ -22,6 +22,7 @@ Blocked:
 
 Todo:
 - T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
+- T4: Héberger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse
 
 Done (last 5):
 - (none)
