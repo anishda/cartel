@@ -13,3 +13,4 @@ iosApp/Pods/
 *.xcuserstate
 DerivedData/
 /packs/
+.kechup/lock
