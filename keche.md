@@ -1,0 +1,12 @@
+# Audioguide Musées
+
+## Objectif
+App KMP (Android + iOS, Compose Multiplatform) : scanner un cartel de musée, l'écouter hors ligne, retrouver l'œuvre dans des packs musée, garder des favoris. Cadrage complet : note du vault Veaucer `01.Projects/Dev - Audioguide Musées (KMP).md`. Détails techniques : `README.md`.
+
+## Décisions
+- Hors ligne d'abord ; packs générés par `pack-builder` (base Joconde), ignorés par git (`/packs/`).
+- Orsay : autorisation écrite requise avant d'embarquer ses données.
+- Anis teste lui-même sur appareil ; pas de test émulateur par l'agent.
+
+## Questions ouvertes
+-
