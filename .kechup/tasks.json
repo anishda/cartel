@@ -1,5 +1,5 @@
 {
-  "next_id": 9,
+  "next_id": 10,
   "tasks": {
     "T1": {
       "after": [],
@@ -159,6 +159,25 @@
       "priority": 5,
       "state": "todo",
       "title": "Corpus curat\u00e9 de 100 \u00e0 300 chefs-d'\u0153uvre par mus\u00e9e (r\u00e9cits sourc\u00e9s, CC BY-SA)"
+    },
+    "T9": {
+      "after": [],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:27.184838+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T9-choisir-nom-et-identifiant-d-finitifs-de-l-app",
+      "id": "T9",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 4,
+      "state": "todo",
+      "title": "Choisir nom et identifiant d\u00e9finitifs de l'app"
     }
   },
   "version": 1
