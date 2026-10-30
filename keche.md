@@ -10,3 +10,19 @@ App KMP (Android + iOS, Compose Multiplatform) : scanner un cartel de musée, l'
 
 ## Questions ouvertes
 -
+
+## Work (kechup — do not edit)
+
+Doing:
+- (none)
+
+Blocked:
+- (none)
+
+Todo:
+- T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
+
+Done (last 5):
+- (none)
+
+<!-- kechup:end -->

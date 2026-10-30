@@ -1,5 +1,25 @@
 {
-  "next_id": 1,
-  "tasks": {},
+  "next_id": 2,
+  "tasks": {
+    "T1": {
+      "after": [],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:23.413887+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T1-essai-sur-appareil-r-el-anis-scan-live-import-voix-vitesse-b",
+      "id": "T1",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 1,
+      "state": "todo",
+      "title": "Essai sur appareil r\u00e9el (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte"
+    }
+  },
   "version": 1
 }
