@@ -1,5 +1,5 @@
 {
-  "next_id": 11,
+  "next_id": 12,
   "tasks": {
     "T1": {
       "after": [],
@@ -41,6 +41,27 @@
       "priority": 5,
       "state": "todo",
       "title": "Stores : comptes d\u00e9veloppeur, fiches, politique de confidentialit\u00e9 (URL)"
+    },
+    "T11": {
+      "after": [
+        "T4"
+      ],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:28.459524+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T11-trancher-l-open-source-apache-2-0-et-mettre-en-place-la-ci-d",
+      "id": "T11",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 6,
+      "state": "todo",
+      "title": "Trancher l'open source (Apache-2.0) et mettre en place la CI de r\u00e9g\u00e9n\u00e9ration des packs"
     },
     "T2": {
       "after": [
