@@ -1,0 +1,262 @@
+{
+ "imageHeight": 450,
+ "imageWidth": 337,
+ "lines": [
+  {
+   "bottom": 0.9742,
+   "confidence": 1,
+   "left": 0.2535,
+   "right": 0.3041,
+   "text": "XXXXXXX XX",
+   "top": 0.7726
+  },
+  {
+   "bottom": 0.1138,
+   "confidence": 1,
+   "left": 0.3295,
+   "right": 0.6527,
+   "text": "XXXXXXXX XXXXXXXXXX",
+   "top": 0.0728
+  },
+  {
+   "bottom": 0.1459,
+   "confidence": 1,
+   "left": 0.3307,
+   "right": 0.6931,
+   "text": "Xx Xxxxxx, x'xxx xx 1524 xxxx xx",
+   "top": 0.1146
+  },
+  {
+   "bottom": 0.1708,
+   "confidence": 1,
+   "left": 0.3305,
+   "right": 0.6933,
+   "text": "xxxxx xx Xxxx, xxx xx xxxxxxx",
+   "top": 0.1381
+  },
+  {
+   "bottom": 0.1923,
+   "confidence": 0.3,
+   "left": 0.3306,
+   "right": 0.5212,
+   "text": "Xxxxx xxx xxxxx",
+   "top": 0.1683
+  },
+  {
+   "bottom": 0.2252,
+   "confidence": 1,
+   "left": 0.3302,
+   "right": 0.7055,
+   "text": "Xxxxxx xxx xxxx xxxx, xx Xxxxxx xx",
+   "top": 0.1856
+  },
+  {
+   "bottom": 0.2444,
+   "confidence": 1,
+   "left": 0.3366,
+   "right": 0.6988,
+   "text": "Xxxx xxx xxxxxx. Xx Xxxxxx xxxxx",
+   "top": 0.2162
+  },
+  {
+   "bottom": 0.2683,
+   "confidence": 0.5,
+   "left": 0.3367,
+   "right": 0.6337,
+   "text": "xx xxxxxxx xxxx xXxx xxxxxx",
+   "top": 0.2426
+  },
+  {
+   "bottom": 0.3,
+   "confidence": 1,
+   "left": 0.3362,
+   "right": 0.7054,
+   "text": "Xx 1337 x 1364, xx xxxxxxx",
+   "top": 0.262
+  },
+  {
+   "bottom": 0.3193,
+   "confidence": 1,
+   "left": 0.3365,
+   "right": 0.7047,
+   "text": "xxxxxxxx xxx xxxxxxxxx x xxxxxxxxx",
+   "top": 0.2907
+  },
+  {
+   "bottom": 0.374,
+   "confidence": 1,
+   "left": 0.3366,
+   "right": 0.7166,
+   "text": "Xx 1364, xx xxxxx xxxxxx xxxxx",
+   "top": 0.3394
+  },
+  {
+   "bottom": 0.3936,
+   "confidence": 1,
+   "left": 0.3368,
+   "right": 0.6217,
+   "text": "x x'xxxxxxxxx xx x'xxxx xxxx.",
+   "top": 0.3687
+  },
+  {
+   "bottom": 0.4656,
+   "confidence": 1,
+   "left": 0.3655,
+   "right": 0.7649,
+   "text": "XXX XXXXXXXXXX XX XXXXXX",
+   "top": 0.4217
+  },
+  {
+   "bottom": 0.5011,
+   "confidence": 1,
+   "left": 0.3665,
+   "right": 0.7525,
+   "text": "Xxx xxxxxxxx xxxxxx xxxxxxx",
+   "top": 0.4669
+  },
+  {
+   "bottom": 0.5244,
+   "confidence": 1,
+   "left": 0.3669,
+   "right": 0.432,
+   "text": "xxxx",
+   "top": 0.5022
+  },
+  {
+   "bottom": 0.5156,
+   "confidence": 0.5,
+   "left": 0.4556,
+   "right": 0.568,
+   "text": "xxxxxxxx",
+   "top": 0.5022
+  },
+  {
+   "bottom": 0.5111,
+   "confidence": 0.5,
+   "left": 0.5917,
+   "right": 0.6391,
+   "text": "xxx",
+   "top": 0.4978
+  },
+  {
+   "bottom": 0.5481,
+   "confidence": 0.5,
+   "left": 0.372,
+   "right": 0.7524,
+   "text": "xxxxxxxx xxxx xxxxxxxx xxx xx",
+   "top": 0.5156
+  },
+  {
+   "bottom": 0.5678,
+   "confidence": 1,
+   "left": 0.3723,
+   "right": 0.6749,
+   "text": "xxxxxxxxx xx xxx xxxxxx.",
+   "top": 0.5456
+  },
+  {
+   "bottom": 0.5994,
+   "confidence": 1,
+   "left": 0.3721,
+   "right": 0.7522,
+   "text": "Xxx xxxxxxxx xxxxx xxxxxxxx:",
+   "top": 0.5721
+  },
+  {
+   "bottom": 0.6211,
+   "confidence": 0.5,
+   "left": 0.3722,
+   "right": 0.7577,
+   "text": "xxxx xx xxxxx xx XXX xxxxxx xx",
+   "top": 0.596
+  },
+  {
+   "bottom": 0.649,
+   "confidence": 0.5,
+   "left": 0.3722,
+   "right": 0.758,
+   "text": "xxxxxx, xxxxxxxxx, xxxxxxx xx",
+   "top": 0.6216
+  },
+  {
+   "bottom": 0.6711,
+   "confidence": 1,
+   "left": 0.3728,
+   "right": 0.6095,
+   "text": "xxxx xxx xx Xxxxxx.",
+   "top": 0.6489
+  },
+  {
+   "bottom": 0.6978,
+   "confidence": 1,
+   "left": 0.6272,
+   "right": 0.7633,
+   "text": "xxxxxxxxxxx",
+   "top": 0.6756
+  },
+  {
+   "bottom": 0.7264,
+   "confidence": 1,
+   "left": 0.3723,
+   "right": 0.7578,
+   "text": "xxxxxxxxxxxxxx x xxx xxxxx",
+   "top": 0.6998
+  },
+  {
+   "bottom": 0.752,
+   "confidence": 0.5,
+   "left": 0.3723,
+   "right": 0.7639,
+   "text": "Xxxxx xxxx xxxx xxxxxx xxxx",
+   "top": 0.7266
+  },
+  {
+   "bottom": 0.7756,
+   "confidence": 1,
+   "left": 0.3723,
+   "right": 0.7518,
+   "text": "xxxx: xx xx xxxxxxxx xxxxxx.",
+   "top": 0.7531
+  },
+  {
+   "bottom": 0.8054,
+   "confidence": 0.5,
+   "left": 0.3725,
+   "right": 0.7637,
+   "text": "Xxx xxx xxxxxxxx xxxxxxxxxxx",
+   "top": 0.7842
+  },
+  {
+   "bottom": 0.8347,
+   "confidence": 1,
+   "left": 0.3781,
+   "right": 0.7697,
+   "text": "xxxx xxxxxxxxx xxxxx xxxxxx xx",
+   "top": 0.8082
+  },
+  {
+   "bottom": 0.8633,
+   "confidence": 1,
+   "left": 0.3779,
+   "right": 0.7759,
+   "text": "xxxx. X xx xxx xx xx Xxxxxx xx",
+   "top": 0.8281
+  },
+  {
+   "bottom": 0.8832,
+   "confidence": 1,
+   "left": 0.3784,
+   "right": 0.7696,
+   "text": "Xxxx xxx. xx xxx xxxxx xxx xxxxx",
+   "top": 0.8617
+  },
+  {
+   "bottom": 0.9111,
+   "confidence": 1,
+   "left": 0.3787,
+   "right": 0.7219,
+   "text": "xxx xxxxxxxx xxx xx xxxxxx",
+   "top": 0.8933
+  }
+ ]
+}

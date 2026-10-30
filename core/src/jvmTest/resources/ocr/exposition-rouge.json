@@ -1,0 +1,158 @@
+{
+ "imageHeight": 2000,
+ "imageWidth": 1904,
+ "lines": [
+  {
+   "bottom": 0.2306,
+   "confidence": 1,
+   "left": 0.3539,
+   "right": 0.6218,
+   "text": "XXXX-XXXX",
+   "top": 0.1798
+  },
+  {
+   "bottom": 0.2951,
+   "confidence": 0.5,
+   "left": 0.2507,
+   "right": 0.6212,
+   "text": "XXXXXXX",
+   "top": 0.2234
+  },
+  {
+   "bottom": 0.3216,
+   "confidence": 1,
+   "left": 0.3658,
+   "right": 0.6175,
+   "text": "XXXXXXXXX XX XXXXXXXXX",
+   "top": 0.291
+  },
+  {
+   "bottom": 0.3002,
+   "confidence": 1,
+   "left": 0.6237,
+   "right": 0.7121,
+   "text": "(1881-1961)",
+   "top": 0.278
+  },
+  {
+   "bottom": 0.3692,
+   "confidence": 1,
+   "left": 0.2057,
+   "right": 0.6186,
+   "text": "Xxxxxxxxxxx xxxxxxxxxxxx : Xxxx-Xxxx Xxxxxxxx",
+   "top": 0.3391
+  },
+  {
+   "bottom": 0.4128,
+   "confidence": 1,
+   "left": 0.2045,
+   "right": 0.7359,
+   "text": "Xxxxxxx xxx xx xxxxx xx Xxxxxxx, xxxxx xxxxxxxxxx xxx xxxxxxxx xx",
+   "top": 0.3923
+  },
+  {
+   "bottom": 0.4377,
+   "confidence": 1,
+   "left": 0.2074,
+   "right": 0.7345,
+   "text": "xxxxxxxxxxx xxxx xx Xxxxxx xx Xxxxxxxx x Xxxxx xx xxxx xxxx",
+   "top": 0.4111
+  },
+  {
+   "bottom": 0.4638,
+   "confidence": 1,
+   "left": 0.2074,
+   "right": 0.5376,
+   "text": "xxxxxxxxx xx 27 xxx xx 20 xxxxxxx 2014.",
+   "top": 0.4365
+  },
+  {
+   "bottom": 0.5096,
+   "confidence": 1,
+   "left": 0.2086,
+   "right": 0.7317,
+   "text": "Xx Xxxxxxx xxx xx xxxxxxx xx xx Xxxxx xx Xxxxxxx. Xxxx xxx xxxxxxxx",
+   "top": 0.4733
+  },
+  {
+   "bottom": 0.5356,
+   "confidence": 1,
+   "left": 0.2101,
+   "right": 0.7304,
+   "text": "Xxxxx xx Xxxxxx xxx xx Xxxxxxxxx xx xx Xxxxxxx xx xx xx",
+   "top": 0.4949
+  },
+  {
+   "bottom": 0.5581,
+   "confidence": 1,
+   "left": 0.2101,
+   "right": 0.7305,
+   "text": "Xxxxxxxxxxxxx. Xxxx xxx xxxxxxxx xx xxxxxxx xxxxxxxxxx xxx",
+   "top": 0.5165
+  },
+  {
+   "bottom": 0.5827,
+   "confidence": 1,
+   "left": 0.2097,
+   "right": 0.729,
+   "text": "xxx xxxxxxxxxxx x'Xxxx xx Xx Xxxxxxx xx xxx Xxxxxx x'Xxxxxxxxxxx",
+   "top": 0.5355
+  },
+  {
+   "bottom": 0.6077,
+   "confidence": 1,
+   "left": 0.2128,
+   "right": 0.7292,
+   "text": "Xxxxxxx. Xxxx xxxxxxxxx xxxxxxxxx xx xxxxxxxx xx XxxXx",
+   "top": 0.5554
+  },
+  {
+   "bottom": 0.6304,
+   "confidence": 1,
+   "left": 0.2109,
+   "right": 0.4894,
+   "text": "Xxxxxxxxxxxxx xx Xxxxx Xxxxxxxxx.",
+   "top": 0.592
+  },
+  {
+   "bottom": 0.6812,
+   "confidence": 1,
+   "left": 0.2126,
+   "right": 0.722,
+   "text": "X'xxxxxxxxxx xxxxxxxxx x'xx xxxxxxx xxxxxxxxxxxx xx Xxxxxx XXXXX",
+   "top": 0.6111
+  },
+  {
+   "bottom": 0.7176,
+   "confidence": 0.5,
+   "left": 0.4675,
+   "right": 0.5145,
+   "text": "XXXXXX",
+   "top": 0.6989
+  },
+  {
+   "bottom": 0.962,
+   "confidence": 1,
+   "left": 0.0166,
+   "right": 0.159,
+   "text": "Xxxxxxxxxxx:",
+   "top": 0.9376
+  },
+  {
+   "bottom": 0.9911,
+   "confidence": 1,
+   "left": 0.0148,
+   "right": 0.1332,
+   "text": "Xxxxxxxxx",
+   "top": 0.9657
+  },
+  {
+   "bottom": 0.9966,
+   "confidence": 1,
+   "left": 0.1339,
+   "right": 0.3302,
+   "text": "03 20 36 05-05",
+   "top": 0.9641
+  }
+ ]
+}

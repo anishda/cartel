@@ -1,0 +1,84 @@
+# Audioguide Musées (nom de travail)
+
+App Kotlin Multiplatform (Android + iOS, UI Compose Multiplatform) : scanner le cartel d'une œuvre et l'écouter, hors ligne ; retrouver une œuvre dans des « packs musée » téléchargés ; garder ses favoris. Cadrage complet dans la note du vault Veaucer : `01.Projects/Dev - Audioguide Musées (KMP).md`.
+
+## Ce que fait l'app
+
+- **Scanner** : scan en direct (CameraX + ML Kit sur Android, VisionKit sur iOS) ou photo importée → OCR → **isolation du cartel** → nettoyage du texte → lecture vocale hors ligne. La langue du cartel est devinée ; sur un **cartel bilingue**, l'app ne propose que ses langues et lit celle choisie (celle du téléphone par défaut). Le texte lu est **modifiable** avant l'écoute. Si un pack installé contient l'œuvre, elle est reconnue (inventaire, titre, artiste) et sa fiche est proposée.
+- **Rechercher** : par titre, artiste ou numéro d'inventaire, dans les musées téléchargés. Fiche détaillée, lecture à voix haute.
+- **Favoris** : cœur sur une fiche ou sur l'œuvre reconnue, ou « Garder ce cartel » pour un texte sans œuvre connue. Un instantané est gardé : lisibles sans réseau, même si le pack est supprimé. Note personnelle, export en Markdown (feuille de partage, pour Obsidian).
+- **Musées** : téléchargement, mise à jour et suppression des packs (Louvre, Orsay, Orangerie).
+- **Réglages** : vitesse de lecture, **choix de la voix par langue** (qualité standard / améliorée / premium, essai), crédits, vie privée.
+
+## Comment le scan lit un cartel
+
+L'OCR ne rend pas du texte à plat mais des **lignes avec leur position** (`TextLine`). Ensuite, tout est dans `:core`, testable sans appareil :
+
+1. `LabelReader` : une photo petite ou douteuse est relue en **recadrant sur le texte et en l'agrandissant** (le gain d'OCR le plus net : une bannière de 337 px passe de 0,87 à 1,00 de confiance). Garde la meilleure des deux lectures.
+2. `LabelExtractor` : écarte le bruit (logos, filigranes, adresses web, téléphones, texte vertical, lignes peu sûres), retient la zone de texte principale (la plus fournie, la plus centrée), repère les **colonnes** par leur gouttière, recolle les morceaux d'une même ligne colonne par colonne et rebâtit les **paragraphes d'après l'interligne** (mesuré sur le centre des lignes : une photo de biais fausse la hauteur des boîtes).
+3. `LabelLanguages` : une langue par colonne (ou ligne à ligne si les colonnes n'ont pas été reconnues), puis `CartelCleaner` nettoie chaque version (n° d'inventaire, dates, abréviations).
+4. `SpeechText` : ponctuation finale, capitales adoucies (« GAUGUIN » → « Gauguin »), puis les synthétiseurs marquent **une pause entre les paragraphes**.
+
+Les fixtures `core/src/jvmTest/resources/ocr/*.json` sont de vraies sorties d'OCR (texte anonymisé) de trois cartels photographiés : elles protègent les réglages de l'extracteur.
+
+## Structure
+
+```
+core/          KMP sans interface : domaine du cartel, catalogue, favoris, réglages, format des packs
+shared/        Compose Multiplatform (écrans, navigation, thème) + accès natifs (OCR, voix, caméra, partage)
+androidApp/    Application Android
+iosApp/        Projet Xcode (SwiftUI qui embarque Compose + scanner VisionKit en Swift)
+pack-builder/  Outil JVM : fabrique les packs à partir de la base Joconde
+tools/         make-icons.py : régénère l'icône (Pillow)
+packs/         Packs générés (ignorés par git)
+```
+
+Un nouvel onglet se déclare dans `TopLevel` (`shared/.../ui/navigation/Navigation.kt`).
+
+## Commandes
+
+JDK 21 requis (le JDK par défaut de la machine est un build Valhalla expérimental). Le démon Gradle est épinglé sur un JDK 25 (`gradle/gradle-daemon-jvm.properties`) : `:core` vise donc explicitement Java 11 pour que `:pack-builder` (JDK 21) puisse le charger.
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+./gradlew :core:jvmTest :core:iosSimulatorArm64Test :pack-builder:test :shared:jvmTest   # tests
+./gradlew :androidApp:assembleDebug                                                      # APK debug
+```
+
+```bash
+xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator \
+  -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build/ios \
+  CODE_SIGNING_ALLOWED=NO build
+```
+
+`local.properties` (ignoré par git) doit contenir `sdk.dir=/Users/<toi>/Library/Android/sdk`.
+
+## Fabriquer et servir les packs
+
+```bash
+./gradlew :pack-builder:run --args="--out packs --cache build/pack-cache"   # tous les musées
+./gradlew :pack-builder:run --args="--museum orsay"                          # un seul
+python3 -m http.server 8080 --directory packs                                # serveur de développement
+```
+
+Les packs sortent dans `packs/` avec `manifest.json`.
+
+**Adresse du serveur de packs** : Android, propriété Gradle `-PpackBaseUrl=https://…` (par défaut en debug : `http://10.0.2.2:8080/`, le Mac vu de l'émulateur ; vide en release, à renseigner). iOS, `PACK_BASE_URL` dans `iosApp/Configuration/Config.xcconfig` (`http:/$()/localhost:8080/` par défaut : `$()` évite que `//` soit pris pour un commentaire).
+
+Android 17 : pour que l'émulateur joigne le Mac, accorder la permission réseau local au build debug :
+
+```bash
+adb shell pm grant app.audioguide android.permission.ACCESS_LOCAL_NETWORK
+```
+
+## Sources et licences
+
+Les fiches viennent de la base Joconde (ministère de la Culture), Licence Ouverte 2.0 : la source et la date sont affichées dans l'app (fiches et écran Réglages). Aucune image n'est embarquée. Les textes du Louvre et d'Orsay ne sont pas repris tant que leurs conditions de réutilisation ne sont pas clarifiées (voir la note du vault).
+
+## Ce qui n'est pas vérifié
+
+Rien de ce qui touche l'OCR et la voix **sur un appareil** : ML Kit et Vision n'ont été exercés que via les fixtures et le calibrage sur des photos (OCR du Mac), pas dans l'app ; le scan en direct (cadence, résolution 1080p, VisionKit) et l'import de photo sur un vrai cartel ; la qualité des voix à l'oreille et la liste des voix installées. Les tests automatiques (JVM, iOS, Gradle) couvrent le cœur de `:core` et la session de scan.
+
+## Identifiants provisoires
+
+Package et bundle id `app.audioguide` : à remplacer par un identifiant sur un domaine que tu possèdes avant toute publication.

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Développement seulement : le serveur de packs local (le Mac) est en HTTP, sur le réseau local.
+         Android 17 exige ACCESS_LOCAL_NETWORK pour cela, sinon la connexion expire. -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+
+    <application android:usesCleartextTraffic="true" />
+</manifest>

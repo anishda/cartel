@@ -1,0 +1,230 @@
+{
+ "imageHeight": 1500,
+ "imageWidth": 2000,
+ "lines": [
+  {
+   "bottom": 0.3394,
+   "confidence": 0.5,
+   "left": 0.1766,
+   "right": 0.3679,
+   "text": "XXXXXXX XXXXX",
+   "top": 0.2707
+  },
+  {
+   "bottom": 0.3688,
+   "confidence": 1,
+   "left": 0.199,
+   "right": 0.352,
+   "text": "xxx xxxxxxxx xxxxxxxx",
+   "top": 0.32
+  },
+  {
+   "bottom": 0.4162,
+   "confidence": 1,
+   "left": 0.0313,
+   "right": 0.2592,
+   "text": "Xx xxxxx XXXX XXXXX XXXXXXX xxxxxxxxx xxxxxxxx xx xxxxxxxx xxxxxxxx",
+   "top": 0.3766
+  },
+  {
+   "bottom": 0.4252,
+   "confidence": 1,
+   "left": 0.0315,
+   "right": 0.2592,
+   "text": "xxxxxxxxxxxxx xxxxxxxxx x x'xxxxx xx Xxxxxxx Xxxxx (1910-1979), xxxxxxx",
+   "top": 0.391
+  },
+  {
+   "bottom": 0.4373,
+   "confidence": 1,
+   "left": 0.0313,
+   "right": 0.2578,
+   "text": "xxxxxxxx xxx x'xxxxxxx x Xxxxxxxxx xx 1930. Xxxxxxxxxx xx xxxxxxxx, x'xxxxx",
+   "top": 0.4027
+  },
+  {
+   "bottom": 0.4462,
+   "confidence": 1,
+   "left": 0.0302,
+   "right": 0.2548,
+   "text": "x Xxxxxxxxx xxxx x x'Xxxxx xxx Xxxxx-Xxxx xx Xxxxxxxxxx xxxx xxx xxxxxx",
+   "top": 0.4163
+  },
+  {
+   "bottom": 0.4584,
+   "confidence": 1,
+   "left": 0.0301,
+   "right": 0.2649,
+   "text": "1960, Xxxxx x xxxxxx xxx xxxxxxxxxx xxxxxxxxx xxx xxx xxxxxxxx xxxxxxxxx xx",
+   "top": 0.4292
+  },
+  {
+   "bottom": 0.4683,
+   "confidence": 1,
+   "left": 0.0302,
+   "right": 0.262,
+   "text": "xxx xxxxxx. « Xxxxxxx », « xxxxxxxxx » xx « Xxxxxxxx » - xxxx xx Xxxxx xxxx xxxxx",
+   "top": 0.442
+  },
+  {
+   "bottom": 0.4769,
+   "confidence": 1,
+   "left": 0.0303,
+   "right": 0.2444,
+   "text": "xxxxxxxxx xx xxxxxxxxxxx, Xxxxx xxxxxxx xxxxx xxxxxxxxx xxxxxx x'xxxxx",
+   "top": 0.4549
+  },
+  {
+   "bottom": 0.4857,
+   "confidence": 1,
+   "left": 0.0303,
+   "right": 0.1674,
+   "text": "xxxxxx xx xxx xxxxxxxxx xxxxx-xxxxxxxxx.",
+   "top": 0.468
+  },
+  {
+   "bottom": 0.5119,
+   "confidence": 1,
+   "left": 0.0289,
+   "right": 0.2589,
+   "text": "Xx x'xx xxx xxxx xxxxxxxx. Xxxxxxxxxx, xx xxxxxx x xxxxx xxx xx xxxxxxxxx x'Xxxxxxx",
+   "top": 0.4917
+  },
+  {
+   "bottom": 0.521,
+   "confidence": 1,
+   "left": 0.029,
+   "right": 0.2588,
+   "text": "xx Xxxx xxxx xxxxxxxxxx xxxxxxx xx Xxxxx xx'xx xx xxxxxxxx xxx xxxx x'xxxxxxx",
+   "top": 0.5059
+  },
+  {
+   "bottom": 0.5313,
+   "confidence": 1,
+   "left": 0.0291,
+   "right": 0.2485,
+   "text": "xx Xxxxxx, xxxxxxxxx xxx xxxx xxxx. Xxxxxxxxx, Xxxxx xxx xxxx xxxxxxxxxx,",
+   "top": 0.5193
+  },
+  {
+   "bottom": 0.545,
+   "confidence": 1,
+   "left": 0.029,
+   "right": 0.2428,
+   "text": "xx xxxxx xx xxxx xxxxxx - xxxxxxxxxx xx xxxxxx. Xx x'xxx xxx xx xxxxxxx",
+   "top": 0.53
+  },
+  {
+   "bottom": 0.5577,
+   "confidence": 1,
+   "left": 0.0289,
+   "right": 0.2574,
+   "text": "xxxxxxxxxxxx. Xx xxx xxxxxx xxxxxx xxx xxx xxxxxxxxxxx, xxx xxxxxxxx xx xxxxxx",
+   "top": 0.5396
+  },
+  {
+   "bottom": 0.5695,
+   "confidence": 1,
+   "left": 0.0275,
+   "right": 0.2487,
+   "text": "xxx xxxxxxxxxxxx. Xxx xxxxxxxxxx, xxxxxxx xx xxxxxx xx xxxxxx xxxxx xxx xx",
+   "top": 0.5518
+  },
+  {
+   "bottom": 0.5836,
+   "confidence": 1,
+   "left": 0.0273,
+   "right": 0.2488,
+   "text": "xxxxxxx xxx xxx xxxxx - xx Xxxxx xx xxxxxxxxx xx xx xxxxxxx, xxxx xxxxxx",
+   "top": 0.5617
+  },
+  {
+   "bottom": 0.5953,
+   "confidence": 1,
+   "left": 0.0259,
+   "right": 0.2342,
+   "text": "xxx xxxxx xxxx xxxxxxxxxx, xxxxxxxxx xx xxxxxxx xx xx xxxxxxxxxx.",
+   "top": 0.5734
+  },
+  {
+   "bottom": 0.6216,
+   "confidence": 1,
+   "left": 0.0258,
+   "right": 0.2547,
+   "text": "X x'xxxxx xx x'xx xxxxx xx xxxxxx xx xxxx xxxxxx xx'x xxxx xxxx x'xxxxxxxx xx-",
+   "top": 0.5935
+  },
+  {
+   "bottom": 0.6345,
+   "confidence": 1,
+   "left": 0.0243,
+   "right": 0.2562,
+   "text": "x'xxx x'Xxxxx xxx Xxxxx-Xxxx xx Xxxxxxxxxx, xx x'xxx xxx xxxxxxx xxxxxxx'xxx xx",
+   "top": 0.6035
+  },
+  {
+   "bottom": 0.6473,
+   "confidence": 1,
+   "left": 0.0242,
+   "right": 0.2476,
+   "text": "xxxxxx xxxxxxx x x'xx xx xxx xxxxxxx xxx xxxx xxxxxxxx, xxxx xxxxxxxxx",
+   "top": 0.6157
+  },
+  {
+   "bottom": 0.6605,
+   "confidence": 1,
+   "left": 0.0254,
+   "right": 0.066,
+   "text": "xxxxxxxxxx.",
+   "top": 0.6437
+  },
+  {
+   "bottom": 0.4329,
+   "confidence": 1,
+   "left": 0.29,
+   "right": 0.4075,
+   "text": "Xxx xxxxx XXXX XXXXX XXXXXXX xxxxxxxxx xxx xx",
+   "top": 0.4058
+  },
+  {
+   "bottom": 0.4436,
+   "confidence": 0.5,
+   "left": 0.2902,
+   "right": 0.4278,
+   "text": "xxxxxxxxxxxxx xxxxxxxxxx xxxxxxx xx xxx xxxx xx Xxxxxxx Xxxxx",
+   "top": 0.4174
+  },
+  {
+   "bottom": 0.4531,
+   "confidence": 1,
+   "left": 0.2902,
+   "right": 0.4337,
+   "text": "(1910-1979), x Xxxxxx xxxxxx xxx xxxx Xxxxxxxxx xxx xxxx xx 1890.",
+   "top": 0.4259
+  },
+  {
+   "bottom": 0.4615,
+   "confidence": 0.5,
+   "left": 0.2902,
+   "right": 0.4308,
+   "text": "Xx x xxxxxxxxx xx xxxxxxxx xx Xxxxxxxxx, xxx xxxxx xx xxx (xxxx xxx",
+   "top": 0.4365
+  },
+  {
+   "bottom": 0.4706,
+   "confidence": 0.5,
+   "left": 0.2902,
+   "right": 0.4306,
+   "text": "Xxxxx-Xxxx xx Xxxxxxxxxx xx xxx 1960x, Xxxxx xxxxxx xxxxxxxxxx x",
+   "top": 0.4473
+  },
+  {
+   "bottom": 0.6227,
+   "confidence": 0.5,
+   "left": 0.286,
+   "right": 0.3448,
+   "text": "xxx xxxxxxx xx xxx xx xxx x",
+   "top": 0.6077
+  }
+ ]
+}

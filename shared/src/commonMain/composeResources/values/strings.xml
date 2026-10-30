@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Langue par défaut : français. La traduction anglaise est dans values-en. -->
+<resources>
+    <string name="app_name">Audioguide</string>
+
+    <string name="nav_scan">Scanner</string>
+    <string name="nav_search">Rechercher</string>
+    <string name="nav_museums">Musées</string>
+    <string name="back">Retour</string>
+    <string name="close">Fermer</string>
+    <string name="cancel">Annuler</string>
+
+    <string name="scan_title">Écoute les cartels</string>
+    <string name="scan_subtitle">Sans réseau, dans la langue du cartel.</string>
+    <string name="scan_live">Scanner en direct</string>
+    <string name="scan_import">Importer une photo</string>
+    <string name="scan_language">Langue du cartel</string>
+    <string name="scan_idle">Cadre un cartel pour l'entendre. L'œuvre est retrouvée automatiquement si son musée est téléchargé.</string>
+    <string name="scan_recognizing">Lecture du cartel…</string>
+    <string name="scan_failed_empty">Aucun texte détecté. Rapproche-toi du cartel et évite les reflets.</string>
+    <string name="scan_failed_generic">Lecture impossible : %1$s</string>
+    <string name="scan_result_title">Texte du cartel</string>
+    <string name="scan_show_raw">Texte brut</string>
+    <string name="scan_text_label">Texte lu (modifiable)</string>
+    <string name="scan_show_clean">Texte lu</string>
+    <string name="scan_match_title">Œuvre reconnue</string>
+    <string name="scan_match_others">Autres possibilités</string>
+    <string name="scan_clear">Nouveau scan</string>
+
+    <string name="voice_checking">Voix : vérification…</string>
+    <string name="voice_ready">Voix hors ligne disponible</string>
+    <string name="voice_download">Voix à télécharger dans les réglages du téléphone</string>
+    <string name="voice_unsupported">Aucune voix pour cette langue</string>
+    <string name="listen">Écouter</string>
+    <string name="stop">Stop</string>
+
+    <string name="live_title">Scan en direct</string>
+    <string name="live_hint">Cadre le cartel, attends que le texte apparaisse, puis touche « Lire ».</string>
+    <string name="live_read">Lire</string>
+    <string name="live_waiting">En attente de texte…</string>
+    <string name="live_permission">L'accès à l'appareil photo est nécessaire pour scanner en direct. Autorise-le dans les réglages du téléphone, ou importe une photo.</string>
+    <string name="live_unsupported">Le scan en direct n'est pas disponible sur cet appareil. Importe une photo du cartel.</string>
+
+    <string name="search_placeholder">Titre, artiste ou numéro d'inventaire</string>
+    <string name="search_filter_all">Tous</string>
+    <string name="search_hint_title">Cherche dans tes musées</string>
+    <string name="search_hint_body">Par exemple « Olympia », « Manet » ou « RF 644 ».</string>
+    <string name="search_no_results">Aucun résultat pour « %1$s »</string>
+    <string name="search_no_packs_title">Aucun musée téléchargé</string>
+    <string name="search_no_packs_body">Télécharge un musée pour chercher ses œuvres, même sans réseau.</string>
+    <string name="search_no_packs_action">Voir les musées</string>
+    <string name="search_clear">Effacer</string>
+
+    <string name="artwork_not_found">Œuvre introuvable</string>
+    <string name="artwork_listen">Écouter la fiche</string>
+    <string name="artwork_info">Informations</string>
+    <string name="artwork_provenance">Historique</string>
+    <string name="artwork_technical">Description technique</string>
+    <string name="info_technique">Technique</string>
+    <string name="info_dimensions">Dimensions</string>
+    <string name="info_dimensions_value">%1$s × %2$s cm</string>
+    <string name="info_location">Emplacement</string>
+    <string name="info_inventory">Inventaire</string>
+    <string name="info_school">École</string>
+    <string name="info_museum">Musée</string>
+    <string name="artwork_source">Source : %1$s. %2$s. Données du %3$s.</string>
+
+    <string name="packs_title">Musées</string>
+    <string name="packs_intro">Télécharge un musée une fois, puis cherche ses œuvres partout, même sans réseau.</string>
+    <string name="packs_offline_banner">Serveur injoignable. Les musées déjà téléchargés restent disponibles.</string>
+    <string name="packs_loading">Recherche des musées disponibles…</string>
+    <string name="packs_download">Télécharger</string>
+    <string name="packs_update">Mettre à jour</string>
+    <string name="packs_installed">Installé</string>
+    <string name="packs_remove">Supprimer</string>
+    <string name="packs_retry">Réessayer</string>
+    <string name="packs_refresh">Actualiser</string>
+    <string name="packs_downloading">Téléchargement… %1$s</string>
+    <string name="packs_error">Échec : %1$s</string>
+    <string name="packs_details">%1$s œuvres · %2$s · version %3$s</string>
+    <string name="packs_installed_details">%1$s œuvres · version %2$s</string>
+    <string name="packs_source">Données : base Joconde du ministère de la Culture, Licence Ouverte 2.0.</string>
+    <string name="packs_remove_title">Supprimer ce musée ?</string>
+    <string name="packs_remove_body">Tu pourras le télécharger de nouveau plus tard.</string>
+    <string name="packs_not_listed">Installé, absent du serveur</string>
+
+    <string name="nav_favorites">Favoris</string>
+    <string name="nav_settings">Réglages</string>
+
+    <string name="scan_bilingual">Cartel bilingue : choisis la langue à écouter</string>
+    <string name="scan_keep">Garder ce cartel</string>
+    <string name="scan_kept">Cartel gardé</string>
+    <string name="favorite_add">Ajouter aux favoris</string>
+    <string name="favorite_remove">Retirer des favoris</string>
+
+    <string name="favorites_title">Favoris</string>
+    <string name="favorites_subtitle">Tes œuvres et tes cartels, lisibles sans réseau.</string>
+    <string name="favorites_empty_title">Aucun favori</string>
+    <string name="favorites_empty_body">Touche le cœur sur une fiche, ou garde un cartel scanné : tu le retrouveras ici, même sans réseau.</string>
+    <string name="favorites_cartels">Cartels scannés</string>
+    <string name="favorites_share">Exporter en Markdown</string>
+    <string name="favorites_export_title">Favoris — Audioguide</string>
+    <string name="favorites_export_date">Exporté le</string>
+    <string name="favorite_note">Note personnelle</string>
+    <string name="favorite_open">Voir la fiche</string>
+    <string name="favorite_delete">Supprimer</string>
+    <string name="favorite_delete_title">Supprimer ce favori ?</string>
+    <string name="favorite_delete_body">Il disparaît de ta liste. Tu peux le rajouter à tout moment.</string>
+    <string name="favorite_not_found">Favori introuvable</string>
+
+    <string name="settings_title">Réglages</string>
+    <string name="settings_speech_title">Vitesse de lecture</string>
+    <string name="settings_speech_value">Vitesse × %1$s</string>
+    <string name="settings_speech_preview">Essayer</string>
+    <string name="settings_preview_text">Voici un exemple de lecture, à la vitesse choisie.</string>
+    <string name="settings_voice_title">Voix</string>
+    <string name="settings_voice_auto">Automatique (la meilleure voix installée)</string>
+    <string name="settings_voice_listen">Écouter</string>
+    <string name="settings_voice_none">Aucune voix installée pour cette langue.</string>
+    <string name="settings_voice_network">en ligne</string>
+    <string name="settings_voice_hint">Les voix « améliorées » ou « premium » sont bien plus naturelles. iPhone : Réglages ▸ Accessibilité ▸ Contenu énoncé ▸ Voix. Android : Paramètres ▸ Système ▸ Langues ▸ Synthèse vocale.</string>
+    <string name="voice_quality_standard">Standard</string>
+    <string name="voice_quality_enhanced">Améliorée</string>
+    <string name="voice_quality_premium">Premium</string>
+    <string name="settings_about_title">À propos</string>
+    <string name="settings_about_body">Écoute les cartels des musées, sans réseau. Version %1$s.</string>
+    <string name="settings_credits_title">Sources et crédits</string>
+    <string name="settings_credits_data">Œuvres : base Joconde, ministère de la Culture, Licence Ouverte 2.0. La date de mise à jour figure sur chaque fiche.</string>
+    <string name="settings_credits_ocr">Lecture du texte : ML Kit sur Android, Apple Vision sur iPhone, directement sur l'appareil.</string>
+    <string name="settings_credits_voice">Voix : celles de ton téléphone, installées sur l'appareil.</string>
+    <string name="settings_privacy_title">Vie privée</string>
+    <string name="settings_privacy_body">Aucune donnée personnelle n'est collectée ni envoyée. Les photos, les textes lus et les favoris restent sur ton téléphone. L'app ne se connecte que pour télécharger les musées.</string>
+</resources>

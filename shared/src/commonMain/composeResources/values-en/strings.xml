@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audioguide</string>
+
+    <string name="nav_scan">Scan</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_museums">Museums</string>
+    <string name="back">Back</string>
+    <string name="close">Close</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="scan_title">Listen to wall labels</string>
+    <string name="scan_subtitle">Offline, in the language of the label.</string>
+    <string name="scan_live">Live scan</string>
+    <string name="scan_import">Import a photo</string>
+    <string name="scan_language">Label language</string>
+    <string name="scan_idle">Frame a label to hear it. The artwork is found automatically if its museum is downloaded.</string>
+    <string name="scan_recognizing">Reading the label…</string>
+    <string name="scan_failed_empty">No text detected. Move closer to the label and avoid reflections.</string>
+    <string name="scan_failed_generic">Could not read the label: %1$s</string>
+    <string name="scan_result_title">Label text</string>
+    <string name="scan_show_raw">Raw text</string>
+    <string name="scan_text_label">Spoken text (editable)</string>
+    <string name="scan_show_clean">Spoken text</string>
+    <string name="scan_match_title">Artwork recognized</string>
+    <string name="scan_match_others">Other possibilities</string>
+    <string name="scan_clear">New scan</string>
+
+    <string name="voice_checking">Voice: checking…</string>
+    <string name="voice_ready">Offline voice available</string>
+    <string name="voice_download">Voice to download in the phone settings</string>
+    <string name="voice_unsupported">No voice for this language</string>
+    <string name="listen">Listen</string>
+    <string name="stop">Stop</string>
+
+    <string name="live_title">Live scan</string>
+    <string name="live_hint">Frame the label, wait for the text to appear, then tap “Read”.</string>
+    <string name="live_read">Read</string>
+    <string name="live_waiting">Waiting for text…</string>
+    <string name="live_permission">Camera access is needed for live scanning. Allow it in the phone settings, or import a photo.</string>
+    <string name="live_unsupported">Live scanning is not available on this device. Import a photo of the label.</string>
+
+    <string name="search_placeholder">Title, artist or inventory number</string>
+    <string name="search_filter_all">All</string>
+    <string name="search_hint_title">Search your museums</string>
+    <string name="search_hint_body">For example “Olympia”, “Manet” or “RF 644”.</string>
+    <string name="search_no_results">No results for “%1$s”</string>
+    <string name="search_no_packs_title">No museum downloaded</string>
+    <string name="search_no_packs_body">Download a museum to search its artworks, even offline.</string>
+    <string name="search_no_packs_action">Browse museums</string>
+    <string name="search_clear">Clear</string>
+
+    <string name="artwork_not_found">Artwork not found</string>
+    <string name="artwork_listen">Listen to this entry</string>
+    <string name="artwork_info">Details</string>
+    <string name="artwork_provenance">History</string>
+    <string name="artwork_technical">Technical description</string>
+    <string name="info_technique">Technique</string>
+    <string name="info_dimensions">Dimensions</string>
+    <string name="info_dimensions_value">%1$s × %2$s cm</string>
+    <string name="info_location">Location</string>
+    <string name="info_inventory">Inventory</string>
+    <string name="info_school">School</string>
+    <string name="info_museum">Museum</string>
+    <string name="artwork_source">Source: %1$s. %2$s. Data from %3$s.</string>
+
+    <string name="packs_title">Museums</string>
+    <string name="packs_intro">Download a museum once, then search its artworks anywhere, even offline.</string>
+    <string name="packs_offline_banner">Server unreachable. Museums you already downloaded stay available.</string>
+    <string name="packs_loading">Looking for available museums…</string>
+    <string name="packs_download">Download</string>
+    <string name="packs_update">Update</string>
+    <string name="packs_installed">Installed</string>
+    <string name="packs_remove">Delete</string>
+    <string name="packs_retry">Retry</string>
+    <string name="packs_refresh">Refresh</string>
+    <string name="packs_downloading">Downloading… %1$s</string>
+    <string name="packs_error">Failed: %1$s</string>
+    <string name="packs_details">%1$s artworks · %2$s · version %3$s</string>
+    <string name="packs_installed_details">%1$s artworks · version %2$s</string>
+    <string name="packs_source">Data: Joconde database, French Ministry of Culture, Open License 2.0.</string>
+    <string name="packs_remove_title">Delete this museum?</string>
+    <string name="packs_remove_body">You can download it again later.</string>
+    <string name="packs_not_listed">Installed, not on the server</string>
+
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="scan_bilingual">Bilingual label: choose the language to hear</string>
+    <string name="scan_keep">Keep this label</string>
+    <string name="scan_kept">Label kept</string>
+    <string name="favorite_add">Add to favorites</string>
+    <string name="favorite_remove">Remove from favorites</string>
+
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_subtitle">Your artworks and labels, readable offline.</string>
+    <string name="favorites_empty_title">No favorites yet</string>
+    <string name="favorites_empty_body">Tap the heart on an entry, or keep a scanned label: you will find it here, even offline.</string>
+    <string name="favorites_cartels">Scanned labels</string>
+    <string name="favorites_share">Export as Markdown</string>
+    <string name="favorites_export_title">Favorites — Audioguide</string>
+    <string name="favorites_export_date">Exported on</string>
+    <string name="favorite_note">Personal note</string>
+    <string name="favorite_open">View entry</string>
+    <string name="favorite_delete">Delete</string>
+    <string name="favorite_delete_title">Delete this favorite?</string>
+    <string name="favorite_delete_body">It disappears from your list. You can add it again at any time.</string>
+    <string name="favorite_not_found">Favorite not found</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_speech_title">Reading speed</string>
+    <string name="settings_speech_value">Speed × %1$s</string>
+    <string name="settings_speech_preview">Try it</string>
+    <string name="settings_preview_text">This is a sample of the reading, at the chosen speed.</string>
+    <string name="settings_voice_title">Voice</string>
+    <string name="settings_voice_auto">Automatic (best installed voice)</string>
+    <string name="settings_voice_listen">Listen</string>
+    <string name="settings_voice_none">No voice installed for this language.</string>
+    <string name="settings_voice_network">online</string>
+    <string name="settings_voice_hint">“Enhanced” or “premium” voices sound far more natural. iPhone: Settings ▸ Accessibility ▸ Spoken Content ▸ Voices. Android: Settings ▸ System ▸ Languages ▸ Text-to-speech.</string>
+    <string name="voice_quality_standard">Standard</string>
+    <string name="voice_quality_enhanced">Enhanced</string>
+    <string name="voice_quality_premium">Premium</string>
+    <string name="settings_about_title">About</string>
+    <string name="settings_about_body">Listen to museum wall labels, offline. Version %1$s.</string>
+    <string name="settings_credits_title">Sources and credits</string>
+    <string name="settings_credits_data">Artworks: Joconde database, French Ministry of Culture, Open License 2.0. The update date appears on each entry.</string>
+    <string name="settings_credits_ocr">Text reading: ML Kit on Android, Apple Vision on iPhone, directly on the device.</string>
+    <string name="settings_credits_voice">Voices: your phone's own voices, installed on the device.</string>
+    <string name="settings_privacy_title">Privacy</string>
+    <string name="settings_privacy_body">No personal data is collected or sent. Photos, read texts and favorites stay on your phone. The app only connects to download museums.</string>
+</resources>

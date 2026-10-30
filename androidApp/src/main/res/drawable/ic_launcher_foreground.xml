@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Façade de musée dans la zone sûre de l'icône adaptative (grille de 108). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#FBF8F3" android:pathData="M54,30 L30,44 L78,44 Z" />
+    <path android:fillColor="#FBF8F3" android:pathData="M32,46 H76 V50 H32 Z" />
+    <path android:fillColor="#FBF8F3" android:pathData="M34.5,52 h6 v20 h-6 z" />
+    <path android:fillColor="#FBF8F3" android:pathData="M45.5,52 h6 v20 h-6 z" />
+    <path android:fillColor="#FBF8F3" android:pathData="M56.5,52 h6 v20 h-6 z" />
+    <path android:fillColor="#FBF8F3" android:pathData="M67.5,52 h6 v20 h-6 z" />
+    <path android:fillColor="#FBF8F3" android:pathData="M30,74 H78 V78 H30 Z" />
+    <path android:fillColor="#FBF8F3" android:pathData="M27,79 H81 V83 H27 Z" />
+</vector>
