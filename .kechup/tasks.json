@@ -1,5 +1,5 @@
 {
-  "next_id": 10,
+  "next_id": 11,
   "tasks": {
     "T1": {
       "after": [],
@@ -19,6 +19,28 @@
       "priority": 1,
       "state": "todo",
       "title": "Essai sur appareil r\u00e9el (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte"
+    },
+    "T10": {
+      "after": [
+        "T4",
+        "T9"
+      ],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:27.824000+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T10-stores-comptes-d-veloppeur-fiches-politique-de-confidentiali",
+      "id": "T10",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 5,
+      "state": "todo",
+      "title": "Stores : comptes d\u00e9veloppeur, fiches, politique de confidentialit\u00e9 (URL)"
     },
     "T2": {
       "after": [
