@@ -25,6 +25,7 @@ Todo:
 - T4: Héberger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse
 - T5: Filtre œuvres exposées : affiner au-delà de peinture+sculpture (image, croisement Wikidata)
 - T6: Louvre : écrire pour obtenir un export des commentaires de notices
+- T7: Orsay / RMN-GP : demander l'autorisation écrite de reprise des textes
 
 Done (last 5):
 - (none)
