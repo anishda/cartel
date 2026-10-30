@@ -1,5 +1,5 @@
 {
-  "next_id": 3,
+  "next_id": 4,
   "tasks": {
     "T1": {
       "after": [],
@@ -40,6 +40,27 @@
       "priority": 2,
       "state": "todo",
       "title": "D\u00e9cider du scan : photo plein format via LabelReader ou scanner de documents natif"
+    },
+    "T3": {
+      "after": [
+        "T1"
+      ],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:24.099092+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T3-d-cider-des-voix-voix-neuronale-embarqu-e-piper-sherpa-onnx-",
+      "id": "T3",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 3,
+      "state": "todo",
+      "title": "D\u00e9cider des voix : voix neuronale embarqu\u00e9e (Piper/sherpa-onnx) si voix syst\u00e8me insuffisantes"
     }
   },
   "version": 1

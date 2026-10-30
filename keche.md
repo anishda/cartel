@@ -18,6 +18,7 @@ Doing:
 
 Blocked:
 - T2: Décider du scan : photo plein format via LabelReader ou scanner de documents natif (waits for T1)
+- T3: Décider des voix : voix neuronale embarquée (Piper/sherpa-onnx) si voix système insuffisantes (waits for T1)
 
 Todo:
 - T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
