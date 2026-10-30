@@ -1,5 +1,5 @@
 {
-  "next_id": 8,
+  "next_id": 9,
   "tasks": {
     "T1": {
       "after": [],
@@ -137,6 +137,28 @@
       "priority": 3,
       "state": "todo",
       "title": "Orsay / RMN-GP : demander l'autorisation \u00e9crite de reprise des textes"
+    },
+    "T8": {
+      "after": [
+        "T6",
+        "T7"
+      ],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:26.579931+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T8-corpus-curat-de-100-300-chefs-d-uvre-par-mus-e-r-cits-sourc-",
+      "id": "T8",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 5,
+      "state": "todo",
+      "title": "Corpus curat\u00e9 de 100 \u00e0 300 chefs-d'\u0153uvre par mus\u00e9e (r\u00e9cits sourc\u00e9s, CC BY-SA)"
     }
   },
   "version": 1
