@@ -1,5 +1,5 @@
 {
-  "next_id": 5,
+  "next_id": 6,
   "tasks": {
     "T1": {
       "after": [],
@@ -80,6 +80,25 @@
       "priority": 2,
       "state": "todo",
       "title": "H\u00e9berger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse"
+    },
+    "T5": {
+      "after": [],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-10-30T11:01:24.986710+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T5-filtre-uvres-expos-es-affiner-au-del-de-peinture-sculpture-i",
+      "id": "T5",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 4,
+      "state": "todo",
+      "title": "Filtre \u0153uvres expos\u00e9es : affiner au-del\u00e0 de peinture+sculpture (image, croisement Wikidata)"
     }
   },
   "version": 1
