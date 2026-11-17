@@ -26,6 +26,11 @@
     <string name="scan_match_title">Œuvre reconnue</string>
     <string name="scan_match_others">Autres possibilités</string>
     <string name="scan_clear">Nouveau scan</string>
+    <string name="scan_translate">Traduire en français</string>
+    <string name="scan_translating">Traduction en cours…</string>
+    <string name="scan_translation_title">Traduction</string>
+    <string name="scan_translate_hint">Hors ligne une fois la langue téléchargée (environ 30 Mo, une seule fois).</string>
+    <string name="scan_translate_failed">Traduction impossible : la première fois, une connexion est nécessaire pour télécharger la langue.</string>
 
     <string name="voice_checking">Voix : vérification…</string>
     <string name="voice_ready">Voix hors ligne disponible</string>

@@ -9,6 +9,7 @@ import app.audioguide.domain.Region
 import app.audioguide.domain.TextLine
 import app.audioguide.domain.SpeechSynthesizer
 import app.audioguide.domain.TextRecognizer
+import app.audioguide.domain.TextTranslator
 import app.audioguide.domain.VoiceOption
 import app.audioguide.domain.VoiceStatus
 import app.audioguide.favorites.FavoriteKind
@@ -70,7 +71,19 @@ class ScanSessionTest {
     private val catalog = Catalog(store)
     private val favorites = FavoritesStore(root.resolve("user.db").toString(), { 1_000L }, scope)
 
-    private fun session() = ScanSession(recognizer, synthesizer, catalog, favorites)
+    private class FakeTranslator(var result: Result<String> = Result.success("Le tableau reprend le motif de la Vénus couchée.")) : TextTranslator {
+        override val isAvailable = true
+        val requests = mutableListOf<Triple<String, String, String>>()
+        override fun supports(from: String, to: String) = from != to
+        override suspend fun translate(text: String, from: String, to: String): Result<String> {
+            requests += Triple(text, from, to)
+            return result
+        }
+    }
+
+    private val translator = FakeTranslator()
+
+    private fun session() = ScanSession(recognizer, synthesizer, catalog, favorites, translator)
 
     private fun installOrsay() = runBlocking {
         val file = root.resolve("orsay.db").toString()
@@ -95,6 +108,49 @@ class ScanSessionTest {
         "The painting takes up the motif of the", "reclining Venus of the Renaissance, but", "sets it in the Paris of the nineteenth century.",
         "Shown at the Salon of 1865, it caused", "a scandal that the press has relayed.",
     ).joinToString("\n")
+
+    private val englishCartel = "Édouard MANET\nOlympia\n\nThe painting takes up the motif of the\nreclining Venus of the Renaissance, but\nsets it in the Paris of the nineteenth century.\nShown at the Salon of 1865, it caused\na scandal that the press has relayed."
+
+    @Test
+    fun anEnglishCartelCanBeTranslatedToFrenchAndRead() = runBlocking {
+        val session = session()
+        session.onRecognized(RecognizedText.fromPlainText(englishCartel))
+        val ready = session.state.await { it.step == ScanStep.Done }
+        assertEquals("en-US", ready.languageTag)
+        assertTrue(ready.canTranslate)
+
+        session.translate()
+        val done = session.state.await { it.translation is TranslationState.Done }
+        assertEquals("Le tableau reprend le motif de la Vénus couchée.", (done.translation as TranslationState.Done).text)
+        assertEquals("en", translator.requests.single().second)
+        assertEquals("fr", translator.requests.single().third)
+
+        session.speakTranslation()
+        assertEquals("fr-FR", synthesizer.spoken.last().second)
+    }
+
+    @Test
+    fun aFailedTranslationCanBeRetriedAndCartelChangesResetIt() = runBlocking {
+        translator.result = Result.failure(java.io.IOException("offline"))
+        val session = session()
+        session.onRecognized(RecognizedText.fromPlainText(englishCartel))
+        session.state.await { it.step == ScanStep.Done }
+        session.translate()
+        session.state.await { it.translation == TranslationState.Failed }
+
+        translator.result = Result.success("Traduit.")
+        session.translate()
+        session.state.await { it.translation == TranslationState.Done("Traduit.") }
+        session.clear()
+        assertEquals(TranslationState.None, session.state.await { it.step == ScanStep.Idle }.translation)
+    }
+
+    @Test
+    fun aFrenchCartelHasNothingToTranslate() = runBlocking {
+        val session = session()
+        session.onRecognized(RecognizedText.fromPlainText(frenchCartel))
+        assertEquals(false, session.state.await { it.step == ScanStep.Done }.canTranslate)
+    }
 
     @Test
     fun aRecognizedTextIsCleanedAndMatched() = runBlocking {

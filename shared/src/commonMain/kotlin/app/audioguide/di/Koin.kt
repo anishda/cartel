@@ -42,7 +42,7 @@ val appModule = module {
         FavoritesStore(get<AppPaths>().userDb, ::currentTimeMillis, CoroutineScope(SupervisorJob() + Dispatchers.Default))
     }
     single { SettingsStore(FileSystem.SYSTEM, get<AppPaths>().settingsFile.toPath()) }
-    single { ScanSession(get(), get(), get(), get()) }
+    single { ScanSession(get(), get(), get(), get(), get()) }
     single {
         HttpClient {
             install(HttpTimeout) {

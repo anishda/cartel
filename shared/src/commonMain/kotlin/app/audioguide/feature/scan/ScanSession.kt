@@ -12,7 +12,9 @@ import app.audioguide.domain.LanguageGuesser
 import app.audioguide.domain.RecognizedText
 import app.audioguide.domain.SpeechSynthesizer
 import app.audioguide.domain.SpeechText
+import app.audioguide.domain.NoTranslator
 import app.audioguide.domain.TextRecognizer
+import app.audioguide.domain.TextTranslator
 import app.audioguide.domain.VoiceStatus
 import app.audioguide.favorites.FavoritesStore
 import app.audioguide.platform.systemLanguageTag
@@ -49,9 +51,22 @@ data class ScanUiState(
     val favoriteKeys: Set<String> = emptySet(),
     /** Le texte de ce cartel a déjà été gardé en favori. */
     val cartelSaved: Boolean = false,
+    val translation: TranslationState = TranslationState.None,
+    /** La plateforme sait traduire ce cartel vers le français. */
+    val canTranslate: Boolean = false,
 ) {
     fun isFavorite(artwork: Artwork) = "${artwork.museumId}/${artwork.reference}" in favoriteKeys
 }
+
+sealed interface TranslationState {
+    data object None : TranslationState
+    data object Working : TranslationState
+    data class Done(val text: String) : TranslationState
+    data object Failed : TranslationState
+}
+
+/** Langue vers laquelle on traduit les cartels. */
+const val TRANSLATION_TARGET_TAG = "fr-FR"
 
 class SpeechLanguage(val tag: String, val label: String)
 
@@ -73,6 +88,7 @@ class ScanSession(
     private val synthesizer: SpeechSynthesizer,
     private val catalog: Catalog,
     private val favorites: FavoritesStore,
+    private val translator: TextTranslator = NoTranslator,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val reader = LabelReader(recognizer)
@@ -85,6 +101,8 @@ class ScanSession(
             state.copy(
                 isSpeaking = speaking,
                 voiceStatus = synthesizer.voiceStatus(state.languageTag),
+                canTranslate = translator.isAvailable &&
+                    translator.supports(state.languageTag.substringBefore('-'), TRANSLATION_TARGET_TAG.substringBefore('-')),
                 favoriteKeys = saved.mapNotNull { f -> f.reference?.let { "${f.museumId}/$it" } }.toSet(),
             )
         }.stateIn(scope, SharingStarted.Eagerly, local.value)
@@ -113,7 +131,7 @@ class ScanSession(
     fun setText(text: String) {
         local.update { state ->
             val versions = state.versions.map { if (it.languageTag == state.languageTag) it.copy(text = text) else it }
-            state.copy(cleanedText = text, versions = versions, cartelSaved = false)
+            state.copy(cleanedText = text, versions = versions, cartelSaved = false, translation = TranslationState.None)
         }
     }
 
@@ -122,8 +140,26 @@ class ScanSession(
         synthesizer.stop()
         local.update { state ->
             val version = state.versions.firstOrNull { it.languageTag == tag }
-            state.copy(languageTag = tag, cleanedText = version?.text ?: state.cleanedText, cartelSaved = false)
+            state.copy(languageTag = tag, cleanedText = version?.text ?: state.cleanedText, cartelSaved = false, translation = TranslationState.None)
         }
+    }
+
+    /** Traduit le texte lu vers le français (hors ligne une fois le modèle de la langue téléchargé). */
+    fun translate() {
+        val current = local.value
+        if (current.cleanedText.isBlank() || current.translation == TranslationState.Working) return
+        local.update { it.copy(translation = TranslationState.Working) }
+        job = scope.launch {
+            translator.translate(current.cleanedText, current.languageTag.substringBefore('-'), TRANSLATION_TARGET_TAG.substringBefore('-'))
+                .onSuccess { translated -> local.update { it.copy(translation = TranslationState.Done(translated)) } }
+                .onFailure { local.update { it.copy(translation = TranslationState.Failed) } }
+        }
+    }
+
+    /** Lit la traduction avec la voix française. */
+    fun speakTranslation() {
+        val done = local.value.translation as? TranslationState.Done ?: return
+        synthesizer.speak(SpeechText.prepare(done.text), TRANSLATION_TARGET_TAG)
     }
 
     fun speak() {
@@ -160,7 +196,7 @@ class ScanSession(
         job?.cancel()
         synthesizer.stop()
         local.update {
-            it.copy(step = ScanStep.Recognizing, failure = null, failureDetail = null, matches = emptyList(), versions = emptyList(), cartelSaved = false)
+            it.copy(step = ScanStep.Recognizing, failure = null, failureDetail = null, matches = emptyList(), versions = emptyList(), cartelSaved = false, translation = TranslationState.None)
         }
     }
 
