@@ -215,7 +215,7 @@
       "created_by": "claude:vex",
       "done_at": null,
       "done_commit": null,
-      "drop_reason": null,
+      "drop_reason": "D\u00e9cision de Zac 2026-11-17 : corpus r\u00e9dig\u00e9 trop lourd ; remplac\u00e9 par le r\u00e9cit Wikipedia (T12)",
       "evidence": null,
       "folder": "tasks/T8-corpus-curat-de-100-300-chefs-d-uvre-par-mus-e-r-cits-sourc-",
       "id": "T8",
@@ -223,7 +223,7 @@
       "notes": [],
       "owner": null,
       "priority": 5,
-      "state": "todo",
+      "state": "dropped",
       "title": "Corpus curat\u00e9 de 100 \u00e0 300 chefs-d'\u0153uvre par mus\u00e9e (r\u00e9cits sourc\u00e9s, CC BY-SA)"
     },
     "T9": {

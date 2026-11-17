@@ -21,7 +21,6 @@ Doing:
 Blocked:
 - T2: Décider du scan : photo plein format via LabelReader ou scanner de documents natif (waits for T1)
 - T3: Décider des voix : voix neuronale embarquée (Piper/sherpa-onnx) si voix système insuffisantes (waits for T1)
-- T8: Corpus curaté de 100 à 300 chefs-d'œuvre par musée (récits sourcés, CC BY-SA) (waits for dropped T6; waits for dropped T7)
 - T10: Stores : comptes développeur, fiches, politique de confidentialité (URL) (waits for T4; waits for T9)
 
 Todo:
