@@ -1,5 +1,5 @@
 {
-  "next_id": 12,
+  "next_id": 13,
   "tasks": {
     "T1": {
       "after": [],
@@ -60,6 +60,25 @@
       "priority": 6,
       "state": "doing",
       "title": "Trancher l'open source (Apache-2.0) et mettre en place la CI de r\u00e9g\u00e9n\u00e9ration des packs"
+    },
+    "T12": {
+      "after": [],
+      "block_reason": null,
+      "claimed_at": null,
+      "created_at": "2026-11-17T15:31:00.730530+00:00",
+      "created_by": "claude:vex",
+      "done_at": null,
+      "done_commit": null,
+      "drop_reason": null,
+      "evidence": null,
+      "folder": "tasks/T12-r-cit-des-uvres-depuis-wikipedia-fr-liaison-wikidata-pack-v2",
+      "id": "T12",
+      "last_note_at": null,
+      "notes": [],
+      "owner": null,
+      "priority": 2,
+      "state": "todo",
+      "title": "R\u00e9cit des \u0153uvres depuis Wikipedia FR (liaison Wikidata, pack v2, fiche)"
     },
     "T2": {
       "after": [

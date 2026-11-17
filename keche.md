@@ -30,6 +30,7 @@ Todo:
 - T6: Louvre : écrire pour obtenir un export des commentaires de notices
 - T7: Orsay / RMN-GP : demander l'autorisation écrite de reprise des textes
 - T9: Choisir nom et identifiant définitifs de l'app
+- T12: Récit des œuvres depuis Wikipedia FR (liaison Wikidata, pack v2, fiche)
 
 Done (last 5):
 - (none)
