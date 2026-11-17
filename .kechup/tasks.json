@@ -45,7 +45,7 @@
     "T11": {
       "after": [],
       "block_reason": null,
-      "claimed_at": null,
+      "claimed_at": "2026-11-17T15:23:07.081496+00:00",
       "created_at": "2026-10-30T11:01:28.459524+00:00",
       "created_by": "claude:vex",
       "done_at": null,
@@ -56,9 +56,9 @@
       "id": "T11",
       "last_note_at": null,
       "notes": [],
-      "owner": null,
+      "owner": "claude:vex",
       "priority": 6,
-      "state": "todo",
+      "state": "doing",
       "title": "Trancher l'open source (Apache-2.0) et mettre en place la CI de r\u00e9g\u00e9n\u00e9ration des packs"
     },
     "T2": {
