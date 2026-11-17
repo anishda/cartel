@@ -17,6 +17,7 @@ App KMP (Android + iOS, Compose Multiplatform) : scanner un cartel de musée, l'
 Doing:
 - T4: Héberger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse [claude:vex]
 - T11: Trancher l'open source (Apache-2.0) et mettre en place la CI de régénération des packs [claude:vex]
+- T15: Corriger le plantage de la recherche sur Galaxy S24 (OutlinedTextField Material3 alpha) [claude:vex]
 
 Blocked:
 - T2: Décider du scan : photo plein format via LabelReader ou scanner de documents natif (waits for T1)
@@ -26,7 +27,6 @@ Blocked:
 Todo:
 - T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
 - T5: Filtre œuvres exposées : affiner au-delà de peinture+sculpture (image, croisement Wikidata)
-- T15: Corriger le plantage de la recherche sur Galaxy S24 (OutlinedTextField Material3 alpha)
 
 Done (last 5):
 - T14: Version de pack unique par build (date + heure) pour que l'app propose la mise à jour
