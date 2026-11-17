@@ -174,7 +174,7 @@
       "created_by": "claude:vex",
       "done_at": null,
       "done_commit": null,
-      "drop_reason": null,
+      "drop_reason": "D\u00e9cision de Zac 2026-11-17 : pas de demande au Louvre",
       "evidence": null,
       "folder": "tasks/T6-louvre-crire-pour-obtenir-un-export-des-commentaires-de-noti",
       "id": "T6",
@@ -182,7 +182,7 @@
       "notes": [],
       "owner": null,
       "priority": 3,
-      "state": "todo",
+      "state": "dropped",
       "title": "Louvre : \u00e9crire pour obtenir un export des commentaires de notices"
     },
     "T7": {
