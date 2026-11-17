@@ -58,11 +58,13 @@ class ArtworkViewModel(
         viewModelScope.launch { loaded.value = Loaded(catalog.artwork(museumId, reference)) }
     }
 
-    fun speak() {
+    /** [full] : tout le récit et la fiche ; sinon l'écoute courte, celle qu'on lance devant l'œuvre. */
+    fun speak(full: Boolean = false) {
         val current = state.value
         val artwork = current.artwork ?: return
         val museumName = current.pack?.museumName ?: return
-        synthesizer.speak(SpeechText.prepare(ArtworkNarration.build(artwork, museumName)), ArtworkNarration.LANGUAGE_TAG)
+        val text = if (full) ArtworkNarration.build(artwork, museumName) else ArtworkNarration.buildShort(artwork)
+        synthesizer.speak(SpeechText.prepare(text), ArtworkNarration.LANGUAGE_TAG)
     }
 
     fun toggleFavorite() {

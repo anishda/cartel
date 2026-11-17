@@ -52,7 +52,8 @@
     <string name="search_clear">Effacer</string>
 
     <string name="artwork_not_found">Œuvre introuvable</string>
-    <string name="artwork_listen">Écouter la fiche</string>
+    <string name="artwork_listen">Écouter</string>
+    <string name="artwork_listen_full">Tout écouter</string>
     <string name="artwork_info">Informations</string>
     <string name="artwork_provenance">Historique</string>
     <string name="artwork_technical">Description technique</string>
