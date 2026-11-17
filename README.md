@@ -65,7 +65,7 @@ python3 -m http.server 8080 --directory packs                                # s
 
 Les packs sortent dans `packs/` avec `manifest.json`.
 
-**Adresse du serveur de packs** : Android, propriété Gradle `-PpackBaseUrl=https://…` (par défaut en debug : `http://10.0.2.2:8080/`, le Mac vu de l'émulateur). iOS, `PACK_BASE_URL` dans `iosApp/Configuration/Config.xcconfig` (`http:/$()/localhost:8080/` en debug : `$()` évite que `//` soit pris pour un commentaire). En **release**, les deux pointent vers `https://github.com/anishda/cartel/releases/latest/download/`.
+**Adresse du serveur de packs** : Android, propriété Gradle `-PpackBaseUrl=https://…` (pour un serveur local depuis l'émulateur : `-PpackBaseUrl=http://10.0.2.2:8080/`, le Mac vu de l'émulateur ; ce n'est pas joignable depuis un vrai téléphone). iOS, `PACK_BASE_URL` dans `iosApp/Configuration/Config.xcconfig` (`http:/$()/localhost:8080/` en debug : `$()` évite que `//` soit pris pour un commentaire). Par défaut, Android (debug et release) et iOS en release pointent vers `https://github.com/anishda/cartel/releases/latest/download/`.
 
 **Publication des packs** : le workflow `.github/workflows/packs.yml` régénère les packs chaque jeudi (Joconde est mise à jour le mercredi) et les publie dans une release `packs-AAAA-MM-JJ` marquée « latest ». Lancement manuel : onglet Actions, « Packs musée », Run workflow. `.github/workflows/ci.yml` lance les tests JVM, l'APK debug et les tests iOS à chaque push et pull request.
 
