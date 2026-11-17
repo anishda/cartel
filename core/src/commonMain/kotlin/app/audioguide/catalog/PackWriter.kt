@@ -52,6 +52,14 @@ class PackWriter private constructor(private val db: SqliteDb) : AutoCloseable {
         }
     }
 
+    /** Phonèmes d'un segment de texte lu ([key] : voir [NarrationPhonemes.key]) ; une phrase par ligne. */
+    fun addPhonemes(key: String, phonemes: String) {
+        db.update("INSERT OR REPLACE INTO narration_phoneme(key, phonemes) VALUES (?1, ?2)") { s ->
+            s.bindText(1, key)
+            s.bindText(2, phonemes)
+        }
+    }
+
     /** Écrit les métadonnées, ferme l'écriture et compacte le fichier. Retourne le nombre d'œuvres. */
     fun finish(info: PackInfo): Int {
         val meta = mapOf(

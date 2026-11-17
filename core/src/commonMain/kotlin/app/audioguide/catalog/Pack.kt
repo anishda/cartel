@@ -12,7 +12,12 @@ enum class TitleMatch { Exact, Prefix, Contains }
 data class SearchHit(val artwork: Artwork, val rank: Int)
 
 /** Pack musée ouvert en lecture. Les accès sont sérialisés et exécutés hors du fil principal. */
-class Pack private constructor(private val db: SqliteDb, val info: PackInfo, formatVersion: Int) : AutoCloseable {
+class Pack private constructor(
+    private val db: SqliteDb,
+    val info: PackInfo,
+    formatVersion: Int,
+    private val hasPhonemes: Boolean,
+) : AutoCloseable {
     private val mutex = Mutex()
     private val columns = PackSchema.columns(formatVersion)
 
@@ -74,6 +79,11 @@ class Pack private constructor(private val db: SqliteDb, val info: PackInfo, for
             { it.bindText(1, argument) }, { it.toArtwork(info.museumId) })
     }
 
+    /** Phonèmes précalculés du segment de texte lu [key] (voir [NarrationPhonemes.key]) ; `null` si le pack n'en a pas. */
+    suspend fun phonemes(key: String): String? = if (!hasPhonemes) null else access {
+        query("SELECT phonemes FROM narration_phoneme WHERE key = ?1", { it.bindText(1, key) }) { it.getText(0) }.firstOrNull()
+    }
+
     override fun close() = db.close()
 
     companion object {
@@ -103,6 +113,7 @@ class Pack private constructor(private val db: SqliteDb, val info: PackInfo, for
                         storyLicense = meta[PackSchema.Meta.STORY_LICENSE],
                     ),
                     version,
+                    hasPhonemes = version >= 4,
                 )
             } catch (e: Throwable) {
                 db.close()
