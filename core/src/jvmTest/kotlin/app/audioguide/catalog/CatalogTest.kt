@@ -44,6 +44,53 @@ class CatalogTest {
     private val joconde = ArtworkDraft(reference = "M5031-1", inventoryNo = "INV 779", title = "La Joconde", artist = "Léonard de Vinci", domain = "peinture")
 
     @Test
+    fun keepsWikidataLinkAndStory() = runTest {
+        val story = ArtworkStory("Olympia est un tableau d'Édouard Manet.", "Olympia (Manet)", "https://fr.wikipedia.org/wiki/Olympia_(Manet)")
+        val path = root.resolve("v2.pack.db").toString()
+        PackWriter.create(path).use { writer ->
+            writer.add(olympia.copy(wikidataId = "Q152509", notability = 60, story = story))
+            writer.finish(
+                PackInfo(
+                    museumId = "orsay", museumName = "musée d'Orsay", city = "Paris", version = "v",
+                    builtAt = "b", sourceName = "Joconde", sourceUrl = null, license = "LO 2.0",
+                    sourceUpdatedAt = null, recordCount = 0, storyLicense = "CC BY-SA 4.0",
+                ),
+            )
+        }
+        val pack = Pack.open(path)
+        assertEquals("CC BY-SA 4.0", pack.info.storyLicense)
+        val found = assertNotNull(pack.byReference("M5060-1"))
+        assertEquals("Q152509", found.wikidataId)
+        assertEquals(60, found.notability)
+        assertEquals(story, found.story)
+        pack.close()
+    }
+
+    @Test
+    fun stillReadsVersionOnePacks() = runTest {
+        val path = buildPack("v1.pack.db", "orsay", "musée d'Orsay", olympia, dejeuner)
+        SqliteDb.open(path).use { db ->
+            listOf("wikidata_id", "notability", "story_text", "story_title", "story_url")
+                .forEach { db.exec("ALTER TABLE artwork DROP COLUMN $it") }
+            db.exec("PRAGMA user_version = 1")
+        }
+        val pack = Pack.open(path)
+        val found = assertNotNull(pack.byReference("M5060-1"))
+        assertEquals(null, found.story)
+        assertEquals(0, found.notability)
+        assertEquals(2, pack.search("manet").size)
+        pack.close()
+    }
+
+    @Test
+    fun famousWorksComeFirstAmongEqualMatches() = runTest {
+        val obscure = ArtworkDraft(reference = "M5060-9", inventoryNo = "RF 9", title = "Aaa portrait", artist = "Édouard Manet")
+        val pack = Pack.open(buildPack("rank.pack.db", "orsay", "musée d'Orsay", obscure, olympia.copy(notability = 60), dejeuner.copy(hasImage = true)))
+        assertEquals(listOf("Olympia", "Le Déjeuner sur l'herbe", "Aaa portrait"), pack.search("manet").map { it.artwork.title })
+        pack.close()
+    }
+
+    @Test
     fun writesAndReadsAPack() = runTest {
         val pack = Pack.open(buildPack("orsay.pack.db", "orsay", "musée d'Orsay", olympia, dejeuner))
         assertEquals("orsay", pack.info.museumId)

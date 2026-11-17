@@ -21,6 +21,20 @@ data class Artwork(
     val provenance: String?,
     val description: String?,
     val hasImage: Boolean,
+    /** Élément Wikidata de l'œuvre (« Q12418 »), si la liaison par inventaire a été confirmée. */
+    val wikidataId: String? = null,
+    /** Notoriété : nombre d'articles Wikimedia sur l'œuvre (0 si inconnue). Sert au classement de la recherche. */
+    val notability: Int = 0,
+    /** Récit de l'œuvre, repris d'un article Wikipedia. */
+    val story: ArtworkStory? = null,
+)
+
+/** Récit d'une œuvre, extrait d'un article Wikipedia : à afficher avec son attribution (CC BY-SA). */
+data class ArtworkStory(
+    val text: String,
+    /** Titre de l'article source. */
+    val articleTitle: String,
+    val articleUrl: String,
 )
 
 /** Œuvre prête à être insérée dans un pack (sans identifiant, ni musée : fixés par le pack). */
@@ -40,6 +54,9 @@ data class ArtworkDraft(
     val provenance: String? = null,
     val description: String? = null,
     val hasImage: Boolean = false,
+    val wikidataId: String? = null,
+    val notability: Int = 0,
+    val story: ArtworkStory? = null,
 )
 
 /** Description d'un pack, lue dans sa table `meta`. */
@@ -54,4 +71,6 @@ data class PackInfo(
     val license: String,
     val sourceUpdatedAt: String?,
     val recordCount: Int,
+    /** Licence des récits du pack (« CC BY-SA 4.0 »), absente s'il n'en contient pas. */
+    val storyLicense: String? = null,
 )

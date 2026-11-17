@@ -22,6 +22,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.audioguide.catalog.Artwork
+import app.audioguide.catalog.ArtworkStory
 import app.audioguide.catalog.PackInfo
 import app.audioguide.feature.search.shortMuseumName
 import app.audioguide.platform.systemLanguageTag
@@ -38,6 +41,9 @@ import app.audioguide.resources.artwork_listen
 import app.audioguide.resources.artwork_not_found
 import app.audioguide.resources.artwork_provenance
 import app.audioguide.resources.artwork_source
+import app.audioguide.resources.artwork_story
+import app.audioguide.resources.artwork_story_open
+import app.audioguide.resources.artwork_story_source
 import app.audioguide.resources.artwork_technical
 import app.audioguide.resources.back
 import app.audioguide.resources.favorite_add
@@ -131,6 +137,8 @@ private fun ArtworkContent(artwork: Artwork, pack: PackInfo?) {
             }
         }
 
+        artwork.story?.let { StorySection(it, pack?.storyLicense) }
+
         Card(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             modifier = Modifier.fillMaxWidth(),
@@ -175,6 +183,26 @@ private fun ArtworkContent(artwork: Artwork, pack: PackInfo?) {
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        }
+    }
+}
+
+/** Récit Wikipedia, toujours accompagné de son attribution (CC BY-SA) et d'un lien vers l'article. */
+@Composable
+private fun StorySection(story: ArtworkStory, license: String?) {
+    val uriHandler = LocalUriHandler.current
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        SectionLabel(stringResource(Res.string.artwork_story))
+        story.text.split('\n').forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
+        Text(
+            stringResource(Res.string.artwork_story_source, story.articleTitle, license ?: "CC BY-SA 4.0"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        if (story.articleUrl.isNotBlank()) {
+            TextButton(onClick = { runCatching { uriHandler.openUri(story.articleUrl) } }) {
+                Text(stringResource(Res.string.artwork_story_open))
+            }
         }
     }
 }

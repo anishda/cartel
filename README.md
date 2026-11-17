@@ -80,7 +80,9 @@ adb shell pm grant app.audioguide android.permission.ACCESS_LOCAL_NETWORK
 Code sous licence Apache-2.0 (`LICENSE`). Les packs ont leurs propres licences, par source.
 
 
-Les fiches viennent de la base Joconde (ministère de la Culture), Licence Ouverte 2.0 : la source et la date sont affichées dans l'app (fiches et écran Réglages). Aucune image n'est embarquée. Les textes du Louvre et d'Orsay ne sont pas repris tant que leurs conditions de réutilisation ne sont pas clarifiées (voir la note du vault).
+Les fiches viennent de la base Joconde (ministère de la Culture), Licence Ouverte 2.0 : la source et la date sont affichées dans l'app (fiches et écran Réglages). Aucune image n'est embarquée. Les textes du Louvre et d'Orsay ne sont pas repris (pas de demande d'autorisation, décision du 2026-11-17).
+
+**Récits (format de pack v2)** : `pack-builder` relie chaque œuvre à Wikidata par son numéro d'inventaire (P217) dans une collection du musée (P195), confirmé par un nom d'artiste ou un titre proche (un même numéro désigne parfois deux objets : RF 644 est Olympia et un buste). Quand l'œuvre a un article sur Wikipédia en français, son introduction devient le récit de la fiche, lu avant la fiche technique, avec l'attribution (CC BY-SA 4.0) et un lien vers l'article. La notoriété (nombre d'articles Wikimedia) fait remonter les œuvres connues dans la recherche. Packs du 2026-11-17 : Louvre 6 883 œuvres reliées et 640 récits, Orsay 2 209 et 324, Orangerie 11 et 7. `--stories no` fabrique des packs sans récits. Les packs v1 restent lisibles par l'app.
 
 ## Ce qui n'est pas vérifié
 

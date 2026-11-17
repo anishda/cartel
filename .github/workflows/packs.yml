@@ -34,5 +34,5 @@ jobs:
           else
             gh release create "$tag" packs/* --latest \
               --title "Packs musée du $(date -u +%Y-%m-%d)" \
-              --notes "Packs générés depuis la base Joconde (ministère de la Culture, Licence Ouverte 2.0). Voir manifest.json pour les versions et empreintes."
+              --notes "Packs générés depuis la base Joconde (ministère de la Culture, Licence Ouverte 2.0). Récits : introductions des articles Wikipédia en français (contributeurs de Wikipédia, CC BY-SA 4.0), reliés par Wikidata (CC0). Voir manifest.json pour les versions et empreintes."
           fi

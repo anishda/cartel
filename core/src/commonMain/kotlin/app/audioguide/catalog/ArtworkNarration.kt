@@ -11,6 +11,11 @@ object ArtworkNarration {
         parts += sentence(artwork.title)
         artwork.artist?.let { parts += sentence("Par $it") }
         artwork.dateText?.let { parts += sentence(it) }
+        // Le récit vient avant la fiche technique : c'est ce qu'on veut entendre devant l'œuvre.
+        artwork.story?.let { story ->
+            parts += story.text.lines().filter { it.isNotBlank() }.map(::sentence)
+            parts += sentence(storyAttribution(story))
+        }
         artwork.school?.let { parts += sentence("École : $it") }
         artwork.technique?.let { parts += sentence("Technique : $it") }
         dimensions(artwork.heightCm, artwork.widthCm)?.let { parts += sentence(it) }
@@ -21,6 +26,9 @@ object ArtworkNarration {
         // Le nettoyeur du cartel développe siècles et abréviations ; il n'y a pas de numéro d'inventaire à lire.
         return CartelCleaner.clean(parts.joinToString("\n"))
     }
+
+    /** Mention de la source du récit, lue après lui (CC BY-SA impose l'attribution). */
+    fun storyAttribution(story: ArtworkStory): String = "Récit d'après l'article Wikipédia « ${story.articleTitle} »"
 
     fun dimensions(heightCm: Double?, widthCm: Double?): String? = when {
         heightCm != null && widthCm != null -> "Dimensions : ${cm(heightCm)} centimètres de haut sur ${cm(widthCm)} de large"
