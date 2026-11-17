@@ -26,6 +26,7 @@ Blocked:
 Todo:
 - T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
 - T5: Filtre œuvres exposées : affiner au-delà de peinture+sculpture (image, croisement Wikidata)
+- T14: Version de pack unique par build (date + heure) pour que l'app propose la mise à jour
 
 Done (last 5):
 - T13: Images libres d'œuvres (Wikimedia Commons, miniatures en ligne avec crédit)
