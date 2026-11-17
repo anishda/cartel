@@ -229,7 +229,7 @@
     "T9": {
       "after": [],
       "block_reason": null,
-      "claimed_at": null,
+      "claimed_at": "2026-11-17T15:54:36.839985+00:00",
       "created_at": "2026-10-30T11:01:27.184838+00:00",
       "created_by": "claude:vex",
       "done_at": null,
@@ -240,9 +240,9 @@
       "id": "T9",
       "last_note_at": null,
       "notes": [],
-      "owner": null,
+      "owner": "claude:vex",
       "priority": 4,
-      "state": "todo",
+      "state": "doing",
       "title": "Choisir nom et identifiant d\u00e9finitifs de l'app"
     }
   },
