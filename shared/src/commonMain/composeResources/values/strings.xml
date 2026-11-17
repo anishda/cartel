@@ -61,6 +61,9 @@
     <string name="artwork_image_credit">Image : %1$s, %2$s, via Wikimedia Commons</string>
     <string name="artwork_image_credit_anonymous">Image : %1$s, via Wikimedia Commons</string>
     <string name="artwork_image_description">Photo de l'œuvre</string>
+    <string name="artwork_image_zoom">Agrandir la photo</string>
+    <string name="image_zoom_close">Fermer</string>
+    <string name="image_zoom_offline">Impossible de charger l'image en grand. Vérifie la connexion.</string>
     <string name="artwork_story_open">Lire l'article</string>
     <string name="info_technique">Technique</string>
     <string name="info_dimensions">Dimensions</string>

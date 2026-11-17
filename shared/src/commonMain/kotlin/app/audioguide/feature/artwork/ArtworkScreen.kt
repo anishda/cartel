@@ -26,6 +26,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -52,6 +56,7 @@ import app.audioguide.resources.artwork_source
 import app.audioguide.resources.artwork_image_credit
 import app.audioguide.resources.artwork_image_credit_anonymous
 import app.audioguide.resources.artwork_image_description
+import app.audioguide.resources.artwork_image_zoom
 import app.audioguide.resources.artwork_story
 import app.audioguide.resources.artwork_story_open
 import app.audioguide.resources.artwork_story_source
@@ -203,10 +208,13 @@ private fun ArtworkContent(artwork: Artwork, pack: PackInfo?) {
 /**
  * Miniature de l'œuvre, chargée en ligne depuis Wikimedia Commons puis gardée par Coil. Rien ne s'affiche tant que
  * l'image n'est pas là (hors ligne : la fiche reste complète), et l'auteur et la licence l'accompagnent toujours.
+ * Un appui l'ouvre en grand ([ImageZoomDialog]).
  */
 @Composable
 private fun ArtworkPhoto(image: ArtworkImage) {
     val uriHandler = LocalUriHandler.current
+    var zoomed by remember { mutableStateOf(false) }
+    if (zoomed) ImageZoomDialog(image, onDismiss = { zoomed = false })
     SubcomposeAsyncImage(
         model = image.thumbnailUrl(),
         contentDescription = stringResource(Res.string.artwork_image_description),
@@ -219,7 +227,8 @@ private fun ArtworkPhoto(image: ArtworkImage) {
                     painter = state.painter,
                     contentDescription = stringResource(Res.string.artwork_image_description),
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxWidth().heightIn(max = 360.dp).clip(RoundedCornerShape(12.dp)),
+                    modifier = Modifier.fillMaxWidth().heightIn(max = 360.dp).clip(RoundedCornerShape(12.dp))
+                        .clickable(onClickLabel = stringResource(Res.string.artwork_image_zoom)) { zoomed = true },
                 )
                 TextButton(onClick = { runCatching { uriHandler.openUri(image.pageUrl) } }) {
                     Text(

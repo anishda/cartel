@@ -60,6 +60,9 @@
     <string name="artwork_image_credit">Image: %1$s, %2$s, via Wikimedia Commons</string>
     <string name="artwork_image_credit_anonymous">Image: %1$s, via Wikimedia Commons</string>
     <string name="artwork_image_description">Photo of the artwork</string>
+    <string name="artwork_image_zoom">Enlarge the photo</string>
+    <string name="image_zoom_close">Close</string>
+    <string name="image_zoom_offline">Couldn’t load the full-size image. Check your connection.</string>
     <string name="artwork_story_open">Read the article</string>
     <string name="info_technique">Technique</string>
     <string name="info_dimensions">Dimensions</string>
