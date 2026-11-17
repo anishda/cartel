@@ -102,7 +102,7 @@
     "T14": {
       "after": [],
       "block_reason": null,
-      "claimed_at": null,
+      "claimed_at": "2026-11-17T20:34:48.300446+00:00",
       "created_at": "2026-11-17T20:34:37.776721+00:00",
       "created_by": "claude:vex",
       "done_at": null,
@@ -113,9 +113,9 @@
       "id": "T14",
       "last_note_at": null,
       "notes": [],
-      "owner": null,
+      "owner": "claude:vex",
       "priority": 2,
-      "state": "todo",
+      "state": "doing",
       "title": "Version de pack unique par build (date + heure) pour que l'app propose la mise \u00e0 jour"
     },
     "T2": {
