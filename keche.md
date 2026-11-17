@@ -15,7 +15,7 @@ App KMP (Android + iOS, Compose Multiplatform) : scanner un cartel de musée, l'
 ## Work (kechup — do not edit)
 
 Doing:
-- (none)
+- T4: Héberger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse [claude:vex]
 
 Blocked:
 - T2: Décider du scan : photo plein format via LabelReader ou scanner de documents natif (waits for T1)
@@ -26,7 +26,6 @@ Blocked:
 
 Todo:
 - T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
-- T4: Héberger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse
 - T5: Filtre œuvres exposées : affiner au-delà de peinture+sculpture (image, croisement Wikidata)
 - T6: Louvre : écrire pour obtenir un export des commentaires de notices
 - T7: Orsay / RMN-GP : demander l'autorisation écrite de reprise des textes
