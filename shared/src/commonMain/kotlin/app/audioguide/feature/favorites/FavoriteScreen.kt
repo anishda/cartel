@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.audioguide.favorites.Favorite
 import app.audioguide.resources.Res
+import app.audioguide.ui.components.AppTextField
 import app.audioguide.resources.artwork_listen
 import app.audioguide.resources.back
 import app.audioguide.resources.cancel
@@ -166,10 +166,10 @@ private fun FavoriteContent(
             }
         }
 
-        OutlinedTextField(
+        AppTextField(
             value = note,
             onValueChange = { note = it },
-            label = { Text(stringResource(Res.string.favorite_note)) },
+            label = stringResource(Res.string.favorite_note),
             minLines = 3,
             shape = MaterialTheme.shapes.medium,
             modifier = Modifier.fillMaxWidth(),

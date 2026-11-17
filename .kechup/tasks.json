@@ -1,5 +1,5 @@
 {
-  "next_id": 15,
+  "next_id": 16,
   "tasks": {
     "T1": {
       "after": [],
@@ -117,6 +117,25 @@
       "priority": 2,
       "state": "done",
       "title": "Version de pack unique par build (date + heure) pour que l'app propose la mise \u00e0 jour"
+    },
+    "T15": {
+      "after": [],
+      "block_reason": null,
+      "claimed_at": "2026-11-17T20:39:59.726448+00:00",
+      "created_at": "2026-11-17T20:39:43.560140+00:00",
+      "created_by": "claude:vex",
+      "done_at": "2026-11-17T20:40:05.375326+00:00",
+      "done_commit": "aaa03906eb5eec89c8977fa23e751f4636daf1ec",
+      "drop_reason": null,
+      "evidence": "tasks/T15-corriger-le-plantage-de-la-recherche-sur-galaxy-s24-outlined/REPORT.md",
+      "folder": "tasks/T15-corriger-le-plantage-de-la-recherche-sur-galaxy-s24-outlined",
+      "id": "T15",
+      "last_note_at": null,
+      "notes": [],
+      "owner": "claude:vex",
+      "priority": 1,
+      "state": "done",
+      "title": "Corriger le plantage de la recherche sur Galaxy S24 (OutlinedTextField Material3 alpha)"
     },
     "T2": {
       "after": [
