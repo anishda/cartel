@@ -72,7 +72,7 @@ Les packs sortent dans `packs/` avec `manifest.json`.
 Android 17 : pour que l'émulateur joigne le Mac, accorder la permission réseau local au build debug :
 
 ```bash
-adb shell pm grant app.audioguide android.permission.ACCESS_LOCAL_NETWORK
+adb shell pm grant io.github.anishda.cartel android.permission.ACCESS_LOCAL_NETWORK
 ```
 
 ## Sources et licences
@@ -88,6 +88,6 @@ Les fiches viennent de la base Joconde (ministère de la Culture), Licence Ouver
 
 Rien de ce qui touche l'OCR et la voix **sur un appareil** : ML Kit et Vision n'ont été exercés que via les fixtures et le calibrage sur des photos (OCR du Mac), pas dans l'app ; le scan en direct (cadence, résolution 1080p, VisionKit) et l'import de photo sur un vrai cartel ; la qualité des voix à l'oreille et la liste des voix installées. Les tests automatiques (JVM, iOS, Gradle) couvrent le cœur de `:core` et la session de scan.
 
-## Identifiants provisoires
+## Identifiants
 
-Package et bundle id `app.audioguide` : à remplacer par un identifiant sur un domaine que tu possèdes avant toute publication.
+Application Android et bundle iOS : `io.github.anishda.cartel` (décidé le 2026-11-17). Le package Kotlin reste `app.audioguide` : il n'est pas visible des stores.

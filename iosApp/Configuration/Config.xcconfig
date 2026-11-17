@@ -1,5 +1,5 @@
 TEAM_ID=
-BUNDLE_ID=app.audioguide
+BUNDLE_ID=io.github.anishda.cartel
 APP_NAME=Cartel
 // Serveur de packs : « // » commencerait un commentaire, d'où $() entre les deux barres.
 // Debug : le Mac (python3 -m http.server 8080 --directory packs).
