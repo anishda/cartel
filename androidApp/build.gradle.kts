@@ -32,12 +32,13 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    // Adresse du serveur de packs : -PpackBaseUrl=https://… (en développement : le Mac, vu de l'émulateur).
-    // En release : la dernière release GitHub, publiée chaque semaine par .github/workflows/packs.yml.
+    // Adresse du serveur de packs : -PpackBaseUrl=https://… (en développement : -PpackBaseUrl=http://10.0.2.2:8080/ pour
+    // le Mac vu de l'émulateur). Par défaut, debug comme release : la dernière release GitHub, publiée chaque semaine par
+    // .github/workflows/packs.yml. 10.0.2.2 n'existe que dans l'émulateur : sur un vrai téléphone, le serveur est injoignable.
     val releasePackUrl = "https://github.com/anishda/cartel/releases/latest/download/"
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "PACK_BASE_URL", "\"${findProperty("packBaseUrl") ?: "http://10.0.2.2:8080/"}\"")
+            buildConfigField("String", "PACK_BASE_URL", "\"${findProperty("packBaseUrl") ?: releasePackUrl}\"")
         }
         getByName("release") {
             isMinifyEnabled = false
