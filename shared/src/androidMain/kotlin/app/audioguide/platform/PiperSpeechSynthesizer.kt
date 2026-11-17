@@ -3,6 +3,7 @@ package app.audioguide.platform
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import android.util.Log
 import app.audioguide.catalog.NarrationPhonemes
 import app.audioguide.domain.SpeechSynthesizer
 import app.audioguide.domain.VoiceOption
@@ -21,6 +22,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Lecture à la voix neuronale (Piper SIWIS, via sherpa-onnx) quand elle est installée et que le pack donne les phonèmes
@@ -51,6 +54,11 @@ class PiperSpeechSynthesizer(
     @Volatile private var track: AudioTrack? = null
     private var engine: OfflineTts? = null
 
+    /** Segment préparé d'avance (texte, échantillons) : celui qui suit le segment en cours de lecture. */
+    private var prefetched: Pair<String, FloatArray>? = null
+    private val prefetchLock = Mutex()
+    private val engineLock = Mutex()
+
     private fun usable(languageTag: String) =
         enabled() && model.state.value == NaturalVoiceState.Ready && languageTag.startsWith("fr", ignoreCase = true)
 
@@ -72,17 +80,30 @@ class PiperSpeechSynthesizer(
         }
         val mine = ++generation
         scope.launch(Dispatchers.Default) {
-            val found = runCatching { phonemes(NarrationPhonemes.key(text)) }.getOrNull()
+            val samples = runCatching { samplesFor(text, mine) }.getOrNull()
             if (mine != generation) return@launch
-            if (found == null) {
+            if (samples == null) {
                 // Texte absent du pack : la voix du système le lit.
                 system.speak(text, languageTag, onDone)
                 return@launch
             }
-            val completed = runCatching { synthesize(found, mine) }.getOrDefault(false)
+            val completed = runCatching { play(samples, mine) }.getOrDefault(false)
             if (mine == generation) {
                 piperSpeaking.value = false
                 if (completed) onDone?.invoke()
+            }
+        }
+    }
+
+    override fun prepare(text: String, languageTag: String) {
+        if (!usable(languageTag)) return
+        val mine = generation
+        scope.launch(Dispatchers.Default) {
+            // Une seule préparation à la fois, pour ne pas ralentir la lecture en cours.
+            prefetchLock.withLock {
+                if (mine != generation || prefetched?.first == text) return@withLock
+                val samples = runCatching { synthesizeText(text) }.getOrNull() ?: return@withLock
+                prefetched = text to samples
             }
         }
     }
@@ -94,38 +115,52 @@ class PiperSpeechSynthesizer(
         system.stop()
     }
 
-    /** Synthétise et joue au fil de l'eau. Retourne vrai si la lecture est allée jusqu'au bout. */
-    private fun synthesize(phonemeText: String, mine: Int): Boolean {
-        val tts = engine ?: createEngine().also { engine = it }
+    /** Les échantillons du segment : ceux préparés pendant le segment précédent, sinon à synthétiser maintenant. */
+    private suspend fun samplesFor(text: String, mine: Int): FloatArray? {
+        prefetchLock.withLock {
+            prefetched?.takeIf { it.first == text }?.let { prefetched = null; return it.second }
+        }
+        return synthesizeText(text)
+    }
+
+    /** Phonèmes du pack, puis synthèse du segment en entier : pas de coupure au milieu, à la différence d'un flux. */
+    private suspend fun synthesizeText(text: String): FloatArray? {
+        val phonemeText = phonemes(NarrationPhonemes.key(text)) ?: return null
         val config = GenerationConfig(
             speed = rate,
             phonemeCodepoints = phonemeText.lines().filter { it.isNotBlank() }
                 .map { sentence -> sentence.codePoints().toArray() }
                 .toTypedArray(),
         )
-        val audio = createTrack(tts.sampleRate())
+        // Le moteur ne fait qu'une synthèse à la fois.
+        return engineLock.withLock {
+            val tts = engine ?: createEngine().also { engine = it }
+            val started = System.currentTimeMillis()
+            val audio = tts.generateWithConfig("", config)
+            Log.d(TAG, "Piper : ${audio.samples.size * 1000L / audio.sampleRate} ms d'audio synthétisés en ${System.currentTimeMillis() - started} ms")
+            sampleRate = audio.sampleRate
+            audio.samples
+        }
+    }
+
+    @Volatile private var sampleRate = 22_050
+
+    /** Joue les échantillons. Retourne vrai si la lecture est allée jusqu'au bout. */
+    private fun play(samples: FloatArray, mine: Int): Boolean {
+        val audio = createTrack(sampleRate)
         track = audio
         piperSpeaking.value = true
-        audio.play()
-        var frames = 0L
         try {
-            // Un objet nommé plutôt qu'un lambda : le code JNI de sherpa-onnx cherche la méthode `invoke([F)Ljava/lang/Integer;`
-            // sur la classe du rappel, et un lambda compilé par D8 n'a que `invoke(Object)`, ce qui fait tomber l'app.
-            val callback = object : Function1<FloatArray, Int> {
-                override fun invoke(samples: FloatArray): Int =
-                    if (mine != generation) {
-                        0
-                    } else {
-                        // Bloque quand le tampon audio est plein : la synthèse suit la lecture.
-                        audio.write(samples, 0, samples.size, AudioTrack.WRITE_BLOCKING)
-                        frames += samples.size
-                        1
-                    }
+            audio.play()
+            var offset = 0
+            while (offset < samples.size && mine == generation) {
+                val count = minOf(CHUNK, samples.size - offset)
+                audio.write(samples, offset, count, AudioTrack.WRITE_BLOCKING)
+                offset += count
             }
-            tts.generateWithConfigAndCallback("", config, callback)
             // Laisse finir ce qui reste dans le tampon avant de dire que c'est terminé.
             val deadline = System.currentTimeMillis() + DRAIN_TIMEOUT_MS
-            while (mine == generation && (audio.playbackHeadPosition.toLong() and 0xFFFFFFFFL) < frames && System.currentTimeMillis() < deadline) {
+            while (mine == generation && (audio.playbackHeadPosition.toLong() and 0xFFFFFFFFL) < samples.size && System.currentTimeMillis() < deadline) {
                 Thread.sleep(20)
             }
             return mine == generation
@@ -167,7 +202,9 @@ class PiperSpeechSynthesizer(
     }
 
     private companion object {
-        const val THREADS = 2
+        const val TAG = "PiperSpeech"
+        const val CHUNK = 4096
+        const val THREADS = 4
         const val DRAIN_TIMEOUT_MS = 10_000L
     }
 }

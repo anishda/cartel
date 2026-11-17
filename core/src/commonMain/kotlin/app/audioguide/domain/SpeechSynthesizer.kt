@@ -55,4 +55,10 @@ interface SpeechSynthesizer {
     fun speak(text: String, languageTag: String, onDone: (() -> Unit)? = null)
 
     fun stop()
+
+    /**
+     * Annonce le texte qu'on lira ensuite : un synthétiseur lent peut le préparer pendant la lecture en cours, pour
+     * l'enchaîner sans attente. Sans effet par défaut (les voix du système n'en ont pas besoin).
+     */
+    fun prepare(text: String, languageTag: String) {}
 }

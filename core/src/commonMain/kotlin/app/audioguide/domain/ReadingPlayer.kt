@@ -96,6 +96,8 @@ class ReadingPlayer(
         segmentStartedAt = now()
         _state.value = _state.value.copy(status = PlayerStatus.Playing, totalMillis = plan.totalMillis)
         synthesizer.speak(plan.segments[newIndex], languageTag) { scope.launch { onSegmentDone(mine) } }
+        // Le segment suivant se prépare pendant celui-ci.
+        plan.segments.getOrNull(newIndex + 1)?.let { synthesizer.prepare(it, languageTag) }
     }
 
     private fun onSegmentDone(mine: Int) {
