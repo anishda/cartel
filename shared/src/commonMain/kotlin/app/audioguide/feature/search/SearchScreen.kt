@@ -1,6 +1,13 @@
 package app.audioguide.feature.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -139,8 +146,9 @@ private fun ArtworkRow(artwork: Artwork, museumName: String, onClick: () -> Unit
     Row(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(horizontal = 20.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
     ) {
+        ArtworkThumbnail(artwork)
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(artwork.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
             val subtitle = listOfNotNull(artwork.artist, artwork.dateText).joinToString(" · ")
@@ -153,6 +161,33 @@ private fun ArtworkRow(artwork: Artwork, museumName: String, onClick: () -> Unit
         Icon(AppIcons.Chevron, contentDescription = null, tint = MaterialTheme.colorScheme.outline)
     }
 }
+
+/**
+ * Vignette de l'œuvre (Wikimedia Commons, en ligne puis en cache). Sans image libre, hors ligne ou pendant le
+ * chargement, un cadre neutre garde l'alignement de la liste. Auteur et licence sont sur la fiche.
+ */
+@Composable
+private fun ArtworkThumbnail(artwork: Artwork) {
+    Box(
+        modifier = Modifier.size(THUMBNAIL_SIZE).clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(AppIcons.Museum, contentDescription = null, tint = MaterialTheme.colorScheme.outline, modifier = Modifier.size(24.dp))
+        artwork.image?.let { image ->
+            AsyncImage(
+                model = image.thumbnailUrl(THUMBNAIL_REQUEST_WIDTH),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize(),
+            )
+        }
+    }
+}
+
+private val THUMBNAIL_SIZE = 64.dp
+
+/** Taille de miniature standard de Wikimedia, assez fine pour une vignette de 64 dp en haute densité. */
+private const val THUMBNAIL_REQUEST_WIDTH = 250
 
 /** « musée du Louvre » → « Louvre », « musée de l'Orangerie des Tuileries » → « Orangerie des Tuileries ». */
 internal fun shortMuseumName(name: String): String =
