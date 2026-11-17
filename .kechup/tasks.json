@@ -193,7 +193,7 @@
       "created_by": "claude:vex",
       "done_at": null,
       "done_commit": null,
-      "drop_reason": null,
+      "drop_reason": "D\u00e9cision de Zac 2026-11-17 : pas de demande \u00e0 Orsay/RMN-GP",
       "evidence": null,
       "folder": "tasks/T7-orsay-rmn-gp-demander-l-autorisation-crite-de-reprise-des-te",
       "id": "T7",
@@ -201,7 +201,7 @@
       "notes": [],
       "owner": null,
       "priority": 3,
-      "state": "todo",
+      "state": "dropped",
       "title": "Orsay / RMN-GP : demander l'autorisation \u00e9crite de reprise des textes"
     },
     "T8": {
