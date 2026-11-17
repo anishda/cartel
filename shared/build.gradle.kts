@@ -46,6 +46,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.mlkit.text.recognition)
+            implementation(libs.mlkit.translate)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

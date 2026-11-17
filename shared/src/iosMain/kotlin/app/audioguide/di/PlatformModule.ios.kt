@@ -1,7 +1,9 @@
 package app.audioguide.di
 
 import app.audioguide.domain.SpeechSynthesizer
+import app.audioguide.domain.NoTranslator
 import app.audioguide.domain.TextRecognizer
+import app.audioguide.domain.TextTranslator
 import app.audioguide.platform.AppInfo
 import app.audioguide.platform.AppPaths
 import app.audioguide.platform.AppleSpeechSynthesizer
@@ -16,6 +18,8 @@ import org.koin.dsl.module
 
 actual val platformModule: Module = module {
     single<TextRecognizer> { VisionTextRecognizer() }
+    // Le framework Translation d'Apple ne s'appelle que depuis une vue SwiftUI : pas encore branché sur iOS.
+    single<TextTranslator> { NoTranslator }
     single<SpeechSynthesizer> { AppleSpeechSynthesizer() }
     single {
         val support = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, true)

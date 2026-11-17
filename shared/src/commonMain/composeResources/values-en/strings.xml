@@ -25,6 +25,11 @@
     <string name="scan_match_title">Artwork recognized</string>
     <string name="scan_match_others">Other possibilities</string>
     <string name="scan_clear">New scan</string>
+    <string name="scan_translate">Translate to French</string>
+    <string name="scan_translating">Translating…</string>
+    <string name="scan_translation_title">Translation</string>
+    <string name="scan_translate_hint">Works offline once the language is downloaded (about 30 MB, once).</string>
+    <string name="scan_translate_failed">Couldn’t translate: the first time, a connection is needed to download the language.</string>
 
     <string name="voice_checking">Voice: checking…</string>
     <string name="voice_ready">Offline voice available</string>

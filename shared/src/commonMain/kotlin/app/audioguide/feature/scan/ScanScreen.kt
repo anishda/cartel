@@ -70,6 +70,11 @@ import app.audioguide.resources.voice_ready
 import app.audioguide.resources.voice_unsupported
 import app.audioguide.ui.AppIcons
 import app.audioguide.ui.components.ListenButton
+import app.audioguide.resources.scan_translate
+import app.audioguide.resources.scan_translate_failed
+import app.audioguide.resources.scan_translate_hint
+import app.audioguide.resources.scan_translating
+import app.audioguide.resources.scan_translation_title
 import app.audioguide.ui.components.ScreenHeader
 import app.audioguide.ui.components.SectionLabel
 import org.jetbrains.compose.resources.stringResource
@@ -246,6 +251,8 @@ private fun ResultSection(
         }
     }
 
+    if (state.canTranslate) TranslationSection(state, session)
+
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
         TextButton(onClick = session::saveCartel, enabled = !state.cartelSaved) {
             Icon(if (state.cartelSaved) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -255,6 +262,40 @@ private fun ResultSection(
         TextButton(onClick = session::clear) { Text(stringResource(Res.string.scan_clear)) }
     }
     Spacer(Modifier.height(8.dp))
+}
+
+/** Traduction du cartel en français : modèle de langue téléchargé une fois, puis hors ligne. */
+@Composable
+private fun TranslationSection(state: ScanUiState, session: ScanSession) {
+    when (val translation = state.translation) {
+        TranslationState.None, TranslationState.Failed -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            OutlinedButton(onClick = session::translate) { Text(stringResource(Res.string.scan_translate)) }
+            Text(
+                stringResource(if (translation == TranslationState.Failed) Res.string.scan_translate_failed else Res.string.scan_translate_hint),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        TranslationState.Working -> Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+            Text(stringResource(Res.string.scan_translating), style = MaterialTheme.typography.bodyMedium)
+        }
+        is TranslationState.Done -> Card(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                SectionLabel(stringResource(Res.string.scan_translation_title))
+                Text(translation.text, style = MaterialTheme.typography.bodyLarge)
+                ListenButton(
+                    isSpeaking = state.isSpeaking,
+                    enabled = true,
+                    onPlay = session::speakTranslation,
+                    onStop = session::stop,
+                )
+            }
+        }
+    }
 }
 
 @Composable
