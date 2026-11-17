@@ -2,10 +2,11 @@ package app.audioguide.catalog
 
 /**
  * Format SQLite d'un pack musée. Toute modification du format incrémente [VERSION].
- * v2 : liaison Wikidata, notoriété et récit Wikipedia. Les packs v1 restent lisibles.
+ * v2 : liaison Wikidata, notoriété et récit Wikipedia. v3 : image libre sur Wikimedia Commons (nom du fichier,
+ * auteur, licence ; l'image n'est pas dans le pack). Les packs v1 et v2 restent lisibles.
  */
 object PackSchema {
-    const val VERSION = 2
+    const val VERSION = 3
     const val MIN_READABLE_VERSION = 1
 
     object Meta {
@@ -50,7 +51,10 @@ object PackSchema {
             notability INTEGER NOT NULL DEFAULT 0,
             story_text TEXT,
             story_title TEXT,
-            story_url TEXT
+            story_url TEXT,
+            image_file TEXT,
+            image_author TEXT,
+            image_license TEXT
         )
         """.trimIndent(),
         """CREATE UNIQUE INDEX idx_artwork_reference ON artwork(reference)""",
@@ -61,13 +65,17 @@ object PackSchema {
     private const val BASE_COLUMNS = "id, reference, inventory_no, title, artist, date_text, domain, denomination, school, " +
         "technique, height_cm, width_cm, location, provenance, description, has_image"
 
-    /** Colonnes lues pour une œuvre, dans l'ordre attendu par la lecture ; un pack v1 rend des valeurs vides. */
-    fun columns(version: Int): String = BASE_COLUMNS + if (version >= 2) {
-        ", wikidata_id, notability, story_text, story_title, story_url"
-    } else {
+    private const val STORY_COLUMNS = ", wikidata_id, notability, story_text, story_title, story_url"
+    private const val NO_STORY_COLUMNS =
         ", NULL AS wikidata_id, 0 AS notability, NULL AS story_text, NULL AS story_title, NULL AS story_url"
-    }
+    private const val IMAGE_COLUMNS = ", image_file, image_author, image_license"
+    private const val NO_IMAGE_COLUMNS = ", NULL AS image_file, NULL AS image_author, NULL AS image_license"
+
+    /** Colonnes lues pour une œuvre, dans l'ordre attendu par la lecture ; un ancien pack rend des valeurs vides. */
+    fun columns(version: Int): String = BASE_COLUMNS +
+        (if (version >= 2) STORY_COLUMNS else NO_STORY_COLUMNS) +
+        (if (version >= 3) IMAGE_COLUMNS else NO_IMAGE_COLUMNS)
 
     /** Nombre de colonnes renvoyées par [columns]. */
-    const val COLUMN_COUNT = 21
+    const val COLUMN_COUNT = 24
 }

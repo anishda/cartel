@@ -1,6 +1,7 @@
 package app.audioguide.packbuilder
 
 import app.audioguide.catalog.ArtworkDraft
+import app.audioguide.catalog.ArtworkImage
 import app.audioguide.catalog.ArtworkStory
 import app.audioguide.catalog.normalizeForSearch
 import app.audioguide.catalog.normalizeInventory
@@ -76,7 +77,7 @@ object StoryFormatter {
 
 /** Ajoute à chaque œuvre son lien Wikidata, sa notoriété et, s'il existe, le début de son article Wikipedia. */
 class StoryEnricher(private val source: WikimediaSource, private val log: (String) -> Unit = {}) {
-    data class Result(val drafts: List<ArtworkDraft>, val linked: Int, val withStory: Int)
+    data class Result(val drafts: List<ArtworkDraft>, val linked: Int, val withStory: Int, val withImage: Int = 0)
 
     fun enrich(museum: MuseumSpec, drafts: List<ArtworkDraft>): Result {
         val works = source.works(museum).groupBy { normalizeInventory(it.inventoryNo) }
@@ -85,9 +86,11 @@ class StoryEnricher(private val source: WikimediaSource, private val log: (Strin
         val matches = drafts.associateWith { WorkMatcher.match(it, works[normalizeInventory(it.inventoryNo)].orEmpty()) }
         val titles = matches.values.mapNotNull { it?.frwikiTitle }
         val intros = source.intros(titles)
+        val credits = source.credits(matches.values.mapNotNull { it?.imageFile })
 
         var linked = 0
         var withStory = 0
+        var withImage = 0
         val enriched = drafts.map { draft ->
             val work = matches[draft] ?: return@map draft
             linked++
@@ -95,9 +98,13 @@ class StoryEnricher(private val source: WikimediaSource, private val log: (Strin
                 intros[title]?.let(StoryFormatter::format)?.let { ArtworkStory(it, title, articleUrl(title)) }
             }
             if (story != null) withStory++
-            draft.copy(wikidataId = work.id, notability = work.sitelinks, story = story)
+            val image = work.imageFile?.let { file ->
+                credits[file]?.let { ArtworkImage(fileName = file, author = it.author, license = it.license) }
+            }
+            if (image != null) withImage++
+            draft.copy(wikidataId = work.id, notability = work.sitelinks, story = story, image = image)
         }
-        return Result(enriched, linked, withStory)
+        return Result(enriched, linked, withStory, withImage)
     }
 
     companion object {

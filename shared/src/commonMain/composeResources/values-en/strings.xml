@@ -57,6 +57,9 @@
     <string name="artwork_technical">Technical description</string>
     <string name="artwork_story">About this work (in French)</string>
     <string name="artwork_story_source">From the Wikipedia article “%1$s”, %2$s.</string>
+    <string name="artwork_image_credit">Image: %1$s, %2$s, via Wikimedia Commons</string>
+    <string name="artwork_image_credit_anonymous">Image: %1$s, via Wikimedia Commons</string>
+    <string name="artwork_image_description">Photo of the artwork</string>
     <string name="artwork_story_open">Read the article</string>
     <string name="info_technique">Technique</string>
     <string name="info_dimensions">Dimensions</string>
@@ -130,6 +133,7 @@
     <string name="settings_credits_data">Artworks: Joconde database, French Ministry of Culture, Open License 2.0. The update date appears on each entry.</string>
     <string name="settings_credits_ocr">Text reading: ML Kit on Android, Apple Vision on iPhone, directly on the device.</string>
     <string name="settings_credits_stories">Stories: introduction of the French Wikipedia article (Wikipedia contributors, CC BY-SA 4.0), linked to the work through Wikidata (CC0). The source is shown on each page.</string>
+    <string name="settings_credits_images">Images: Wikimedia Commons, free licenses only (public domain, CC0, CC BY, CC BY-SA). The author and license appear under each image, which loads when the page opens.</string>
     <string name="settings_credits_voice">Voices: your phone's own voices, installed on the device.</string>
     <string name="settings_privacy_title">Privacy</string>
     <string name="settings_privacy_body">No personal data is collected or sent. Photos, read texts and favorites stay on your phone. The app only connects to download museums.</string>

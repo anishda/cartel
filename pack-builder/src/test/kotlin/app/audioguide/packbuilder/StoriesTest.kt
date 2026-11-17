@@ -8,7 +8,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class StoriesTest {
-    private val olympia = WikidataWork("Q152509", "RF 644", "Olympia", listOf("Édouard Manet"), 60, "Olympia (Manet)")
+    private val olympia = WikidataWork("Q152509", "RF 644", "Olympia", listOf("Édouard Manet"), 60, "Olympia (Manet)", "Olympia by Manet.jpg")
     private val bust = ArtworkDraft(reference = "b", inventoryNo = "RF 644", title = "Henri Adrien Prévost de Longpérier", artist = "Jean Jules Cambos")
     private val painting = ArtworkDraft(reference = "p", inventoryNo = "RF 644", title = "Olympia", artist = "Édouard Manet")
 
@@ -89,12 +89,39 @@ class StoriesTest {
                "links":{"type":"literal","value":"0"},"creators":{"type":"literal","value":""}}]}}
         """.trimIndent()
         val works = WikimediaApi.parseWorks(body)
-        assertEquals(olympia, works[0])
+        assertEquals(olympia.copy(imageFile = null), works[0])
         assertEquals(WikidataWork("Q1", "RF 1", null, emptyList(), 0, null), works[1])
     }
 
     @Test
     fun articleUrlsAreEncoded() {
         assertEquals("https://fr.wikipedia.org/wiki/Olympia_%28Manet%29", StoryEnricher.articleUrl("Olympia (Manet)"))
+    }
+
+    @Test
+    fun keepsOnlyFreeImageLicensesWithTheirAuthor() {
+        fun page(title: String, license: String, artist: String?): String {
+            val artistField = artist?.let { ",\"Artist\":{\"value\":\"" + it + "\"}" } ?: ""
+            return "{\"title\":\"File:" + title + "\",\"imageinfo\":[{\"extmetadata\":{\"LicenseShortName\":{\"value\":\"" +
+                license + "\"}" + artistField + "}}]}"
+        }
+        val body = """{"query":{"normalized":[{"from":"File:a b.jpg","to":"File:A b.jpg"}],"pages":[""" + listOf(
+            page("A b.jpg", "Public domain", null),
+            page("Cc.jpg", "CC BY-SA 4.0", "<a href='x'>Jane &amp; Co</a>"),
+            page("Nc.jpg", "CC BY-NC 2.0", "Someone"),
+            page("NoAuthor.jpg", "CC BY 3.0", null),
+            page("Fair.jpg", "Copyrighted free use", "Someone"),
+        ).joinToString(",") + "]}}"
+        val credits = WikimediaApi.parseCredits(body, listOf("a b.jpg", "Cc.jpg", "Nc.jpg", "NoAuthor.jpg", "Fair.jpg", "Absent.jpg"))
+        assertEquals(setOf("a b.jpg", "Cc.jpg"), credits.keys)
+        assertEquals(ImageCredit("Public domain", null), credits["a b.jpg"])
+        assertEquals(ImageCredit("CC BY-SA 4.0", "Jane & Co"), credits["Cc.jpg"])
+    }
+
+    @Test
+    fun readsTheImageFileFromWikidata() {
+        val body = """{"results":{"bindings":[{"item":{"value":"http://www.wikidata.org/entity/Q1"},"inv":{"value":"RF 1"},
+            "links":{"value":"3"},"image":{"value":"http://commons.wikimedia.org/wiki/Special:FilePath/Le%20Radeau%20%28M%C3%A9duse%29.jpg"}}]}}"""
+        assertEquals("Le Radeau (Méduse).jpg", WikimediaApi.parseWorks(body).single().imageFile)
     }
 }

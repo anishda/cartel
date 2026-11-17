@@ -66,6 +66,8 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
             implementation(libs.ktor.client.core)
             implementation(libs.okio)
         }

@@ -29,6 +29,7 @@ import app.audioguide.resources.settings_about_title
 import app.audioguide.resources.settings_credits_data
 import app.audioguide.resources.settings_credits_ocr
 import app.audioguide.resources.settings_credits_title
+import app.audioguide.resources.settings_credits_images
 import app.audioguide.resources.settings_credits_stories
 import app.audioguide.resources.settings_credits_voice
 import app.audioguide.resources.settings_preview_text
@@ -93,6 +94,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
             Text(stringResource(Res.string.settings_credits_data), style = MaterialTheme.typography.bodyMedium)
             Text(stringResource(Res.string.settings_credits_ocr), style = MaterialTheme.typography.bodyMedium)
             Text(stringResource(Res.string.settings_credits_stories), style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(Res.string.settings_credits_images), style = MaterialTheme.typography.bodyMedium)
             Text(stringResource(Res.string.settings_credits_voice), style = MaterialTheme.typography.bodyMedium)
         }
 

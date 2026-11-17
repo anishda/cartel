@@ -70,7 +70,7 @@ class CatalogTest {
     fun stillReadsVersionOnePacks() = runTest {
         val path = buildPack("v1.pack.db", "orsay", "musée d'Orsay", olympia, dejeuner)
         SqliteDb.open(path).use { db ->
-            listOf("wikidata_id", "notability", "story_text", "story_title", "story_url")
+            listOf("wikidata_id", "notability", "story_text", "story_title", "story_url", "image_file", "image_author", "image_license")
                 .forEach { db.exec("ALTER TABLE artwork DROP COLUMN $it") }
             db.exec("PRAGMA user_version = 1")
         }
@@ -79,6 +79,29 @@ class CatalogTest {
         assertEquals(null, found.story)
         assertEquals(0, found.notability)
         assertEquals(2, pack.search("manet").size)
+        pack.close()
+    }
+
+    @Test
+    fun keepsTheCommonsImageCredit() = runTest {
+        val image = ArtworkImage("Olympia by Manet.jpg", "Édouard Manet", "Public domain")
+        val pack = Pack.open(buildPack("img.pack.db", "orsay", "musée d'Orsay", olympia.copy(image = image), dejeuner))
+        assertEquals(image, pack.byReference("M5060-1")?.image)
+        assertEquals(null, pack.byReference("M5060-3")?.image)
+        pack.close()
+    }
+
+    @Test
+    fun stillReadsVersionTwoPacks() = runTest {
+        val path = buildPack("v2old.pack.db", "orsay", "musée d'Orsay", olympia.copy(story = ArtworkStory("Un tableau de Manet.", "Olympia", "u")), dejeuner)
+        SqliteDb.open(path).use { db ->
+            listOf("image_file", "image_author", "image_license").forEach { db.exec("ALTER TABLE artwork DROP COLUMN $it") }
+            db.exec("PRAGMA user_version = 2")
+        }
+        val pack = Pack.open(path)
+        val found = assertNotNull(pack.byReference("M5060-1"))
+        assertEquals("Olympia", found.story?.articleTitle)
+        assertEquals(null, found.image)
         pack.close()
     }
 

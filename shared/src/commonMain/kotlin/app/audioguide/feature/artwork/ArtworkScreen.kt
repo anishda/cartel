@@ -31,7 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.audioguide.catalog.Artwork
+import app.audioguide.catalog.ArtworkImage
 import app.audioguide.catalog.ArtworkStory
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.SubcomposeAsyncImage
+import androidx.compose.foundation.Image
 import app.audioguide.catalog.PackInfo
 import app.audioguide.feature.search.shortMuseumName
 import app.audioguide.platform.systemLanguageTag
@@ -41,6 +49,9 @@ import app.audioguide.resources.artwork_listen
 import app.audioguide.resources.artwork_not_found
 import app.audioguide.resources.artwork_provenance
 import app.audioguide.resources.artwork_source
+import app.audioguide.resources.artwork_image_credit
+import app.audioguide.resources.artwork_image_credit_anonymous
+import app.audioguide.resources.artwork_image_description
 import app.audioguide.resources.artwork_story
 import app.audioguide.resources.artwork_story_open
 import app.audioguide.resources.artwork_story_source
@@ -125,6 +136,8 @@ private fun ArtworkContent(artwork: Artwork, pack: PackInfo?) {
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
+        artwork.image?.let { ArtworkPhoto(it) }
+
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             pack?.let { SectionLabel(shortMuseumName(it.museumName)) }
             Text(artwork.title, style = MaterialTheme.typography.headlineMedium)
@@ -185,6 +198,40 @@ private fun ArtworkContent(artwork: Artwork, pack: PackInfo?) {
             )
         }
     }
+}
+
+/**
+ * Miniature de l'œuvre, chargée en ligne depuis Wikimedia Commons puis gardée par Coil. Rien ne s'affiche tant que
+ * l'image n'est pas là (hors ligne : la fiche reste complète), et l'auteur et la licence l'accompagnent toujours.
+ */
+@Composable
+private fun ArtworkPhoto(image: ArtworkImage) {
+    val uriHandler = LocalUriHandler.current
+    SubcomposeAsyncImage(
+        model = image.thumbnailUrl(),
+        contentDescription = stringResource(Res.string.artwork_image_description),
+        modifier = Modifier.fillMaxWidth(),
+        loading = {},
+        error = {},
+        success = { state ->
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Image(
+                    painter = state.painter,
+                    contentDescription = stringResource(Res.string.artwork_image_description),
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxWidth().heightIn(max = 360.dp).clip(RoundedCornerShape(12.dp)),
+                )
+                TextButton(onClick = { runCatching { uriHandler.openUri(image.pageUrl) } }) {
+                    Text(
+                        image.author?.let { stringResource(Res.string.artwork_image_credit, it, image.license) }
+                            ?: stringResource(Res.string.artwork_image_credit_anonymous, image.license),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        },
+    )
 }
 
 /** Récit Wikipedia, toujours accompagné de son attribution (CC BY-SA) et d'un lien vers l'article. */

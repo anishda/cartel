@@ -135,4 +135,8 @@ private fun SQLiteStatement.toArtwork(museumId: String) = Artwork(
     story = textOrNull(18)?.let { text ->
         ArtworkStory(text = text, articleTitle = textOrNull(19) ?: "", articleUrl = textOrNull(20) ?: "")
     },
+    image = textOrNull(21)?.let { file ->
+        // Sans licence connue, l'image n'est pas affichée : on ne la réutilise pas sans pouvoir la citer.
+        textOrNull(23)?.let { license -> ArtworkImage(fileName = file, author = textOrNull(22), license = license) }
+    },
 )
