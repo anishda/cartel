@@ -6,6 +6,7 @@ App KMP (Android + iOS, Compose Multiplatform) : scanner un cartel de musée, l'
 ## Décisions
 - Hors ligne d'abord ; packs générés par `pack-builder` (base Joconde), ignorés par git (`/packs/`).
 - Orsay : autorisation écrite requise avant d'embarquer ses données.
+- 2026-11-02 : pas de mail au Louvre ni de demande à Orsay/RMN-GP. On reste dans la légalité et on ne réutilise pas leurs textes sous licence restreinte (donc T6, T7 et la dépendance de T8 sont caduques, à refondre).
 - Anis teste lui-même sur appareil ; pas de test émulateur par l'agent.
 
 ## Questions ouvertes
