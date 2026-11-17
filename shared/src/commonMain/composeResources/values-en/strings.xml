@@ -56,7 +56,8 @@
     <string name="search_clear">Clear</string>
 
     <string name="artwork_not_found">Artwork not found</string>
-    <string name="artwork_listen">Listen to this entry</string>
+    <string name="artwork_listen">Listen</string>
+    <string name="artwork_listen_full">Listen to everything</string>
     <string name="artwork_info">Details</string>
     <string name="artwork_provenance">History</string>
     <string name="artwork_technical">Technical description</string>

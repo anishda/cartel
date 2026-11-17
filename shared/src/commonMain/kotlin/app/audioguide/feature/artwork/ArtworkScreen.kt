@@ -50,6 +50,8 @@ import app.audioguide.platform.systemLanguageTag
 import app.audioguide.resources.Res
 import app.audioguide.resources.artwork_info
 import app.audioguide.resources.artwork_listen
+import app.audioguide.resources.artwork_listen_full
+import app.audioguide.catalog.StoryCleaner
 import app.audioguide.resources.artwork_not_found
 import app.audioguide.resources.artwork_provenance
 import app.audioguide.resources.artwork_source
@@ -122,14 +124,25 @@ fun ArtworkScreen(
 
         if (artwork != null) {
             Surface(tonalElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
-                ListenButton(
-                    isSpeaking = state.isSpeaking,
-                    enabled = state.voiceReady,
-                    onPlay = viewModel::speak,
-                    onStop = viewModel::stop,
-                    playLabel = stringResource(Res.string.artwork_listen),
+                Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp),
-                )
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    ListenButton(
+                        isSpeaking = state.isSpeaking,
+                        enabled = state.voiceReady,
+                        onPlay = { viewModel.speak(full = false) },
+                        onStop = viewModel::stop,
+                        playLabel = stringResource(Res.string.artwork_listen),
+                        modifier = Modifier.weight(1f),
+                    )
+                    if (!state.isSpeaking) {
+                        TextButton(onClick = { viewModel.speak(full = true) }, enabled = state.voiceReady) {
+                            Text(stringResource(Res.string.artwork_listen_full))
+                        }
+                    }
+                }
             }
         }
     }
@@ -249,7 +262,7 @@ private fun StorySection(story: ArtworkStory, license: String?) {
     val uriHandler = LocalUriHandler.current
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         SectionLabel(stringResource(Res.string.artwork_story))
-        story.text.split('\n').forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
+        StoryCleaner.forReading(story.text).split('\n').forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
         Text(
             stringResource(Res.string.artwork_story_source, story.articleTitle, license ?: "CC BY-SA 4.0"),
             style = MaterialTheme.typography.labelSmall,
