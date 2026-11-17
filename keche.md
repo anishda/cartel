@@ -17,7 +17,6 @@ App KMP (Android + iOS, Compose Multiplatform) : scanner un cartel de musée, l'
 Doing:
 - T4: Héberger les packs en HTTPS (VPS hda.ynh.fr ou release GitHub) et renseigner l'adresse [claude:vex]
 - T11: Trancher l'open source (Apache-2.0) et mettre en place la CI de régénération des packs [claude:vex]
-- T13: Images libres d'œuvres (Wikimedia Commons, miniatures en ligne avec crédit) [claude:vex]
 
 Blocked:
 - T2: Décider du scan : photo plein format via LabelReader ou scanner de documents natif (waits for T1)
@@ -29,6 +28,7 @@ Todo:
 - T5: Filtre œuvres exposées : affiner au-delà de peinture+sculpture (image, croisement Wikidata)
 
 Done (last 5):
+- T13: Images libres d'œuvres (Wikimedia Commons, miniatures en ligne avec crédit)
 - T9: Choisir nom et identifiant définitifs de l'app (done commit not in history)
 - T12: Récit des œuvres depuis Wikipedia FR (liaison Wikidata, pack v2, fiche) (done commit not in history)
 
