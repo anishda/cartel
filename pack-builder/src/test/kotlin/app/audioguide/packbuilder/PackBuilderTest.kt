@@ -92,4 +92,25 @@ class PackBuilderTest {
         val page = JocondeTabularApi.parsePage("""{"data":[],"links":{"next":null},"meta":{"total":0}}""")
         assertNull(page.links!!.next)
     }
+
+    private class FakeWikimedia : WikimediaSource {
+        override fun works(museum: MuseumSpec) = listOf(
+            WikidataWork("Q152509", "RF 644", "Olympia", listOf("Édouard Manet"), 60, "Olympia (Manet)"),
+        )
+        override fun intros(titles: List<String>) =
+            titles.associateWith { "Olympia est un tableau d'Édouard Manet, peint en 1863 et conservé au musée d'Orsay." }
+    }
+
+    @Test
+    fun addsWikipediaStoriesWithTheirLicense() = runBlocking {
+        PackBuilder(FakeSource(records), out, log = {}, wikimedia = FakeWikimedia()).buildAll(listOf(orsay))
+        val pack = Pack.open(out.resolve("orsay.pack.db").toString())
+        assertEquals("CC BY-SA 4.0", pack.info.storyLicense)
+        val olympia = assertNotNull(pack.byInventory("rf644").single())
+        assertEquals("Q152509", olympia.wikidataId)
+        assertEquals("Olympia (Manet)", olympia.story?.articleTitle)
+        assertTrue(olympia.story!!.text.startsWith("Olympia est un tableau"))
+        assertNull(pack.byInventory("rf2003").single().story)
+        pack.close()
+    }
 }

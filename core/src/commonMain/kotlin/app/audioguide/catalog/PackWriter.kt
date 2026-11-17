@@ -41,6 +41,11 @@ class PackWriter private constructor(private val db: SqliteDb) : AutoCloseable {
             s.bindTextOrNull(18, draft.description)
             s.bindLong(19, if (draft.hasImage) 1 else 0)
             s.bindText(20, searchText)
+            s.bindTextOrNull(21, draft.wikidataId)
+            s.bindLong(22, draft.notability.toLong())
+            s.bindTextOrNull(23, draft.story?.text)
+            s.bindTextOrNull(24, draft.story?.articleTitle)
+            s.bindTextOrNull(25, draft.story?.articleUrl)
         }
     }
 
@@ -57,6 +62,7 @@ class PackWriter private constructor(private val db: SqliteDb) : AutoCloseable {
             PackSchema.Meta.LICENSE to info.license,
             PackSchema.Meta.SOURCE_UPDATED_AT to info.sourceUpdatedAt,
             PackSchema.Meta.RECORD_COUNT to count.toString(),
+            PackSchema.Meta.STORY_LICENSE to info.storyLicense,
         )
         for ((key, value) in meta) {
             if (value == null) continue
@@ -79,8 +85,9 @@ class PackWriter private constructor(private val db: SqliteDb) : AutoCloseable {
         private const val INSERT = """
             INSERT INTO artwork (id, reference, inventory_no, inventory_norm, title, title_norm, artist, artist_norm,
                 date_text, domain, denomination, school, technique, height_cm, width_cm, location, provenance,
-                description, has_image, search_text)
-            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)
+                description, has_image, search_text, wikidata_id, notability, story_text, story_title, story_url)
+            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20,
+                ?21, ?22, ?23, ?24, ?25)
         """
     }
 }

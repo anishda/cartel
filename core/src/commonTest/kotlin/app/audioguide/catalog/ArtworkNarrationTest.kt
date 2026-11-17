@@ -26,6 +26,21 @@ class ArtworkNarrationTest {
     }
 
     @Test
+    fun readsTheStoryBeforeTheTechnicalSheetWithItsSource() {
+        val story = ArtworkStory(
+            text = "La Joconde est un portrait peint par Léonard de Vinci.\nC'est l'un des tableaux les plus célèbres au monde",
+            articleTitle = "La Joconde",
+            articleUrl = "https://fr.wikipedia.org/wiki/La_Joconde",
+        )
+        val text = ArtworkNarration.build(joconde.copy(story = story), "musée du Louvre")
+        val storyAt = text.indexOf("portrait peint")
+        assertTrue(storyAt > text.indexOf("Par Léonard de Vinci."), text)
+        assertTrue(storyAt < text.indexOf("Technique"), text)
+        assertTrue(text.contains("les plus célèbres au monde."), text)
+        assertTrue(text.contains("Récit d'après l'article Wikipédia « La Joconde »."), text)
+    }
+
+    @Test
     fun centuriesAreSpelledOut() {
         assertTrue(ArtworkNarration.build(joconde, "musée du Louvre").contains("seizième siècle"))
     }

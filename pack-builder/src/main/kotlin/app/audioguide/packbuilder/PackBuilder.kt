@@ -15,6 +15,8 @@ class PackBuilder(
     private val source: RecordSource,
     private val outDir: Path,
     private val log: (String) -> Unit = ::println,
+    /** Source des liens Wikidata et des récits Wikipedia ; `null` : pack sans récits. */
+    private val wikimedia: WikimediaSource? = null,
 ) {
     /** Fabrique le pack de [museum] et retourne son entrée de manifeste. */
     fun build(museum: MuseumSpec, sourceUpdatedAt: String?): PackManifestEntry {
@@ -25,13 +27,21 @@ class PackBuilder(
         log("${museum.name} : lecture des notices Joconde…")
         val records = source.records(museum) { loaded, total -> log("  $loaded${total?.let { "/$it" } ?: ""} notices") }
 
-        var skipped = 0
+        val mapped = records.map { JocondeMapper.toDraft(it, museum.name) }
+        val skipped = mapped.count { it == null }
+        var drafts = mapped.filterNotNull()
+        var storyLicense: String? = null
+        if (wikimedia != null) {
+            log("${museum.name} : liaison Wikidata et récits Wikipedia…")
+            val result = StoryEnricher(wikimedia, log).enrich(museum, drafts)
+            drafts = result.drafts
+            if (result.withStory > 0) storyLicense = StoryEnricher.LICENSE
+            log("  → ${result.linked} œuvres reliées à Wikidata, ${result.withStory} avec un récit")
+        }
+
         val version = LocalDate.now().toString()
         val count = PackWriter.create(file.toString()).use { writer ->
-            for (record in records) {
-                val draft = JocondeMapper.toDraft(record, museum.name)
-                if (draft == null) skipped++ else writer.add(draft)
-            }
+            drafts.forEach(writer::add)
             writer.finish(
                 PackInfo(
                     museumId = museum.id,
@@ -44,6 +54,7 @@ class PackBuilder(
                     license = JocondeSource.LICENSE,
                     sourceUpdatedAt = sourceUpdatedAt,
                     recordCount = 0,
+                    storyLicense = storyLicense,
                 ),
             )
         }

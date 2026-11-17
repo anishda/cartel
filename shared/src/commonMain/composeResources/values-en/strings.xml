@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Audioguide</string>
+    <string name="app_name">Cartel</string>
 
     <string name="nav_scan">Scan</string>
     <string name="nav_search">Search</string>
@@ -55,6 +55,9 @@
     <string name="artwork_info">Details</string>
     <string name="artwork_provenance">History</string>
     <string name="artwork_technical">Technical description</string>
+    <string name="artwork_story">About this work (in French)</string>
+    <string name="artwork_story_source">From the Wikipedia article “%1$s”, %2$s.</string>
+    <string name="artwork_story_open">Read the article</string>
     <string name="info_technique">Technique</string>
     <string name="info_dimensions">Dimensions</string>
     <string name="info_dimensions_value">%1$s × %2$s cm</string>
@@ -98,7 +101,7 @@
     <string name="favorites_empty_body">Tap the heart on an entry, or keep a scanned label: you will find it here, even offline.</string>
     <string name="favorites_cartels">Scanned labels</string>
     <string name="favorites_share">Export as Markdown</string>
-    <string name="favorites_export_title">Favorites — Audioguide</string>
+    <string name="favorites_export_title">Favorites — Cartel</string>
     <string name="favorites_export_date">Exported on</string>
     <string name="favorite_note">Personal note</string>
     <string name="favorite_open">View entry</string>
@@ -126,6 +129,7 @@
     <string name="settings_credits_title">Sources and credits</string>
     <string name="settings_credits_data">Artworks: Joconde database, French Ministry of Culture, Open License 2.0. The update date appears on each entry.</string>
     <string name="settings_credits_ocr">Text reading: ML Kit on Android, Apple Vision on iPhone, directly on the device.</string>
+    <string name="settings_credits_stories">Stories: introduction of the French Wikipedia article (Wikipedia contributors, CC BY-SA 4.0), linked to the work through Wikidata (CC0). The source is shown on each page.</string>
     <string name="settings_credits_voice">Voices: your phone's own voices, installed on the device.</string>
     <string name="settings_privacy_title">Privacy</string>
     <string name="settings_privacy_body">No personal data is collected or sent. Photos, read texts and favorites stay on your phone. The app only connects to download museums.</string>

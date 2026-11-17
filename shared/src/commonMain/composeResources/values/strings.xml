@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Langue par défaut : français. La traduction anglaise est dans values-en. -->
 <resources>
-    <string name="app_name">Audioguide</string>
+    <string name="app_name">Cartel</string>
 
     <string name="nav_scan">Scanner</string>
     <string name="nav_search">Rechercher</string>
@@ -56,6 +56,9 @@
     <string name="artwork_info">Informations</string>
     <string name="artwork_provenance">Historique</string>
     <string name="artwork_technical">Description technique</string>
+    <string name="artwork_story">Histoire de l'œuvre</string>
+    <string name="artwork_story_source">D'après l'article « %1$s » de Wikipédia, %2$s.</string>
+    <string name="artwork_story_open">Lire l'article</string>
     <string name="info_technique">Technique</string>
     <string name="info_dimensions">Dimensions</string>
     <string name="info_dimensions_value">%1$s × %2$s cm</string>
@@ -99,7 +102,7 @@
     <string name="favorites_empty_body">Touche le cœur sur une fiche, ou garde un cartel scanné : tu le retrouveras ici, même sans réseau.</string>
     <string name="favorites_cartels">Cartels scannés</string>
     <string name="favorites_share">Exporter en Markdown</string>
-    <string name="favorites_export_title">Favoris — Audioguide</string>
+    <string name="favorites_export_title">Favoris — Cartel</string>
     <string name="favorites_export_date">Exporté le</string>
     <string name="favorite_note">Note personnelle</string>
     <string name="favorite_open">Voir la fiche</string>
@@ -127,6 +130,7 @@
     <string name="settings_credits_title">Sources et crédits</string>
     <string name="settings_credits_data">Œuvres : base Joconde, ministère de la Culture, Licence Ouverte 2.0. La date de mise à jour figure sur chaque fiche.</string>
     <string name="settings_credits_ocr">Lecture du texte : ML Kit sur Android, Apple Vision sur iPhone, directement sur l'appareil.</string>
+    <string name="settings_credits_stories">Histoire des œuvres : introduction de l'article Wikipédia en français (contributeurs de Wikipédia, CC BY-SA 4.0), reliée à l'œuvre par Wikidata (CC0). La source est citée sur chaque fiche.</string>
     <string name="settings_credits_voice">Voix : celles de ton téléphone, installées sur l'appareil.</string>
     <string name="settings_privacy_title">Vie privée</string>
     <string name="settings_privacy_body">Aucune donnée personnelle n'est collectée ni envoyée. Les photos, les textes lus et les favoris restent sur ton téléphone. L'app ne se connecte que pour télécharger les musées.</string>
