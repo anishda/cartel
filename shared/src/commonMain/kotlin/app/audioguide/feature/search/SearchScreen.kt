@@ -20,7 +20,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +33,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.audioguide.catalog.Artwork
 import app.audioguide.resources.Res
+import app.audioguide.ui.components.AppTextField
 import app.audioguide.resources.nav_museums
 import app.audioguide.resources.search_clear
 import app.audioguide.resources.search_filter_all
@@ -60,18 +60,20 @@ fun SearchScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedTextField(
+            AppTextField(
                 value = state.query,
                 onValueChange = viewModel::onQueryChange,
                 singleLine = true,
-                placeholder = { Text(stringResource(Res.string.search_placeholder)) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                trailingIcon = {
-                    if (state.query.isNotEmpty()) {
+                placeholder = stringResource(Res.string.search_placeholder),
+                leading = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailing = if (state.query.isNotEmpty()) {
+                    {
                         IconButton(onClick = { viewModel.onQueryChange("") }) {
                             Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.search_clear))
                         }
                     }
+                } else {
+                    null
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),

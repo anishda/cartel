@@ -27,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -43,6 +42,7 @@ import app.audioguide.catalog.ArtworkMatch
 import app.audioguide.domain.VoiceStatus
 import app.audioguide.platform.rememberPhotoImporter
 import app.audioguide.resources.Res
+import app.audioguide.ui.components.AppTextField
 import app.audioguide.resources.favorite_add
 import app.audioguide.resources.favorite_remove
 import app.audioguide.resources.scan_bilingual
@@ -232,13 +232,13 @@ private fun ResultSection(
                 // valeur (la session la reçoit en différé) ; il repart du texte de la session quand le cartel ou la
                 // langue change.
                 var edited by remember(state.rawText, state.languageTag) { mutableStateOf(state.cleanedText) }
-                OutlinedTextField(
+                AppTextField(
                     value = edited,
                     onValueChange = {
                         edited = it
                         session.setText(it)
                     },
-                    label = { Text(stringResource(Res.string.scan_text_label)) },
+                    label = stringResource(Res.string.scan_text_label),
                     textStyle = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.fillMaxWidth(),
                 )
