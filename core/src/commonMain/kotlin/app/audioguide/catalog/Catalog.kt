@@ -25,6 +25,9 @@ class Catalog(private val store: PackStore) {
     /** Phonèmes précalculés du segment de texte lu [key], dans le pack de [museumId] ; `null` s'il n'y en a pas. */
     suspend fun phonemes(museumId: String, key: String): String? = store.pack(museumId)?.phonemes(key)
 
+    /** Phonèmes précalculés du segment de texte lu [key], dans le premier pack installé qui les a. */
+    suspend fun phonemes(key: String): String? = store.packs().firstNotNullOfOrNull { it.phonemes(key) }
+
     suspend fun artwork(museumId: String, reference: String): Artwork? =
         store.pack(museumId)?.byReference(reference)
 

@@ -7,6 +7,7 @@ import app.audioguide.domain.SpeechText
 import app.audioguide.domain.VoiceOption
 import app.audioguide.domain.VoiceStatus
 import app.audioguide.platform.AppInfo
+import app.audioguide.platform.NaturalVoice
 import app.audioguide.settings.Settings
 import app.audioguide.settings.SettingsStore
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +17,20 @@ class SettingsViewModel(
     private val store: SettingsStore,
     private val synthesizer: SpeechSynthesizer,
     val appInfo: AppInfo,
+    val naturalVoice: NaturalVoice,
 ) : ViewModel() {
     val settings: StateFlow<Settings> = store.settings
+
+    fun downloadNaturalVoice() {
+        viewModelScope.launch { naturalVoice.download() }
+    }
+
+    fun deleteNaturalVoice() = naturalVoice.delete()
+
+    fun setNaturalVoice(enabled: Boolean) {
+        synthesizer.stop()
+        viewModelScope.launch { store.update { it.copy(naturalVoice = enabled) } }
+    }
 
     fun setSpeechRate(rate: Float) {
         viewModelScope.launch { store.update { it.copy(speechRate = rate) } }

@@ -80,6 +80,10 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
             }
         }
 
+        if (viewModel.naturalVoice.available) {
+            SettingsCard { NaturalVoiceSettings(viewModel, settings.naturalVoice) }
+        }
+
         SettingsCard {
             VoiceSettings(viewModel, settings.preferredVoices)
         }

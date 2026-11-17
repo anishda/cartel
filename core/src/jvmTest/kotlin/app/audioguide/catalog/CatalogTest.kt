@@ -222,6 +222,22 @@ class CatalogTest {
     }
 
     @Test
+    fun catalogFindsPhonemesInAnyInstalledPack() = runTest {
+        val store = PackStore(FileSystem.SYSTEM, root.resolve("packs").toOkioPath())
+        val orsay = buildPack("ph-orsay.db", "orsay", "musée d'Orsay", olympia)
+        val louvre = buildPack("ph-louvre.db", "louvre", "musée du Louvre", joconde)
+        SqliteDb.open(louvre).use { db ->
+            db.update("INSERT INTO narration_phoneme(key, phonemes) VALUES (?1, ?2)") { it.bindText(1, "k"); it.bindText(2, "ʒɔkˈɔ̃d") }
+        }
+        store.install("orsay", orsay.toOkio(), expectedSha256 = null)
+        store.install("louvre", louvre.toOkio(), expectedSha256 = null)
+
+        val catalog = Catalog(store)
+        assertEquals("ʒɔkˈɔ̃d", catalog.phonemes("k"))
+        assertEquals(null, catalog.phonemes("autre"))
+    }
+
+    @Test
     fun installRejectsABadChecksum() = runTest {
         val store = PackStore(FileSystem.SYSTEM, root.resolve("packs").toOkioPath())
         val source = buildPack("src.db", "orsay", "musée d'Orsay", olympia)

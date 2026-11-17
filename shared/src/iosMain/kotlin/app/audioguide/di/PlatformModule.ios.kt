@@ -7,6 +7,8 @@ import app.audioguide.domain.TextTranslator
 import app.audioguide.platform.AppInfo
 import app.audioguide.platform.AppPaths
 import app.audioguide.platform.AppleSpeechSynthesizer
+import app.audioguide.platform.NaturalVoice
+import app.audioguide.platform.NoNaturalVoice
 import app.audioguide.platform.VisionTextRecognizer
 import platform.Foundation.NSApplicationSupportDirectory
 import platform.Foundation.NSBundle
@@ -21,6 +23,8 @@ actual val platformModule: Module = module {
     // Le framework Translation d'Apple ne s'appelle que depuis une vue SwiftUI : pas encore branché sur iOS.
     single<TextTranslator> { NoTranslator }
     single<SpeechSynthesizer> { AppleSpeechSynthesizer() }
+    // La voix neuronale n'est pas encore sur iOS.
+    single<NaturalVoice> { NoNaturalVoice }
     single {
         val support = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, true)
             .firstOrNull() as? String ?: NSTemporaryDirectory()

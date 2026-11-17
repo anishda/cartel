@@ -139,6 +139,12 @@
     <string name="settings_voice_none">Aucune voix installée pour cette langue.</string>
     <string name="settings_voice_network">en ligne</string>
     <string name="settings_voice_hint">Les voix « améliorées » ou « premium » sont bien plus naturelles. iPhone : Réglages ▸ Accessibilité ▸ Contenu énoncé ▸ Voix. Android : Paramètres ▸ Système ▸ Langues ▸ Synthèse vocale.</string>
+    <string name="natural_voice_title">Voix naturelle</string>
+    <string name="natural_voice_hint">Une voix plus naturelle (Piper) pour les fiches d'œuvres. Le modèle se télécharge une fois, puis tout reste hors ligne. Les textes absents du musée téléchargé, et les cartels scannés, sont lus par la voix du téléphone.</string>
+    <string name="natural_voice_download">Télécharger la voix (%1$d Mo)</string>
+    <string name="natural_voice_use">Utiliser la voix naturelle</string>
+    <string name="natural_voice_delete">Supprimer la voix</string>
+    <string name="natural_voice_failed">Téléchargement impossible. Vérifie la connexion et réessaie.</string>
     <string name="voice_quality_standard">Standard</string>
     <string name="voice_quality_enhanced">Améliorée</string>
     <string name="voice_quality_premium">Premium</string>
@@ -149,7 +155,7 @@
     <string name="settings_credits_ocr">Lecture du texte : ML Kit sur Android, Apple Vision sur iPhone, directement sur l'appareil.</string>
     <string name="settings_credits_stories">Histoire des œuvres : introduction de l'article Wikipédia en français (contributeurs de Wikipédia, CC BY-SA 4.0), reliée à l'œuvre par Wikidata (CC0). La source est citée sur chaque fiche.</string>
     <string name="settings_credits_images">Images : Wikimedia Commons, licences libres seulement (domaine public, CC0, CC BY, CC BY-SA). L'auteur et la licence figurent sous chaque image, qui se charge quand la fiche s'ouvre.</string>
-    <string name="settings_credits_voice">Voix : celles de ton téléphone, installées sur l'appareil.</string>
+    <string name="settings_credits_voice">Voix : celles de ton téléphone, installées sur l'appareil. Voix naturelle facultative : Piper (MIT), voix SIWIS (université d'Édimbourg, CC BY 4.0), moteur sherpa-onnx (Apache-2.0).</string>
     <string name="settings_privacy_title">Vie privée</string>
     <string name="settings_privacy_body">Aucune donnée personnelle n'est collectée ni envoyée. Les photos, les textes lus et les favoris restent sur ton téléphone. L'app ne se connecte que pour télécharger les musées.</string>
 </resources>
