@@ -36,7 +36,7 @@ class PackBuilder(
             val result = StoryEnricher(wikimedia, log).enrich(museum, drafts)
             drafts = result.drafts
             if (result.withStory > 0) storyLicense = StoryEnricher.LICENSE
-            log("  → ${result.linked} œuvres reliées à Wikidata, ${result.withStory} avec un récit")
+            log("  → ${result.linked} œuvres reliées à Wikidata, ${result.withStory} avec un récit, ${result.withImage} avec une image libre")
         }
 
         val version = LocalDate.now().toString()

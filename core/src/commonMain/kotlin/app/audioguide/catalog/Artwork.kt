@@ -27,7 +27,36 @@ data class Artwork(
     val notability: Int = 0,
     /** Récit de l'œuvre, repris d'un article Wikipedia. */
     val story: ArtworkStory? = null,
+    /** Image libre de l'œuvre sur Wikimedia Commons ; l'image elle-même n'est pas dans le pack. */
+    val image: ArtworkImage? = null,
 )
+
+/**
+ * Image d'une œuvre sur Wikimedia Commons, sous licence libre. L'app la charge en ligne quand la fiche s'ouvre
+ * et affiche [author] et [license] : les licences CC BY et CC BY-SA l'exigent.
+ */
+data class ArtworkImage(
+    /** Nom du fichier sur Commons, sans le préfixe « File: » : « Mona Lisa.jpg ». */
+    val fileName: String,
+    val author: String?,
+    /** « Public domain », « CC0 », « CC BY-SA 4.0»… */
+    val license: String,
+) {
+    /** Adresse d'une miniature de [width] pixels de large. */
+    fun thumbnailUrl(width: Int = 500): String =
+        "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeFileName(fileName) + "?width=$width"
+
+    /** Page de l'image sur Commons : auteur, licence et historique complets. */
+    val pageUrl: String get() = "https://commons.wikimedia.org/wiki/File:" + encodeFileName(fileName)
+
+    private fun encodeFileName(name: String): String = buildString {
+        for (b in name.replace(' ', '_').encodeToByteArray()) {
+            val c = b.toInt() and 0xFF
+            val safe = c < 0x80 && (c.toChar().isLetterOrDigit() || c.toChar() in "-_.~(),")
+            if (safe) append(c.toChar()) else append('%').append("0123456789ABCDEF"[c shr 4]).append("0123456789ABCDEF"[c and 15])
+        }
+    }
+}
 
 /** Récit d'une œuvre, extrait d'un article Wikipedia : à afficher avec son attribution (CC BY-SA). */
 data class ArtworkStory(
@@ -57,6 +86,7 @@ data class ArtworkDraft(
     val wikidataId: String? = null,
     val notability: Int = 0,
     val story: ArtworkStory? = null,
+    val image: ArtworkImage? = null,
 )
 
 /** Description d'un pack, lue dans sa table `meta`. */

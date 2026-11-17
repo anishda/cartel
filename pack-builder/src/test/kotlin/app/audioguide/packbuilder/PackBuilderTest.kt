@@ -95,8 +95,10 @@ class PackBuilderTest {
 
     private class FakeWikimedia : WikimediaSource {
         override fun works(museum: MuseumSpec) = listOf(
-            WikidataWork("Q152509", "RF 644", "Olympia", listOf("Édouard Manet"), 60, "Olympia (Manet)"),
+            WikidataWork("Q152509", "RF 644", "Olympia", listOf("Édouard Manet"), 60, "Olympia (Manet)", "Olympia by Manet.jpg"),
         )
+        override fun credits(files: List<String>) =
+            files.associateWith { ImageCredit("Public domain", "Édouard Manet") }
         override fun intros(titles: List<String>) =
             titles.associateWith { "Olympia est un tableau d'Édouard Manet, peint en 1863 et conservé au musée d'Orsay." }
     }
@@ -110,7 +112,10 @@ class PackBuilderTest {
         assertEquals("Q152509", olympia.wikidataId)
         assertEquals("Olympia (Manet)", olympia.story?.articleTitle)
         assertTrue(olympia.story!!.text.startsWith("Olympia est un tableau"))
+        assertEquals("Olympia by Manet.jpg", olympia.image?.fileName)
+        assertEquals("Public domain", olympia.image?.license)
         assertNull(pack.byInventory("rf2003").single().story)
+        assertNull(pack.byInventory("rf2003").single().image)
         pack.close()
     }
 }

@@ -1,5 +1,5 @@
 {
-  "next_id": 13,
+  "next_id": 14,
   "tasks": {
     "T1": {
       "after": [],
@@ -79,6 +79,25 @@
       "priority": 2,
       "state": "done",
       "title": "R\u00e9cit des \u0153uvres depuis Wikipedia FR (liaison Wikidata, pack v2, fiche)"
+    },
+    "T13": {
+      "after": [],
+      "block_reason": null,
+      "claimed_at": "2026-11-17T17:48:29.183709+00:00",
+      "created_at": "2026-11-17T17:48:21.521780+00:00",
+      "created_by": "claude:vex",
+      "done_at": "2026-11-17T17:48:32.158092+00:00",
+      "done_commit": "0d42c83f0817e545d469854001cbecfca8f60108",
+      "drop_reason": null,
+      "evidence": "tasks/T13-images-libres-d-uvres-wikimedia-commons-miniatures-en-ligne-/REPORT.md",
+      "folder": "tasks/T13-images-libres-d-uvres-wikimedia-commons-miniatures-en-ligne-",
+      "id": "T13",
+      "last_note_at": null,
+      "notes": [],
+      "owner": "claude:vex",
+      "priority": 2,
+      "state": "done",
+      "title": "Images libres d'\u0153uvres (Wikimedia Commons, miniatures en ligne avec cr\u00e9dit)"
     },
     "T2": {
       "after": [

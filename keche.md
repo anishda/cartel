@@ -21,14 +21,15 @@ Doing:
 Blocked:
 - T2: Décider du scan : photo plein format via LabelReader ou scanner de documents natif (waits for T1)
 - T3: Décider des voix : voix neuronale embarquée (Piper/sherpa-onnx) si voix système insuffisantes (waits for T1)
-- T10: Stores : comptes développeur, fiches, politique de confidentialité (URL) (waits for T4)
+- T10: Stores : comptes développeur, fiches, politique de confidentialité (URL) (waits for T4; waits for T9 (work reverted))
 
 Todo:
 - T1: Essai sur appareil réel (Anis) : scan live, import, voix, vitesse, bilingue depuis la refonte
 - T5: Filtre œuvres exposées : affiner au-delà de peinture+sculpture (image, croisement Wikidata)
 
 Done (last 5):
-- T9: Choisir nom et identifiant définitifs de l'app
-- T12: Récit des œuvres depuis Wikipedia FR (liaison Wikidata, pack v2, fiche)
+- T13: Images libres d'œuvres (Wikimedia Commons, miniatures en ligne avec crédit)
+- T9: Choisir nom et identifiant définitifs de l'app (done commit not in history)
+- T12: Récit des œuvres depuis Wikipedia FR (liaison Wikidata, pack v2, fiche) (done commit not in history)
 
 <!-- kechup:end -->

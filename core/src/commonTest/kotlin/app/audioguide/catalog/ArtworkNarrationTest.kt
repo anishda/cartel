@@ -62,4 +62,14 @@ class ArtworkNarrationTest {
         assertEquals("Hauteur : 41 centimètres", ArtworkNarration.dimensions(41.0, null))
         assertEquals(null, ArtworkNarration.dimensions(null, null))
     }
+
+    @Test
+    fun commonsUrlsAreEncoded() {
+        val image = ArtworkImage("Le Radeau de la Méduse (1).jpg", null, "CC0")
+        assertEquals(
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Le_Radeau_de_la_M%C3%A9duse_(1).jpg?width=300",
+            image.thumbnailUrl(300),
+        )
+        assertEquals("https://commons.wikimedia.org/wiki/File:Le_Radeau_de_la_M%C3%A9duse_(1).jpg", image.pageUrl)
+    }
 }

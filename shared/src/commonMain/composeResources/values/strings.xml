@@ -58,6 +58,9 @@
     <string name="artwork_technical">Description technique</string>
     <string name="artwork_story">Histoire de l'œuvre</string>
     <string name="artwork_story_source">D'après l'article « %1$s » de Wikipédia, %2$s.</string>
+    <string name="artwork_image_credit">Image : %1$s, %2$s, via Wikimedia Commons</string>
+    <string name="artwork_image_credit_anonymous">Image : %1$s, via Wikimedia Commons</string>
+    <string name="artwork_image_description">Photo de l'œuvre</string>
     <string name="artwork_story_open">Lire l'article</string>
     <string name="info_technique">Technique</string>
     <string name="info_dimensions">Dimensions</string>
@@ -131,6 +134,7 @@
     <string name="settings_credits_data">Œuvres : base Joconde, ministère de la Culture, Licence Ouverte 2.0. La date de mise à jour figure sur chaque fiche.</string>
     <string name="settings_credits_ocr">Lecture du texte : ML Kit sur Android, Apple Vision sur iPhone, directement sur l'appareil.</string>
     <string name="settings_credits_stories">Histoire des œuvres : introduction de l'article Wikipédia en français (contributeurs de Wikipédia, CC BY-SA 4.0), reliée à l'œuvre par Wikidata (CC0). La source est citée sur chaque fiche.</string>
+    <string name="settings_credits_images">Images : Wikimedia Commons, licences libres seulement (domaine public, CC0, CC BY, CC BY-SA). L'auteur et la licence figurent sous chaque image, qui se charge quand la fiche s'ouvre.</string>
     <string name="settings_credits_voice">Voix : celles de ton téléphone, installées sur l'appareil.</string>
     <string name="settings_privacy_title">Vie privée</string>
     <string name="settings_privacy_body">Aucune donnée personnelle n'est collectée ni envoyée. Les photos, les textes lus et les favoris restent sur ton téléphone. L'app ne se connecte que pour télécharger les musées.</string>

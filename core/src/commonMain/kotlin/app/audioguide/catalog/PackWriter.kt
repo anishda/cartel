@@ -46,6 +46,9 @@ class PackWriter private constructor(private val db: SqliteDb) : AutoCloseable {
             s.bindTextOrNull(23, draft.story?.text)
             s.bindTextOrNull(24, draft.story?.articleTitle)
             s.bindTextOrNull(25, draft.story?.articleUrl)
+            s.bindTextOrNull(26, draft.image?.fileName)
+            s.bindTextOrNull(27, draft.image?.author)
+            s.bindTextOrNull(28, draft.image?.license)
         }
     }
 
@@ -85,9 +88,10 @@ class PackWriter private constructor(private val db: SqliteDb) : AutoCloseable {
         private const val INSERT = """
             INSERT INTO artwork (id, reference, inventory_no, inventory_norm, title, title_norm, artist, artist_norm,
                 date_text, domain, denomination, school, technique, height_cm, width_cm, location, provenance,
-                description, has_image, search_text, wikidata_id, notability, story_text, story_title, story_url)
+                description, has_image, search_text, wikidata_id, notability, story_text, story_title, story_url,
+                image_file, image_author, image_license)
             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20,
-                ?21, ?22, ?23, ?24, ?25)
+                ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28)
         """
     }
 }
