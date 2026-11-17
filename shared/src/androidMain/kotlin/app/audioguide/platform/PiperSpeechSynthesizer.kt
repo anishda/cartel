@@ -109,16 +109,20 @@ class PiperSpeechSynthesizer(
         audio.play()
         var frames = 0L
         try {
-            tts.generateWithConfigAndCallback("", config) { samples ->
-                if (mine != generation) {
-                    0
-                } else {
-                    // Bloque quand le tampon audio est plein : la synthèse suit la lecture.
-                    audio.write(samples, 0, samples.size, AudioTrack.WRITE_BLOCKING)
-                    frames += samples.size
-                    1
-                }
+            // Un objet nommé plutôt qu'un lambda : le code JNI de sherpa-onnx cherche la méthode `invoke([F)Ljava/lang/Integer;`
+            // sur la classe du rappel, et un lambda compilé par D8 n'a que `invoke(Object)`, ce qui fait tomber l'app.
+            val callback = object : Function1<FloatArray, Int> {
+                override fun invoke(samples: FloatArray): Int =
+                    if (mine != generation) {
+                        0
+                    } else {
+                        // Bloque quand le tampon audio est plein : la synthèse suit la lecture.
+                        audio.write(samples, 0, samples.size, AudioTrack.WRITE_BLOCKING)
+                        frames += samples.size
+                        1
+                    }
             }
+            tts.generateWithConfigAndCallback("", config, callback)
             // Laisse finir ce qui reste dans le tampon avant de dire que c'est terminé.
             val deadline = System.currentTimeMillis() + DRAIN_TIMEOUT_MS
             while (mine == generation && (audio.playbackHeadPosition.toLong() and 0xFFFFFFFFL) < frames && System.currentTimeMillis() < deadline) {
