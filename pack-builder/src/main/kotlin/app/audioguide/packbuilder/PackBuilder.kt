@@ -9,7 +9,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
 import java.time.Instant
-import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class PackBuilder(
     private val source: RecordSource,
@@ -39,7 +41,8 @@ class PackBuilder(
             log("  → ${result.linked} œuvres reliées à Wikidata, ${result.withStory} avec un récit, ${result.withImage} avec une image libre")
         }
 
-        val version = LocalDate.now().toString()
+        // Date et heure (UTC) : l'app propose la mise à jour quand cette valeur change, même pour deux builds le même jour.
+        val version = DateTimeFormatter.ofPattern("yyyy-MM-dd.HHmm").format(LocalDateTime.now(ZoneOffset.UTC))
         val count = PackWriter.create(file.toString()).use { writer ->
             drafts.forEach(writer::add)
             writer.finish(

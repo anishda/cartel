@@ -28,6 +28,7 @@ Todo:
 - T5: Filtre œuvres exposées : affiner au-delà de peinture+sculpture (image, croisement Wikidata)
 
 Done (last 5):
+- T14: Version de pack unique par build (date + heure) pour que l'app propose la mise à jour
 - T13: Images libres d'œuvres (Wikimedia Commons, miniatures en ligne avec crédit)
 - T9: Choisir nom et identifiant définitifs de l'app (done commit not in history)
 - T12: Récit des œuvres depuis Wikipedia FR (liaison Wikidata, pack v2, fiche) (done commit not in history)
