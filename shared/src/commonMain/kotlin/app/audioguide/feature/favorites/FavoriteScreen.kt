@@ -49,7 +49,7 @@ import app.audioguide.resources.favorite_note
 import app.audioguide.resources.favorite_open
 import app.audioguide.resources.favorites_cartels
 import app.audioguide.resources.listen
-import app.audioguide.ui.components.ListenButton
+import app.audioguide.ui.components.ListeningBar
 import app.audioguide.ui.components.SectionLabel
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
@@ -64,6 +64,7 @@ fun FavoriteScreen(
     viewModel: FavoriteViewModel = koinViewModel(parameters = { parametersOf(favoriteId) }),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val listening by viewModel.listening.state.collectAsStateWithLifecycle()
     val favorite = state.favorite
     var confirmDelete by remember { mutableStateOf(false) }
     var existed by remember { mutableStateOf(false) }
@@ -102,14 +103,7 @@ fun FavoriteScreen(
                 modifier = Modifier.weight(1f),
             )
             Surface(tonalElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
-                ListenButton(
-                    isSpeaking = state.isSpeaking,
-                    enabled = state.voiceReady,
-                    onPlay = viewModel::speak,
-                    onStop = viewModel::stop,
-                    playLabel = stringResource(if (favorite.reference != null) Res.string.artwork_listen else Res.string.listen),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp),
-                )
+                ListeningBar(listening, viewModel.listening)
             }
         }
     }

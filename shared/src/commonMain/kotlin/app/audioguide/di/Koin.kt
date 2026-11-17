@@ -60,7 +60,7 @@ val appModule = module {
     viewModel { (museumId: String, reference: String) ->
         ArtworkViewModel(museumId, reference, get(), get(), get(), get(), get())
     }
-    viewModel { (favoriteId: Long) -> FavoriteViewModel(favoriteId, get(), get(), get()) }
+    viewModel { (favoriteId: Long) -> FavoriteViewModel(favoriteId, get(), get(), get(), get()) }
 }
 
 fun initKoin(config: KoinAppDeclaration? = null): KoinApplication = startKoin {

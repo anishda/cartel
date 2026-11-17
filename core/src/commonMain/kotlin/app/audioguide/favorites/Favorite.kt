@@ -32,4 +32,6 @@ data class Favorite(
     val createdAt: Long,
     /** Image libre de l'œuvre (Commons) au moment de l'ajout : le fichier est rechargé en ligne, pas gardé ici. */
     val image: ArtworkImage? = null,
+    /** Écoute courte (début du récit) : `null` pour un cartel scanné, ou un favori d'avant l'écoute courte. */
+    val shortBody: String? = null,
 )

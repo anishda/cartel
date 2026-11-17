@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 /** Base des données de l'utilisateur (`user.db`), séparée des packs : les packs se remplacent, elle reste. */
 internal object UserSchema {
-    const val VERSION = 2
+    const val VERSION = 3
 
     private val v1 = listOf(
         """
@@ -45,12 +45,16 @@ internal object UserSchema {
         "ALTER TABLE favorite ADD COLUMN image_license TEXT",
     )
 
+    // v3 : l'écoute courte de l'œuvre, gardée comme le texte complet pour survivre à la suppression du pack.
+    private val v3 = listOf("ALTER TABLE favorite ADD COLUMN short_body TEXT")
+
     /** Amène la base à la dernière version. Refuse une base écrite par une version plus récente de l'app. */
     fun migrate(db: SqliteDb) {
         val current = db.query("PRAGMA user_version", map = { it.getLong(0).toInt() }).first()
         require(current <= VERSION) { "Base utilisateur trop récente : version $current" }
         if (current < 1) db.transaction { v1.forEach(db::exec) }
         if (current < 2) db.transaction { v2.forEach(db::exec) }
+        if (current < 3) db.transaction { v3.forEach(db::exec) }
         db.exec("PRAGMA user_version = $VERSION")
     }
 }
@@ -83,8 +87,8 @@ class FavoritesRepository private constructor(
                 """
                 INSERT OR IGNORE INTO favorite (
                     kind, museum_id, museum_name, reference, title, subtitle, body, language_tag, created_at,
-                    image_file, image_author, image_license
-                ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)
+                    image_file, image_author, image_license, short_body
+                ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)
                 """,
             ) { s ->
                 s.bindText(1, FavoriteKind.Artwork.name)
@@ -97,6 +101,7 @@ class FavoritesRepository private constructor(
                 s.bindText(8, ArtworkNarration.LANGUAGE_TAG)
                 s.bindLong(9, now())
                 bindImage(s, 10, artwork.image)
+                s.bindText(13, ArtworkNarration.buildShort(artwork))
             }
         }
         refresh()
@@ -150,6 +155,21 @@ class FavoritesRepository private constructor(
         refresh()
     }
 
+    /**
+     * Remplace les textes lus d'un favori d'œuvre, quand le pack permet de les refaire : ceux d'avant l'écoute courte
+     * n'ont pas de version courte, et leur texte complet date de l'ancienne lecture.
+     */
+    suspend fun setNarration(id: Long, body: String, shortBody: String) {
+        access {
+            update("UPDATE favorite SET body = ?1, short_body = ?2 WHERE id = ?3 AND kind = 'Artwork'") { s ->
+                s.bindText(1, body)
+                s.bindText(2, shortBody)
+                s.bindLong(3, id)
+            }
+        }
+        refresh()
+    }
+
     /** Une note vide efface la note. */
     suspend fun setNote(id: Long, note: String?) {
         val text = note?.trim()?.ifEmpty { null }
@@ -167,7 +187,7 @@ class FavoritesRepository private constructor(
     companion object {
         private const val COLUMNS =
             "id, kind, museum_id, museum_name, reference, title, subtitle, body, language_tag, note, created_at, " +
-                "image_file, image_author, image_license"
+                "image_file, image_author, image_license, short_body"
 
         /** Ouvre (et crée ou met à jour) la base [path], puis charge les favoris. [now] : millisecondes depuis 1970. */
         suspend fun open(path: String, now: () -> Long): FavoritesRepository = withContext(IoDispatcher) {
@@ -196,6 +216,7 @@ class FavoritesRepository private constructor(
             image = textOrNull(11)?.let { file ->
                 textOrNull(13)?.let { license -> ArtworkImage(fileName = file, author = textOrNull(12), license = license) }
             },
+            shortBody = textOrNull(14),
         )
 
         private fun bindImage(s: SQLiteStatement, first: Int, image: ArtworkImage?) {

@@ -41,6 +41,8 @@ class FavoritesStore(path: String, now: () -> Long, private val scope: Coroutine
 
     suspend fun setImage(id: Long, image: ArtworkImage) = repository.await().setImage(id, image)
 
+    suspend fun setNarration(id: Long, body: String, shortBody: String) = repository.await().setNarration(id, body, shortBody)
+
     suspend fun remove(id: Long) = repository.await().remove(id)
 
     suspend fun setNote(id: Long, note: String?) = repository.await().setNote(id, note)

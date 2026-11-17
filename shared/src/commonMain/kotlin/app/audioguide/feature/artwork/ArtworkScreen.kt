@@ -92,7 +92,7 @@ import app.audioguide.resources.info_technique
 import app.audioguide.ui.AppIcons
 import app.audioguide.ui.components.EmptyState
 import app.audioguide.ui.components.InfoRow
-import app.audioguide.ui.components.ListenButton
+import app.audioguide.ui.components.ListeningBar
 import app.audioguide.ui.components.Pill
 import app.audioguide.ui.components.SectionLabel
 import org.jetbrains.compose.resources.stringResource
@@ -107,6 +107,7 @@ fun ArtworkScreen(
     viewModel: ArtworkViewModel = koinViewModel(parameters = { parametersOf(museumId, reference) }),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val listening by viewModel.listening.state.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -140,90 +141,11 @@ fun ArtworkScreen(
 
         if (artwork != null) {
             Surface(tonalElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
-                if (state.isPlayerActive) {
-                    PlayerBar(state, viewModel)
-                } else {
-                    ListenButtons(state, viewModel)
-                }
+                ListeningBar(listening, viewModel.listening)
             }
         }
     }
 }
-
-/** Les deux écoutes, avec la durée estimée de chacune. */
-@Composable
-private fun ListenButtons(state: ArtworkUiState, viewModel: ArtworkViewModel) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        ListenButton(
-            isSpeaking = false,
-            enabled = state.voiceReady,
-            onPlay = { viewModel.speak(full = false) },
-            onStop = viewModel::stop,
-            playLabel = listOfNotNull(stringResource(Res.string.artwork_listen), state.shortMillis?.let(::formatClock)).joinToString(" · "),
-            modifier = Modifier.weight(1f),
-        )
-        TextButton(onClick = { viewModel.speak(full = true) }, enabled = state.voiceReady) {
-            Text(listOfNotNull(stringResource(Res.string.artwork_listen_full), state.fullMillis?.let(::formatClock)).joinToString(" · "))
-        }
-    }
-}
-
-/** Lecteur : pause et reprise, ±10 s, curseur pour aller à un instant, temps écoulé et durée estimée. */
-@Composable
-private fun PlayerBar(state: ArtworkUiState, viewModel: ArtworkViewModel) {
-    val total = state.totalMillis.coerceAtLeast(1)
-    // Pendant qu'on glisse le curseur, il suit le doigt ; la lecture ne saute qu'au relâchement.
-    var dragging by remember { mutableStateOf<Float?>(null) }
-    val position = dragging ?: (state.positionMillis.toFloat() / total).coerceIn(0f, 1f)
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp)) {
-        Slider(
-            value = position,
-            onValueChange = { dragging = it },
-            onValueChangeFinished = {
-                dragging?.let { viewModel.seekTo((it * total).toLong()) }
-                dragging = null
-            },
-        )
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(formatClock((position * total).toLong()), style = MaterialTheme.typography.labelMedium)
-            Text(
-                stringResource(Res.string.player_estimated, formatClock(state.totalMillis)),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            TextButton(onClick = { viewModel.skip(-SKIP_MILLIS) }) { Text(stringResource(Res.string.player_back)) }
-            if (state.status == PlayerStatus.Playing) {
-                Button(onClick = viewModel::pause) {
-                    Icon(AppIcons.Pause, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(Res.string.player_pause))
-                }
-            } else {
-                Button(onClick = viewModel::resume) {
-                    Icon(AppIcons.Play, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(Res.string.player_resume))
-                }
-            }
-            TextButton(onClick = { viewModel.skip(SKIP_MILLIS) }) { Text(stringResource(Res.string.player_forward)) }
-        }
-        TextButton(onClick = viewModel::stop, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text(stringResource(Res.string.stop))
-        }
-    }
-}
-
-private const val SKIP_MILLIS = 10_000L
 
 @Composable
 private fun ArtworkContent(artwork: Artwork, pack: PackInfo?) {
