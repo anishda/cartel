@@ -77,7 +77,7 @@ class FavoriteViewModel(
 
     fun speak() {
         val favorite = state.value.favorite ?: return
-        synthesizer.speak(SpeechText.prepare(favorite.body), favorite.languageTag)
+        synthesizer.speak(SpeechText.prepare(favorite.body, favorite.languageTag), favorite.languageTag)
     }
 
     fun stop() = synthesizer.stop()

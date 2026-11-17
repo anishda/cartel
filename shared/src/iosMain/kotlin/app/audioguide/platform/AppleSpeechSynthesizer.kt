@@ -36,11 +36,18 @@ class AppleSpeechSynthesizer : SpeechSynthesizer {
     private val pending = mutableSetOf<AVSpeechUtterance>()
 
     // `AVSpeechSynthesizer.delegate` est faible : on garde le delegate dans un champ.
+    /** Fin de lecture demandée par l'appelant ; oubliée dès qu'une autre lecture ou un arrêt la remplace. */
+    private var doneCallback: (() -> Unit)? = null
+
     private val delegate = SpeechDelegate(
         onStarted = { _isSpeaking.value = true },
-        onEnded = { utterance ->
+        onEnded = { utterance, finished ->
             pending.remove(utterance)
-            if (pending.isEmpty()) _isSpeaking.value = false
+            if (pending.isEmpty()) {
+                _isSpeaking.value = false
+                // Seule une lecture menée à son terme appelle [onDone] : une annulation ne le fait pas.
+                if (finished) doneCallback?.also { doneCallback = null }?.invoke()
+            }
         },
     )
     private val synthesizer = AVSpeechSynthesizer().also { it.delegate = delegate }
@@ -74,8 +81,9 @@ class AppleSpeechSynthesizer : SpeechSynthesizer {
         if (voiceId == null) preferred.remove(languageTag) else preferred[languageTag] = voiceId
     }
 
-    override fun speak(text: String, languageTag: String) {
+    override fun speak(text: String, languageTag: String, onDone: (() -> Unit)?) {
         stop()
+        doneCallback = onDone
         // Lecture même quand le téléphone est en mode silencieux.
         val session = AVAudioSession.sharedInstance()
         session.setCategory(AVAudioSessionCategoryPlayback, error = null)
@@ -100,6 +108,7 @@ class AppleSpeechSynthesizer : SpeechSynthesizer {
     override fun stop() {
         // Vider avant d'arrêter : les « annulé » qui arrivent ensuite ne concernent plus aucun paragraphe en attente.
         pending.clear()
+        doneCallback = null
         synthesizer.stopSpeakingAtBoundary(AVSpeechBoundary.AVSpeechBoundaryImmediate)
         _isSpeaking.value = false
     }
@@ -134,7 +143,7 @@ class AppleSpeechSynthesizer : SpeechSynthesizer {
 @OptIn(ExperimentalForeignApi::class)
 private class SpeechDelegate(
     private val onStarted: () -> Unit,
-    private val onEnded: (AVSpeechUtterance) -> Unit,
+    private val onEnded: (AVSpeechUtterance, finished: Boolean) -> Unit,
 ) : NSObject(), AVSpeechSynthesizerDelegateProtocol {
     @ObjCSignatureOverride
     override fun speechSynthesizer(synthesizer: AVSpeechSynthesizer, didStartSpeechUtterance: AVSpeechUtterance) =
@@ -142,9 +151,9 @@ private class SpeechDelegate(
 
     @ObjCSignatureOverride
     override fun speechSynthesizer(synthesizer: AVSpeechSynthesizer, didFinishSpeechUtterance: AVSpeechUtterance) =
-        onEnded(didFinishSpeechUtterance)
+        onEnded(didFinishSpeechUtterance, true)
 
     @ObjCSignatureOverride
     override fun speechSynthesizer(synthesizer: AVSpeechSynthesizer, didCancelSpeechUtterance: AVSpeechUtterance) =
-        onEnded(didCancelSpeechUtterance)
+        onEnded(didCancelSpeechUtterance, false)
 }

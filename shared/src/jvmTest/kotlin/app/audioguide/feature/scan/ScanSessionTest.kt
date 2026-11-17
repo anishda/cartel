@@ -61,7 +61,7 @@ class ScanSessionTest {
         override fun setRate(rate: Float) = Unit
         override fun voices(languageTag: String) = emptyList<VoiceOption>()
         override fun setPreferredVoice(languageTag: String, voiceId: String?) = Unit
-        override fun speak(text: String, languageTag: String) { spoken += text to languageTag }
+        override fun speak(text: String, languageTag: String, onDone: (() -> Unit)?) { spoken += text to languageTag }
         override fun stop() = Unit
     }
 
