@@ -24,6 +24,7 @@ object AppIcons {
         "M4,10v7h3v-7H4zM10,10v7h3v-7h-3zM2,22h19v-3H2v3zM16,10v7h3v-7h-3zM11.5,1L2,6v2h19V6l-9.5,-5z",
     )
     val Play = icon("Play", "M8,5v14l11,-7z")
+    val Pause = icon("Pause", "M6,19h4V5H6v14zM14,5v14h4V5h-4z")
     val Stop = icon("Stop", "M6,6h12v12H6z")
     val Download = icon("Download", "M19,9h-4V3H9v6H5l7,7 7,-7zM5,18v2h14v-2H5z")
     val Refresh = icon(

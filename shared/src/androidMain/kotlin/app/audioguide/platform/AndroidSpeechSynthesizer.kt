@@ -25,13 +25,22 @@ class AndroidSpeechSynthesizer(context: Context) : SpeechSynthesizer {
     private var queued: (() -> Unit)? = null
     private var lastUtteranceId: String? = null
 
+    /** Fin de lecture demandée par l'appelant ; oubliée dès qu'une autre lecture ou un arrêt la remplace. */
+    @Volatile
+    private var doneCallback: (() -> Unit)? = null
+
     private val listener = object : UtteranceProgressListener() {
         override fun onStart(utteranceId: String?) {
             _isSpeaking.value = true
         }
 
         override fun onDone(utteranceId: String?) {
-            if (utteranceId == lastUtteranceId) _isSpeaking.value = false
+            if (utteranceId == lastUtteranceId) {
+                _isSpeaking.value = false
+                val callback = doneCallback
+                doneCallback = null
+                callback?.invoke()
+            }
         }
 
         @Deprecated("Deprecated in Java")
@@ -94,11 +103,12 @@ class AndroidSpeechSynthesizer(context: Context) : SpeechSynthesizer {
         if (voiceId == null) preferred.remove(languageTag) else preferred[languageTag] = voiceId
     }
 
-    override fun speak(text: String, languageTag: String) {
+    override fun speak(text: String, languageTag: String, onDone: (() -> Unit)?) {
         if (!_engineReady.value) {
-            queued = { speak(text, languageTag) }
+            queued = { speak(text, languageTag, onDone) }
             return
         }
+        doneCallback = onDone
         val locale = Locale.forLanguageTag(languageTag)
         tts.setSpeechRate(rate)
         val voice = preferred[languageTag]?.let { id -> tts.voices.orEmpty().firstOrNull { it.name == id } } ?: offlineVoice(locale)
@@ -124,6 +134,7 @@ class AndroidSpeechSynthesizer(context: Context) : SpeechSynthesizer {
     }
 
     override fun stop() {
+        doneCallback = null
         if (_engineReady.value) tts.stop()
         _isSpeaking.value = false
     }

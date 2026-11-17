@@ -53,6 +53,11 @@
     <string name="artwork_not_found">Artwork not found</string>
     <string name="artwork_listen">Listen</string>
     <string name="artwork_listen_full">Listen to everything</string>
+    <string name="player_pause">Pause</string>
+    <string name="player_resume">Resume</string>
+    <string name="player_back">−10 s</string>
+    <string name="player_forward">+10 s</string>
+    <string name="player_estimated">≈ %1$s</string>
     <string name="artwork_info">Details</string>
     <string name="artwork_provenance">History</string>
     <string name="artwork_technical">Technical description</string>

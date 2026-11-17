@@ -47,8 +47,12 @@ interface SpeechSynthesizer {
     /** Voix à utiliser pour [languageTag] ; `null` : la meilleure voix installée. */
     fun setPreferredVoice(languageTag: String, voiceId: String?)
 
-    /** Lit [text] ; une ligne vide sépare les paragraphes, entre lesquels le synthétiseur marque une pause. */
-    fun speak(text: String, languageTag: String)
+    /**
+     * Lit [text] ; une ligne vide sépare les paragraphes, entre lesquels le synthétiseur marque une pause.
+     * [onDone] est appelé (sur un thread quelconque) quand la lecture va jusqu'au bout, jamais si [stop] ou un
+     * nouvel appel de [speak] l'interrompt.
+     */
+    fun speak(text: String, languageTag: String, onDone: (() -> Unit)? = null)
 
     fun stop()
 }

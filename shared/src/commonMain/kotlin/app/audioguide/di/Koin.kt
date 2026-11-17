@@ -58,7 +58,7 @@ val appModule = module {
     viewModelOf(::FavoritesViewModel)
     viewModelOf(::SettingsViewModel)
     viewModel { (museumId: String, reference: String) ->
-        ArtworkViewModel(museumId, reference, get(), get(), get(), get())
+        ArtworkViewModel(museumId, reference, get(), get(), get(), get(), get())
     }
     viewModel { (favoriteId: Long) -> FavoriteViewModel(favoriteId, get(), get(), get()) }
 }
