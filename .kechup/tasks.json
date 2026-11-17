@@ -108,7 +108,7 @@
     "T4": {
       "after": [],
       "block_reason": null,
-      "claimed_at": "2026-11-17T15:22:59.165671+00:00",
+      "claimed_at": "2026-11-17T15:23:05.372797+00:00",
       "created_at": "2026-10-30T11:01:24.509600+00:00",
       "created_by": "claude:vex",
       "done_at": null,
@@ -117,8 +117,14 @@
       "evidence": null,
       "folder": "tasks/T4-h-berger-les-packs-en-https-vps-hda-ynh-fr-ou-release-github",
       "id": "T4",
-      "last_note_at": null,
-      "notes": [],
+      "last_note_at": "2026-11-17T15:23:05.372793+00:00",
+      "notes": [
+        {
+          "at": "2026-11-17T15:23:05.372663+00:00",
+          "by": "claude:vex",
+          "text": "packs.yml (jeudi 5h UTC) + URL releases/latest/download en release Android et iOS. Reste : cr\u00e9er le repo anishda/cartel, pousser, lancer le workflow une fois."
+        }
+      ],
       "owner": "claude:vex",
       "priority": 2,
       "state": "doing",
