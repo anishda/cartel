@@ -18,6 +18,8 @@ data class Settings(
     val speechRate: Float = 1.0f,
     /** Voix choisie par langue (étiquette BCP 47 → identifiant de voix). Absente : la meilleure voix installée. */
     val preferredVoices: Map<String, String> = emptyMap(),
+    /** Utiliser la voix neuronale quand elle est installée (Android). */
+    val naturalVoice: Boolean = true,
     /** Date (ms depuis 1970) à laquelle le cache des images a été vidé pour la dernière fois. */
     val imageCacheSince: Long? = null,
 ) {

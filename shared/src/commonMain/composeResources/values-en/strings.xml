@@ -138,6 +138,12 @@
     <string name="settings_voice_none">No voice installed for this language.</string>
     <string name="settings_voice_network">online</string>
     <string name="settings_voice_hint">“Enhanced” or “premium” voices sound far more natural. iPhone: Settings ▸ Accessibility ▸ Spoken Content ▸ Voices. Android: Settings ▸ System ▸ Languages ▸ Text-to-speech.</string>
+    <string name="natural_voice_title">Natural voice</string>
+    <string name="natural_voice_hint">A more natural voice (Piper) for artwork entries, in French. The model downloads once, then everything stays offline. Texts missing from the downloaded museum, and scanned labels, are read by the phone’s voice.</string>
+    <string name="natural_voice_download">Download the voice (%1$d MB)</string>
+    <string name="natural_voice_use">Use the natural voice</string>
+    <string name="natural_voice_delete">Delete the voice</string>
+    <string name="natural_voice_failed">Couldn’t download. Check your connection and try again.</string>
     <string name="voice_quality_standard">Standard</string>
     <string name="voice_quality_enhanced">Enhanced</string>
     <string name="voice_quality_premium">Premium</string>
@@ -148,7 +154,7 @@
     <string name="settings_credits_ocr">Text reading: ML Kit on Android, Apple Vision on iPhone, directly on the device.</string>
     <string name="settings_credits_stories">Stories: introduction of the French Wikipedia article (Wikipedia contributors, CC BY-SA 4.0), linked to the work through Wikidata (CC0). The source is shown on each page.</string>
     <string name="settings_credits_images">Images: Wikimedia Commons, free licenses only (public domain, CC0, CC BY, CC BY-SA). The author and license appear under each image, which loads when the page opens.</string>
-    <string name="settings_credits_voice">Voices: your phone's own voices, installed on the device.</string>
+    <string name="settings_credits_voice">Voices: your phone's own voices, installed on the device. Optional natural voice: Piper (MIT), SIWIS voice (University of Edinburgh, CC BY 4.0), sherpa-onnx engine (Apache-2.0).</string>
     <string name="settings_privacy_title">Privacy</string>
     <string name="settings_privacy_body">No personal data is collected or sent. Photos, read texts and favorites stay on your phone. The app only connects to download museums.</string>
 </resources>

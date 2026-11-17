@@ -83,6 +83,42 @@ class CatalogTest {
     }
 
     @Test
+    fun keepsPhonemesAndOlderPacksHaveNone() = runTest {
+        val path = buildPack("ph.pack.db", "orsay", "musée d'Orsay", olympia)
+        SqliteDb.open(path).use { db ->
+            db.update("INSERT INTO narration_phoneme(key, phonemes) VALUES (?1, ?2)") { it.bindText(1, "k1"); it.bindText(2, "ɔlɛ̃pjˈa") }
+        }
+        val pack = Pack.open(path)
+        assertEquals("ɔlɛ̃pjˈa", pack.phonemes("k1"))
+        assertEquals(null, pack.phonemes("absent"))
+        pack.close()
+
+        // Un pack d'avant la v4 n'a pas la table : pas d'erreur, simplement rien.
+        SqliteDb.open(path).use { db ->
+            db.exec("DROP TABLE narration_phoneme")
+            db.exec("PRAGMA user_version = 3")
+        }
+        val old = Pack.open(path)
+        assertEquals(null, old.phonemes("k1"))
+        old.close()
+    }
+
+    @Test
+    fun writerStoresPhonemesByKey() = runTest {
+        val path = root.resolve("w.pack.db").toString()
+        PackWriter.create(path).use { writer ->
+            writer.add(olympia)
+            writer.addPhonemes("abc", "une phrase\nune autre")
+            writer.finish(
+                PackInfo("orsay", "musée d'Orsay", "Paris", "v", "2026-10-11T10:00:00Z", "Joconde", null, "LO 2.0", null, 0),
+            )
+        }
+        val pack = Pack.open(path)
+        assertEquals("une phrase\nune autre", pack.phonemes("abc"))
+        pack.close()
+    }
+
+    @Test
     fun keepsTheCommonsImageCredit() = runTest {
         val image = ArtworkImage("Olympia by Manet.jpg", "Édouard Manet", "Public domain")
         val pack = Pack.open(buildPack("img.pack.db", "orsay", "musée d'Orsay", olympia.copy(image = image), dejeuner))
@@ -183,6 +219,22 @@ class CatalogTest {
         assertEquals(listOf("La Joconde"), catalog.search("joconde", museumId = "louvre").map { it.title })
         assertTrue(catalog.search("joconde", museumId = "orsay").isEmpty())
         assertEquals("Olympia", catalog.artwork("orsay", "M5060-1")?.title)
+    }
+
+    @Test
+    fun catalogFindsPhonemesInAnyInstalledPack() = runTest {
+        val store = PackStore(FileSystem.SYSTEM, root.resolve("packs").toOkioPath())
+        val orsay = buildPack("ph-orsay.db", "orsay", "musée d'Orsay", olympia)
+        val louvre = buildPack("ph-louvre.db", "louvre", "musée du Louvre", joconde)
+        SqliteDb.open(louvre).use { db ->
+            db.update("INSERT INTO narration_phoneme(key, phonemes) VALUES (?1, ?2)") { it.bindText(1, "k"); it.bindText(2, "ʒɔkˈɔ̃d") }
+        }
+        store.install("orsay", orsay.toOkio(), expectedSha256 = null)
+        store.install("louvre", louvre.toOkio(), expectedSha256 = null)
+
+        val catalog = Catalog(store)
+        assertEquals("ʒɔkˈɔ̃d", catalog.phonemes("k"))
+        assertEquals(null, catalog.phonemes("autre"))
     }
 
     @Test

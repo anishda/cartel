@@ -48,4 +48,12 @@ class SettingsStoreTest {
         val store = store().apply { load() }
         assertEquals(1.0f, store.settings.value.speechRate)
     }
+
+    @Test
+    fun theNaturalVoiceIsOnByDefaultAndCanBeTurnedOff() = runTest {
+        assertEquals(true, store().apply { load() }.settings.value.naturalVoice)
+        store().update { it.copy(naturalVoice = false) }
+        assertEquals(false, store().apply { load() }.settings.value.naturalVoice)
+    }
 }
+

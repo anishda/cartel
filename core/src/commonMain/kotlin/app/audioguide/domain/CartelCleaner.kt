@@ -9,6 +9,10 @@ object CartelCleaner {
     // Un « de » déjà présent devant la période est absorbé, pour ne pas lire « de de 1503 à 1519 ».
     private val yearRange = Regex("""(?:\bde\s+)?\b(\d{3,4})\s*[-–—]\s*(\d{3,4})\b""")
     private val century = Regex("""\b([IVX]+)(er|re|e|ème|eme|è)\b""")
+    // Dates de Joconde : « 1er quart XVIe siècle », « 2e moitié XIXe siècle », « début XVIIe siècle ». Appliqué après la
+    // conversion des siècles en lettres, pour dire « premier quart du seizième siècle ».
+    private val part = Regex("""\b(\d)(?:er|ère|re|e|ème|è)\s+(quart|tiers|moiti[ée])\s+(?:du\s+)?(?!du\b)(\p{L}+(?:-\p{L}+)?(?: et unième)? siècle)""", RegexOption.IGNORE_CASE)
+    private val edge = Regex("""\b(début|milieu|fin)\s+(?:du\s+)?(?!du\b)(\p{L}+(?:-\p{L}+)?(?: et unième)? siècle)""", RegexOption.IGNORE_CASE)
     private val dimensionH = Regex("""\bH\.\s?(?=\d)""")
     private val dimensionL = Regex("""\bL\.\s?(?=\d)""")
     // L'OCR lit parfois le zéro d'une mesure comme un « o » (« 19o cm »).
@@ -57,6 +61,18 @@ object CartelCleaner {
                 else -> match.value
             }
         }
+        text = part.replace(text) { match ->
+            val rank = match.groupValues[1].toInt()
+            val portion = match.groupValues[2].lowercase().replace("moitie", "moitié")
+            val feminine = portion == "moitié"
+            val word = when {
+                rank == 1 -> if (feminine) "première" else "premier"
+                rank in 2..4 -> ordinals[rank - 1]
+                else -> return@replace match.value
+            }
+            "$word $portion du ${match.groupValues[3]}"
+        }
+        text = edge.replace(text) { "${it.groupValues[1].lowercase()} du ${it.groupValues[2]}" }
         text = text
             .replace("av. J.-C.", "avant Jésus-Christ")
             .replace("apr. J.-C.", "après Jésus-Christ")

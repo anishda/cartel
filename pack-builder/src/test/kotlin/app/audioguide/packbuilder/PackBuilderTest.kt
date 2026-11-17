@@ -118,4 +118,24 @@ class PackBuilderTest {
         assertNull(pack.byInventory("rf2003").single().image)
         pack.close()
     }
+
+    @Test
+    fun phonemesAreStoredForTheWorksWithAStory() = runBlocking {
+        val withStory = app.audioguide.catalog.ArtworkDraft(
+            reference = "R1", inventoryNo = "RF 644", title = "Olympia", artist = "Édouard Manet", dateText = "1863",
+            story = app.audioguide.catalog.ArtworkStory("Olympia est un tableau de 1863. Il fit scandale.", "Olympia", "u"),
+        )
+        val noStory = app.audioguide.catalog.ArtworkDraft(reference = "R2", inventoryNo = "RF 2", title = "Sans récit")
+        val seen = mutableListOf<String>()
+        val builder = PackBuilder(FakeSource(emptyList()), out, log = {}, phonemizer = { texts -> seen += texts; texts.map { "ph(" + it.take(5) + ")" } })
+
+        val phonemes = builder.phonemize(orsay, listOf(withStory, noStory), { texts -> seen += texts; texts.map { "ph(" + it.take(5) + ")" } })
+
+        assertTrue(phonemes.isNotEmpty())
+        // Rien n'est phonétisé pour l'œuvre sans récit, et le phonétiseur ne reçoit pas de chiffres.
+        assertTrue(seen.none { "Sans récit" in it }, seen.toString())
+        assertTrue(seen.none { text -> text.any { it.isDigit() } }, seen.toString())
+        assertTrue(phonemes.keys.all { it.length == 16 })
+    }
 }
+

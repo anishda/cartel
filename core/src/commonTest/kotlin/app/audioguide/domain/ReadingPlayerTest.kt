@@ -59,6 +59,8 @@ class ReadingPlayerTest {
         override val isSpeaking = MutableStateFlow(false)
         override val engineReady = MutableStateFlow(true)
         val spoken = mutableListOf<String>()
+        val prepared = mutableListOf<String>()
+        override fun prepare(text: String, languageTag: String) { prepared += text }
         var stops = 0
         private var done: (() -> Unit)? = null
         override fun voiceStatus(languageTag: String) = VoiceStatus.Ready
@@ -90,6 +92,18 @@ class ReadingPlayerTest {
         assertEquals(PlayerStatus.Playing, player.state.value.status)
         synth.finish(); testScheduler.advanceUntilIdle()
         assertEquals(PlayerStatus.Idle, player.state.value.status)
+    }
+
+    @Test
+    fun theNextSegmentIsPreparedWhileTheCurrentOneIsRead() = runTest {
+        val player = player()
+        player.play()
+        assertEquals(listOf("Deux."), synth.prepared)
+        synth.finish(); testScheduler.advanceUntilIdle()
+        assertEquals(listOf("Deux.", "Trois."), synth.prepared)
+        synth.finish(); testScheduler.advanceUntilIdle()
+        // Le dernier segment n'a rien à préparer.
+        assertEquals(listOf("Deux.", "Trois."), synth.prepared)
     }
 
     @Test
