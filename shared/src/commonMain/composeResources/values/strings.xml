@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Langue par défaut : français. La traduction anglaise est dans values-en. -->
 <resources>
-    <string name="app_name">Audioguide</string>
+    <string name="app_name">Cartel</string>
 
     <string name="nav_scan">Scanner</string>
     <string name="nav_search">Rechercher</string>
@@ -99,7 +99,7 @@
     <string name="favorites_empty_body">Touche le cœur sur une fiche, ou garde un cartel scanné : tu le retrouveras ici, même sans réseau.</string>
     <string name="favorites_cartels">Cartels scannés</string>
     <string name="favorites_share">Exporter en Markdown</string>
-    <string name="favorites_export_title">Favoris — Audioguide</string>
+    <string name="favorites_export_title">Favoris — Cartel</string>
     <string name="favorites_export_date">Exporté le</string>
     <string name="favorite_note">Note personnelle</string>
     <string name="favorite_open">Voir la fiche</string>

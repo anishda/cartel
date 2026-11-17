@@ -1,4 +1,6 @@
-# Audioguide Musées (nom de travail)
+# Cartel
+
+Anciennement « Audioguide Musées » (nom de travail).
 
 App Kotlin Multiplatform (Android + iOS, UI Compose Multiplatform) : scanner le cartel d'une œuvre et l'écouter, hors ligne ; retrouver une œuvre dans des « packs musée » téléchargés ; garder ses favoris. Cadrage complet dans la note du vault Veaucer : `01.Projects/Dev - Audioguide Musées (KMP).md`.
 
@@ -63,7 +65,9 @@ python3 -m http.server 8080 --directory packs                                # s
 
 Les packs sortent dans `packs/` avec `manifest.json`.
 
-**Adresse du serveur de packs** : Android, propriété Gradle `-PpackBaseUrl=https://…` (par défaut en debug : `http://10.0.2.2:8080/`, le Mac vu de l'émulateur ; vide en release, à renseigner). iOS, `PACK_BASE_URL` dans `iosApp/Configuration/Config.xcconfig` (`http:/$()/localhost:8080/` par défaut : `$()` évite que `//` soit pris pour un commentaire).
+**Adresse du serveur de packs** : Android, propriété Gradle `-PpackBaseUrl=https://…` (par défaut en debug : `http://10.0.2.2:8080/`, le Mac vu de l'émulateur). iOS, `PACK_BASE_URL` dans `iosApp/Configuration/Config.xcconfig` (`http:/$()/localhost:8080/` en debug : `$()` évite que `//` soit pris pour un commentaire). En **release**, les deux pointent vers `https://github.com/anishda/cartel/releases/latest/download/`.
+
+**Publication des packs** : le workflow `.github/workflows/packs.yml` régénère les packs chaque jeudi (Joconde est mise à jour le mercredi) et les publie dans une release `packs-AAAA-MM-JJ` marquée « latest ». Lancement manuel : onglet Actions, « Packs musée », Run workflow. `.github/workflows/ci.yml` lance les tests JVM, l'APK debug et les tests iOS à chaque push et pull request.
 
 Android 17 : pour que l'émulateur joigne le Mac, accorder la permission réseau local au build debug :
 
@@ -72,6 +76,9 @@ adb shell pm grant app.audioguide android.permission.ACCESS_LOCAL_NETWORK
 ```
 
 ## Sources et licences
+
+Code sous licence Apache-2.0 (`LICENSE`). Les packs ont leurs propres licences, par source.
+
 
 Les fiches viennent de la base Joconde (ministère de la Culture), Licence Ouverte 2.0 : la source et la date sont affichées dans l'app (fiches et écran Réglages). Aucune image n'est embarquée. Les textes du Louvre et d'Orsay ne sont pas repris tant que leurs conditions de réutilisation ne sont pas clarifiées (voir la note du vault).
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Audioguide</string>
+    <string name="app_name">Cartel</string>
 
     <string name="nav_scan">Scan</string>
     <string name="nav_search">Search</string>
@@ -98,7 +98,7 @@
     <string name="favorites_empty_body">Tap the heart on an entry, or keep a scanned label: you will find it here, even offline.</string>
     <string name="favorites_cartels">Scanned labels</string>
     <string name="favorites_share">Export as Markdown</string>
-    <string name="favorites_export_title">Favorites — Audioguide</string>
+    <string name="favorites_export_title">Favorites — Cartel</string>
     <string name="favorites_export_date">Exported on</string>
     <string name="favorite_note">Personal note</string>
     <string name="favorite_open">View entry</string>

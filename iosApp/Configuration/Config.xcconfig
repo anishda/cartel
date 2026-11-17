@@ -1,5 +1,8 @@
 TEAM_ID=
 BUNDLE_ID=app.audioguide
-APP_NAME=Audioguide
+APP_NAME=Cartel
 // Serveur de packs : « // » commencerait un commentaire, d'où $() entre les deux barres.
+// Debug : le Mac (python3 -m http.server 8080 --directory packs).
 PACK_BASE_URL=http:/$()/localhost:8080/
+// Release : la dernière release GitHub, publiée chaque semaine par .github/workflows/packs.yml.
+PACK_BASE_URL[config=Release]=https:/$()/github.com/anishda/cartel/releases/latest/download/
