@@ -1,6 +1,13 @@
 package app.audioguide.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import app.audioguide.catalog.ArtworkImage
+import coil3.compose.AsyncImage
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +57,33 @@ fun ListenButton(
             Icon(AppIcons.Play, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text(playLabel)
+        }
+    }
+}
+
+private val THUMBNAIL_SIZE = 64.dp
+
+/** Taille de miniature standard de Wikimedia, assez fine pour une vignette de 64 dp en haute densité. */
+private const val THUMBNAIL_REQUEST_WIDTH = 250
+
+/**
+ * Vignette d'une œuvre (Wikimedia Commons, en ligne puis en cache). Sans image libre, hors ligne ou pendant le
+ * chargement, un cadre neutre avec [placeholder] garde l'alignement de la liste.
+ */
+@Composable
+fun ArtworkThumbnail(image: ArtworkImage?, modifier: Modifier = Modifier, placeholder: ImageVector = AppIcons.Museum) {
+    Box(
+        modifier = modifier.size(THUMBNAIL_SIZE).clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(placeholder, contentDescription = null, tint = MaterialTheme.colorScheme.outline, modifier = Modifier.size(24.dp))
+        image?.let {
+            AsyncImage(
+                model = it.thumbnailUrl(THUMBNAIL_REQUEST_WIDTH),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize(),
+            )
         }
     }
 }

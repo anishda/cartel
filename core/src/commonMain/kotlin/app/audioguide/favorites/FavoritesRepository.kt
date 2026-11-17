@@ -1,6 +1,7 @@
 package app.audioguide.favorites
 
 import app.audioguide.catalog.Artwork
+import app.audioguide.catalog.ArtworkImage
 import app.audioguide.catalog.ArtworkNarration
 import app.audioguide.catalog.IoDispatcher
 import app.audioguide.catalog.SqliteDb
@@ -15,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 /** Base des données de l'utilisateur (`user.db`), séparée des packs : les packs se remplacent, elle reste. */
 internal object UserSchema {
-    const val VERSION = 1
+    const val VERSION = 2
 
     private val v1 = listOf(
         """
@@ -37,11 +38,19 @@ internal object UserSchema {
         "CREATE UNIQUE INDEX idx_favorite_artwork ON favorite(museum_id, reference)",
     )
 
+    // v2 : l'image de l'œuvre (nom de fichier Commons, auteur, licence) pour les miniatures.
+    private val v2 = listOf(
+        "ALTER TABLE favorite ADD COLUMN image_file TEXT",
+        "ALTER TABLE favorite ADD COLUMN image_author TEXT",
+        "ALTER TABLE favorite ADD COLUMN image_license TEXT",
+    )
+
     /** Amène la base à la dernière version. Refuse une base écrite par une version plus récente de l'app. */
     fun migrate(db: SqliteDb) {
         val current = db.query("PRAGMA user_version", map = { it.getLong(0).toInt() }).first()
         require(current <= VERSION) { "Base utilisateur trop récente : version $current" }
         if (current < 1) db.transaction { v1.forEach(db::exec) }
+        if (current < 2) db.transaction { v2.forEach(db::exec) }
         db.exec("PRAGMA user_version = $VERSION")
     }
 }
@@ -72,8 +81,10 @@ class FavoritesRepository private constructor(
         access {
             update(
                 """
-                INSERT OR IGNORE INTO favorite (kind, museum_id, museum_name, reference, title, subtitle, body, language_tag, created_at)
-                VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
+                INSERT OR IGNORE INTO favorite (
+                    kind, museum_id, museum_name, reference, title, subtitle, body, language_tag, created_at,
+                    image_file, image_author, image_license
+                ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)
                 """,
             ) { s ->
                 s.bindText(1, FavoriteKind.Artwork.name)
@@ -85,6 +96,7 @@ class FavoritesRepository private constructor(
                 s.bindText(7, ArtworkNarration.build(artwork, museumName))
                 s.bindText(8, ArtworkNarration.LANGUAGE_TAG)
                 s.bindLong(9, now())
+                bindImage(s, 10, artwork.image)
             }
         }
         refresh()
@@ -127,6 +139,17 @@ class FavoritesRepository private constructor(
         refresh()
     }
 
+    /** Complète l'image d'un favori ajouté avant que les miniatures existent. Sans effet s'il en a déjà une. */
+    suspend fun setImage(id: Long, image: ArtworkImage) {
+        access {
+            update("UPDATE favorite SET image_file = ?1, image_author = ?2, image_license = ?3 WHERE id = ?4 AND image_file IS NULL") { s ->
+                bindImage(s, 1, image)
+                s.bindLong(4, id)
+            }
+        }
+        refresh()
+    }
+
     /** Une note vide efface la note. */
     suspend fun setNote(id: Long, note: String?) {
         val text = note?.trim()?.ifEmpty { null }
@@ -143,7 +166,8 @@ class FavoritesRepository private constructor(
 
     companion object {
         private const val COLUMNS =
-            "id, kind, museum_id, museum_name, reference, title, subtitle, body, language_tag, note, created_at"
+            "id, kind, museum_id, museum_name, reference, title, subtitle, body, language_tag, note, created_at, " +
+                "image_file, image_author, image_license"
 
         /** Ouvre (et crée ou met à jour) la base [path], puis charge les favoris. [now] : millisecondes depuis 1970. */
         suspend fun open(path: String, now: () -> Long): FavoritesRepository = withContext(IoDispatcher) {
@@ -169,6 +193,15 @@ class FavoritesRepository private constructor(
             languageTag = getText(8),
             note = textOrNull(9),
             createdAt = getLong(10),
+            image = textOrNull(11)?.let { file ->
+                textOrNull(13)?.let { license -> ArtworkImage(fileName = file, author = textOrNull(12), license = license) }
+            },
         )
+
+        private fun bindImage(s: SQLiteStatement, first: Int, image: ArtworkImage?) {
+            if (image != null) s.bindText(first, image.fileName) else s.bindNull(first)
+            if (image?.author != null) s.bindText(first + 1, image.author) else s.bindNull(first + 1)
+            if (image != null) s.bindText(first + 2, image.license) else s.bindNull(first + 2)
+        }
     }
 }

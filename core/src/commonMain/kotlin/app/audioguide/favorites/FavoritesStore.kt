@@ -1,6 +1,7 @@
 package app.audioguide.favorites
 
 import app.audioguide.catalog.Artwork
+import app.audioguide.catalog.ArtworkImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
@@ -37,6 +38,8 @@ class FavoritesStore(path: String, now: () -> Long, private val scope: Coroutine
             repository.await().addArtwork(artwork, museumName)
         }
     }
+
+    suspend fun setImage(id: Long, image: ArtworkImage) = repository.await().setImage(id, image)
 
     suspend fun remove(id: Long) = repository.await().remove(id)
 

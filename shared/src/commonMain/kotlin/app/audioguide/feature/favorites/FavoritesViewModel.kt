@@ -19,7 +19,23 @@ import kotlinx.coroutines.launch
 /** Les favoris d'un même musée ; [museumName] est `null` pour les cartels sans œuvre connue. */
 data class FavoriteGroup(val museumName: String?, val items: List<Favorite>)
 
-class FavoritesViewModel(private val store: FavoritesStore) : ViewModel() {
+class FavoritesViewModel(private val store: FavoritesStore, private val catalog: Catalog) : ViewModel() {
+    /** Favoris déjà vérifiés : un favori dont l'œuvre n'a pas d'image libre n'est pas relu à chaque changement. */
+    private val checked = mutableSetOf<Long>()
+
+    init {
+        // Les favoris d'avant les miniatures n'ont pas d'image : on la prend dans le pack, s'il est encore installé.
+        viewModelScope.launch {
+            store.favorites.collect { favorites ->
+                favorites.filter { it.kind == FavoriteKind.Artwork && it.image == null && checked.add(it.id) }.forEach { favorite ->
+                    val museumId = favorite.museumId ?: return@forEach
+                    val reference = favorite.reference ?: return@forEach
+                    catalog.artwork(museumId, reference)?.image?.let { store.setImage(favorite.id, it) }
+                }
+            }
+        }
+    }
+
     val groups: StateFlow<List<FavoriteGroup>> = store.favorites.map { favorites ->
         val byMuseum = favorites.filter { it.museumName != null }
             .groupBy { it.museumName }
