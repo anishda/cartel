@@ -3,6 +3,12 @@ package app.audioguide
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.compose.LocalPlatformContext
+import app.audioguide.images.ImageCacheExpiry
+import app.audioguide.platform.currentTimeMillis
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
@@ -34,8 +40,10 @@ fun App() {
     // Ouvre les packs déjà installés avant la première recherche.
     LaunchedEffect(store) { store.refresh() }
     // Charge les réglages, puis applique la vitesse et les voix choisies dès qu'elles changent.
+    val platformContext = LocalPlatformContext.current
     LaunchedEffect(settings) {
         settings.load()
+        purgeImageCacheIfExpired(settings, SingletonImageLoader.get(platformContext))
         var applied = emptySet<String>()
         settings.settings.collect { current ->
             synthesizer.setRate(current.speechRate)
@@ -48,5 +56,20 @@ fun App() {
 
     AudioguideTheme {
         AppNavigation()
+    }
+}
+
+/** Vide les images téléchargées (miniatures et images en grand) une fois par semaine : voir [ImageCacheExpiry]. */
+private suspend fun purgeImageCacheIfExpired(settings: SettingsStore, loader: ImageLoader) {
+    when (val decision = ImageCacheExpiry.decide(settings.settings.value.imageCacheSince, currentTimeMillis())) {
+        ImageCacheExpiry.Decision.Keep -> Unit
+        is ImageCacheExpiry.Decision.Start -> settings.update { it.copy(imageCacheSince = decision.since) }
+        is ImageCacheExpiry.Decision.Clear -> {
+            withContext(Dispatchers.Default) {
+                loader.memoryCache?.clear()
+                loader.diskCache?.clear()
+            }
+            settings.update { it.copy(imageCacheSince = decision.since) }
+        }
     }
 }
