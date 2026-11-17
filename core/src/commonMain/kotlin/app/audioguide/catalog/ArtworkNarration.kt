@@ -13,33 +13,37 @@ object ArtworkNarration {
     const val SHORT_STORY_MAX_CHARS = 450
 
     /**
-     * Écoute courte, celle qu'on lance devant l'œuvre : titre, artiste, date, puis le début du récit, ou à défaut la
-     * technique. Ni fiche technique, ni lieu (on y est), ni historique.
+     * Écoute courte, celle qu'on lance devant l'œuvre : le début du récit seulement. Le titre et l'artiste sont déjà
+     * sur la fiche et sur le cartel, les redire est une répétition. Sans récit, il n'y a rien d'autre à dire : on lit
+     * alors le titre, l'artiste, la date et la technique.
      */
     fun buildShort(artwork: Artwork): String {
         val parts = mutableListOf<String>()
-        parts.addAll(heading(artwork))
-        val story = artwork.story
-        if (story != null) {
-            val intro = StoryCleaner.firstSentences(StoryCleaner.forListening(story.text), SHORT_STORY_SENTENCES, SHORT_STORY_MAX_CHARS)
-            if (intro.isNotBlank()) {
-                parts += sentence(intro)
-                parts += sentence(SHORT_ATTRIBUTION)
-            }
+        val intro = artwork.story?.let {
+            StoryCleaner.firstSentences(StoryCleaner.forListening(it.text), SHORT_STORY_SENTENCES, SHORT_STORY_MAX_CHARS)
+        }.orEmpty()
+        if (intro.isNotBlank()) {
+            parts += sentence(intro)
+            parts += sentence(SHORT_ATTRIBUTION)
         } else {
+            parts.addAll(heading(artwork))
             artwork.technique?.let { parts += sentence(it.replaceFirstChar(Char::uppercaseChar)) }
         }
         return CartelCleaner.clean(parts.joinToString("\n"))
     }
 
-    /** Écoute complète : tout le récit, puis la fiche. L'historique (chronologie illisible à voix haute) reste à l'écrit. */
+    /**
+     * Écoute complète : le récit en entier, puis la fiche. L'historique (chronologie illisible à voix haute) reste à
+     * l'écrit. Comme dans l'écoute courte, titre et artiste ne sont lus que s'il n'y a pas de récit.
+     */
     fun build(artwork: Artwork, museumName: String): String {
         val parts = mutableListOf<String>()
-        parts.addAll(heading(artwork))
-        // Le récit vient avant la fiche technique : c'est ce qu'on veut entendre devant l'œuvre.
-        artwork.story?.let { story ->
-            parts += StoryCleaner.forListening(story.text).lines().filter { it.isNotBlank() }.map(::sentence)
-            parts += sentence(storyAttribution(story))
+        val story = artwork.story?.let { StoryCleaner.forListening(it.text) }.orEmpty()
+        if (story.isNotBlank()) {
+            parts += story.lines().filter { it.isNotBlank() }.map(::sentence)
+            parts += sentence(storyAttribution(artwork.story!!))
+        } else {
+            parts.addAll(heading(artwork))
         }
         artwork.school?.let { parts += sentence("École : $it") }
         artwork.technique?.let { parts += sentence("Technique : $it") }

@@ -35,14 +35,16 @@ class ArtworkNarrationTest {
         )
         val text = ArtworkNarration.build(joconde.copy(story = story), "musée du Louvre")
         val storyAt = text.indexOf("portrait peint")
-        assertTrue(storyAt > text.indexOf("Par Léonard de Vinci."), text)
+        // Le titre et l'artiste sont sur la fiche : avec un récit, on ne les redit pas.
+        assertFalse(text.contains("Par Léonard de Vinci"), text)
+        assertTrue(text.startsWith("La Joconde est un portrait peint"), text)
         assertTrue(storyAt < text.indexOf("Technique"), text)
         assertTrue(text.contains("les plus célèbres au monde."), text)
         assertTrue(text.contains("Récit d'après l'article Wikipédia « La Joconde »."), text)
     }
 
     @Test
-    fun shortListeningKeepsTheHeadingAndTheFirstSentencesOfTheStory() {
+    fun shortListeningIsOnlyTheFirstSentencesOfTheStory() {
         val story = ArtworkStory(
             text = "La Joconde (en italien : La Gioconda) est un tableau de Léonard de Vinci. Elle est exposée au musée du Louvre à Paris. " +
                 "C'est un portrait mi-corps. Il fut acquis par François Ier. Une cinquième phrase.",
@@ -52,15 +54,15 @@ class ArtworkNarrationTest {
         val long = joconde.copy(title = "Portrait de Lisa Gherardini, épouse de Francesco del Giocondo, dit La Joconde ou Monna Lisa", story = story)
         val text = ArtworkNarration.buildShort(long)
         assertEquals(
-            "La Joconde.\nPar Léonard de Vinci.\n1er quart seizième siècle.\n" +
-                "La Joconde est un tableau de Léonard de Vinci. C'est un portrait mi-corps. Il fut acquis par François premier.\nSource : Wikipédia.",
+            "La Joconde est un tableau de Léonard de Vinci. C'est un portrait mi-corps. Il fut acquis par François premier.\nSource : Wikipédia.",
             text,
         )
     }
 
     @Test
-    fun shortListeningWithoutStoryEndsWithTheTechnique() {
+    fun withoutAStoryTheHeadingIsReadAgainAndTheShortListeningEndsWithTheTechnique() {
         val text = ArtworkNarration.buildShort(joconde)
+        assertTrue(text.startsWith("La Joconde.\nPar Léonard de Vinci."), text)
         assertTrue(text.endsWith("Peinture à l'huile, bois."), text)
         assertFalse(text.contains("Conservé"), text)
     }
