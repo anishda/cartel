@@ -159,12 +159,12 @@ class ScanSession(
     /** Lit la traduction avec la voix française. */
     fun speakTranslation() {
         val done = local.value.translation as? TranslationState.Done ?: return
-        synthesizer.speak(SpeechText.prepare(done.text), TRANSLATION_TARGET_TAG)
+        synthesizer.speak(SpeechText.prepare(done.text, TRANSLATION_TARGET_TAG), TRANSLATION_TARGET_TAG)
     }
 
     fun speak() {
         val current = local.value
-        if (current.cleanedText.isNotBlank()) synthesizer.speak(SpeechText.prepare(current.cleanedText), current.languageTag)
+        if (current.cleanedText.isNotBlank()) synthesizer.speak(SpeechText.prepare(current.cleanedText, current.languageTag), current.languageTag)
     }
 
     fun stop() = synthesizer.stop()

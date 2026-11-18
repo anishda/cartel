@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.audioguide.favorites.Favorite
+import app.audioguide.favorites.FavoriteKind
 import app.audioguide.favorites.FavoritesExport
 import app.audioguide.favorites.isoDate
 import app.audioguide.platform.currentTimeMillis
@@ -41,6 +42,7 @@ import app.audioguide.resources.favorites_share
 import app.audioguide.resources.favorites_subtitle
 import app.audioguide.resources.favorites_title
 import app.audioguide.ui.AppIcons
+import app.audioguide.ui.components.ArtworkThumbnail
 import app.audioguide.ui.components.EmptyState
 import app.audioguide.ui.components.ScreenHeader
 import app.audioguide.ui.components.SectionLabel
@@ -113,8 +115,12 @@ private fun FavoriteRow(favorite: Favorite, onClick: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(horizontal = 20.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
     ) {
+        ArtworkThumbnail(
+            favorite.image,
+            placeholder = if (favorite.kind == FavoriteKind.Cartel) AppIcons.Camera else AppIcons.Museum,
+        )
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(favorite.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
             favorite.subtitle?.let {

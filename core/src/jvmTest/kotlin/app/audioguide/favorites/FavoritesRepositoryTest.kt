@@ -1,6 +1,7 @@
 package app.audioguide.favorites
 
 import app.audioguide.catalog.Artwork
+import app.audioguide.catalog.ArtworkImage
 import app.audioguide.catalog.SqliteDb
 import java.nio.file.Files
 import kotlin.io.path.deleteRecursively
@@ -129,4 +130,95 @@ class FavoritesRepositoryTest {
         SqliteDb.open(dbPath).use { it.exec("PRAGMA user_version = 99") }
         assertFailsWith<IllegalArgumentException> { open() }
     }
+
+    private val image = ArtworkImage("Edouard Manet - Olympia.jpg", "Édouard Manet", "Public domain")
+
+    @Test
+    fun theImageOfTheArtworkIsKeptInTheSnapshot() = runTest {
+        val repository = open()
+        repository.addArtwork(olympia.copy(image = image), "musée d'Orsay")
+        assertEquals(image, repository.favorites.value.single().image)
+        repository.close()
+        // Et après réouverture.
+        val reopened = open()
+        assertEquals(image, reopened.favorites.value.single().image)
+        reopened.close()
+    }
+
+    @Test
+    fun anArtworkWithoutImageHasNone() = runTest {
+        val repository = open()
+        assertNull(repository.addArtwork(olympia, "musée d'Orsay").image)
+        repository.close()
+    }
+
+    @Test
+    fun aVersionOneDatabaseIsUpgradedAndItsFavoritesCanGetAnImage() = runTest {
+        SqliteDb.open(dbPath).use { db ->
+            db.exec(
+                """
+                CREATE TABLE favorite (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, kind TEXT NOT NULL, museum_id TEXT, museum_name TEXT,
+                    reference TEXT, title TEXT NOT NULL, subtitle TEXT, body TEXT NOT NULL, language_tag TEXT NOT NULL,
+                    note TEXT, created_at INTEGER NOT NULL
+                )
+                """.trimIndent(),
+            )
+            db.exec("CREATE UNIQUE INDEX idx_favorite_artwork ON favorite(museum_id, reference)")
+            db.exec("INSERT INTO favorite (kind, museum_id, museum_name, reference, title, body, language_tag, created_at) VALUES ('Artwork', 'orsay', 'musée d''Orsay', 'M5060-1', 'Olympia', 'Olympia.', 'fr-FR', 1)")
+            db.exec("PRAGMA user_version = 1")
+        }
+        val repository = open()
+        val old = repository.favorites.value.single()
+        assertNull(old.image)
+
+        repository.setImage(old.id, image)
+        assertEquals(image, repository.favorites.value.single().image)
+
+        // Une image déjà présente n'est jamais écrasée.
+        repository.setImage(old.id, ArtworkImage("Autre.jpg", null, "CC0"))
+        assertEquals(image, repository.favorites.value.single().image)
+        repository.close()
+    }
+
+    @Test
+    fun anArtworkKeepsItsShortListeningAndACartelDoesNot() = runTest {
+        val repository = open()
+        val artwork = repository.addArtwork(olympia.copy(technique = "peinture à l'huile"), "musée d'Orsay")
+        assertTrue(artwork.shortBody!!.isNotBlank())
+        assertNull(repository.addCartel("Un cartel", "Texte", "fr-FR").shortBody)
+        repository.close()
+    }
+
+    @Test
+    fun narrationOfAnOlderFavoriteCanBeRebuilt() = runTest {
+        SqliteDb.open(dbPath).use { db ->
+            db.exec(
+                """
+                CREATE TABLE favorite (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, kind TEXT NOT NULL, museum_id TEXT, museum_name TEXT,
+                    reference TEXT, title TEXT NOT NULL, subtitle TEXT, body TEXT NOT NULL, language_tag TEXT NOT NULL,
+                    note TEXT, created_at INTEGER NOT NULL
+                )
+                """.trimIndent(),
+            )
+            db.exec("CREATE UNIQUE INDEX idx_favorite_artwork ON favorite(museum_id, reference)")
+            db.exec("INSERT INTO favorite (kind, museum_id, museum_name, reference, title, body, language_tag, created_at) VALUES ('Artwork', 'orsay', 'musée d''Orsay', 'M5060-1', 'Olympia', 'ancien texte', 'fr-FR', 1)")
+            db.exec("PRAGMA user_version = 1")
+        }
+        val repository = open()
+        val old = repository.favorites.value.single()
+        assertNull(old.shortBody)
+
+        repository.setNarration(old.id, "nouveau texte complet", "nouveau texte court")
+        val updated = repository.favorites.value.single()
+        assertEquals("nouveau texte complet", updated.body)
+        assertEquals("nouveau texte court", updated.shortBody)
+        // Un cartel n'est jamais réécrit.
+        val cartel = repository.addCartel("Cartel", "Texte", "fr-FR")
+        repository.setNarration(cartel.id, "autre", "autre")
+        assertEquals("Texte", repository.favorites.value.first { it.id == cartel.id }.body)
+        repository.close()
+    }
 }
+

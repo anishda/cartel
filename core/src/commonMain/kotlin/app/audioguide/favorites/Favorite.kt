@@ -1,5 +1,7 @@
 package app.audioguide.favorites
 
+import app.audioguide.catalog.ArtworkImage
+
 enum class FavoriteKind {
     /** Une œuvre d'un pack musée (retrouvable dans le catalogue tant que le pack est installé). */
     Artwork,
@@ -28,4 +30,8 @@ data class Favorite(
     val note: String?,
     /** Millisecondes depuis 1970. */
     val createdAt: Long,
+    /** Image libre de l'œuvre (Commons) au moment de l'ajout : le fichier est rechargé en ligne, pas gardé ici. */
+    val image: ArtworkImage? = null,
+    /** Écoute courte (début du récit) : `null` pour un cartel scanné, ou un favori d'avant l'écoute courte. */
+    val shortBody: String? = null,
 )
