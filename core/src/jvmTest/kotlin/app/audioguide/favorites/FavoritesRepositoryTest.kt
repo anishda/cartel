@@ -1,6 +1,7 @@
 package app.audioguide.favorites
 
 import app.audioguide.catalog.Artwork
+import app.audioguide.catalog.ArtworkImage
 import app.audioguide.catalog.SqliteDb
 import java.nio.file.Files
 import kotlin.io.path.deleteRecursively
@@ -128,5 +129,55 @@ class FavoritesRepositoryTest {
     fun refusesADatabaseFromANewerApp() = runTest {
         SqliteDb.open(dbPath).use { it.exec("PRAGMA user_version = 99") }
         assertFailsWith<IllegalArgumentException> { open() }
+    }
+
+    private val image = ArtworkImage("Edouard Manet - Olympia.jpg", "Édouard Manet", "Public domain")
+
+    @Test
+    fun theImageOfTheArtworkIsKeptInTheSnapshot() = runTest {
+        val repository = open()
+        repository.addArtwork(olympia.copy(image = image), "musée d'Orsay")
+        assertEquals(image, repository.favorites.value.single().image)
+        repository.close()
+        // Et après réouverture.
+        val reopened = open()
+        assertEquals(image, reopened.favorites.value.single().image)
+        reopened.close()
+    }
+
+    @Test
+    fun anArtworkWithoutImageHasNone() = runTest {
+        val repository = open()
+        assertNull(repository.addArtwork(olympia, "musée d'Orsay").image)
+        repository.close()
+    }
+
+    @Test
+    fun aVersionOneDatabaseIsUpgradedAndItsFavoritesCanGetAnImage() = runTest {
+        SqliteDb.open(dbPath).use { db ->
+            db.exec(
+                """
+                CREATE TABLE favorite (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, kind TEXT NOT NULL, museum_id TEXT, museum_name TEXT,
+                    reference TEXT, title TEXT NOT NULL, subtitle TEXT, body TEXT NOT NULL, language_tag TEXT NOT NULL,
+                    note TEXT, created_at INTEGER NOT NULL
+                )
+                """.trimIndent(),
+            )
+            db.exec("CREATE UNIQUE INDEX idx_favorite_artwork ON favorite(museum_id, reference)")
+            db.exec("INSERT INTO favorite (kind, museum_id, museum_name, reference, title, body, language_tag, created_at) VALUES ('Artwork', 'orsay', 'musée d''Orsay', 'M5060-1', 'Olympia', 'Olympia.', 'fr-FR', 1)")
+            db.exec("PRAGMA user_version = 1")
+        }
+        val repository = open()
+        val old = repository.favorites.value.single()
+        assertNull(old.image)
+
+        repository.setImage(old.id, image)
+        assertEquals(image, repository.favorites.value.single().image)
+
+        // Une image déjà présente n'est jamais écrasée.
+        repository.setImage(old.id, ArtworkImage("Autre.jpg", null, "CC0"))
+        assertEquals(image, repository.favorites.value.single().image)
+        repository.close()
     }
 }

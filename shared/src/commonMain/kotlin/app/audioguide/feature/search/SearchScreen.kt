@@ -52,6 +52,7 @@ import app.audioguide.resources.search_no_packs_title
 import app.audioguide.resources.search_no_results
 import app.audioguide.resources.search_placeholder
 import app.audioguide.ui.AppIcons
+import app.audioguide.ui.components.ArtworkThumbnail
 import app.audioguide.ui.components.EmptyState
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -148,7 +149,7 @@ private fun ArtworkRow(artwork: Artwork, museumName: String, onClick: () -> Unit
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        ArtworkThumbnail(artwork)
+        ArtworkThumbnail(artwork.image)
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(artwork.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
             val subtitle = listOfNotNull(artwork.artist, artwork.dateText).joinToString(" · ")
@@ -161,33 +162,6 @@ private fun ArtworkRow(artwork: Artwork, museumName: String, onClick: () -> Unit
         Icon(AppIcons.Chevron, contentDescription = null, tint = MaterialTheme.colorScheme.outline)
     }
 }
-
-/**
- * Vignette de l'œuvre (Wikimedia Commons, en ligne puis en cache). Sans image libre, hors ligne ou pendant le
- * chargement, un cadre neutre garde l'alignement de la liste. Auteur et licence sont sur la fiche.
- */
-@Composable
-private fun ArtworkThumbnail(artwork: Artwork) {
-    Box(
-        modifier = Modifier.size(THUMBNAIL_SIZE).clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(AppIcons.Museum, contentDescription = null, tint = MaterialTheme.colorScheme.outline, modifier = Modifier.size(24.dp))
-        artwork.image?.let { image ->
-            AsyncImage(
-                model = image.thumbnailUrl(THUMBNAIL_REQUEST_WIDTH),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.matchParentSize(),
-            )
-        }
-    }
-}
-
-private val THUMBNAIL_SIZE = 64.dp
-
-/** Taille de miniature standard de Wikimedia, assez fine pour une vignette de 64 dp en haute densité. */
-private const val THUMBNAIL_REQUEST_WIDTH = 250
 
 /** « musée du Louvre » → « Louvre », « musée de l'Orangerie des Tuileries » → « Orangerie des Tuileries ». */
 internal fun shortMuseumName(name: String): String =
