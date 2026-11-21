@@ -10,11 +10,24 @@ object SpeechText {
     private val roman = Regex("""[IVXLCDM]+""")
     private val paragraphBreak = Regex("""\n[ \t]*\n+""")
 
-    fun prepare(text: String): String =
-        text.split(paragraphBreak)
+    /**
+     * [languageTag] : langue du texte (`fr-FR`…). En français, les nombres sont écrits en toutes lettres
+     * ([FrenchNumbers]) ; sans langue, ou dans une autre, le texte garde ses chiffres. En français et en anglais, les
+     * siècles et les numéros de souverains en chiffres romains sont dits en lettres ([RomanNumerals]).
+     */
+    fun prepare(text: String, languageTag: String? = null): String {
+        val french = languageTag?.startsWith("fr", ignoreCase = true) == true
+        val english = languageTag?.startsWith("en", ignoreCase = true) == true
+        fun spoken(paragraph: String) = when {
+            french -> FrenchNumbers.spellNumbersIn(RomanNumerals.spellFrench(paragraph))
+            english -> RomanNumerals.spellEnglish(paragraph)
+            else -> paragraph
+        }
+        return text.split(paragraphBreak)
             .map { paragraph -> paragraph.lines().map { it.trim() }.filter { it.isNotEmpty() }.joinToString(" ") }
             .filter { it.isNotEmpty() }
-            .joinToString("\n\n") { endWithPunctuation(softenCapitals(it)) }
+            .joinToString("\n\n") { endWithPunctuation(softenCapitals(spoken(it))) }
+    }
 
     private val shortCaps = Regex("""\b\p{Lu}{2,3}\b""")
 
