@@ -1,50 +1,58 @@
 # Cartel
 
-Anciennement « Audioguide Musées » (nom de travail).
+**English** · [Français](README.fr.md)
 
-App Kotlin Multiplatform (Android + iOS, UI Compose Multiplatform) : scanner le cartel d'une œuvre et l'écouter, hors ligne ; retrouver une œuvre dans des « packs musée » téléchargés ; garder ses favoris. Cadrage complet dans la note du vault Veaucer : `01.Projects/Dev - Audioguide Musées (KMP).md`.
+Cartel reads museum labels (*cartels*) aloud, offline, and tells the story of the artwork when open data exists. Point your phone at a label, listen to it, find the artwork in a downloaded museum pack and keep it in your favorites.
 
-## Ce que fait l'app
+Open source (Apache-2.0), Android and iOS, built with Kotlin Multiplatform and Compose Multiplatform. Museums covered: **Louvre**, **Musée d'Orsay** and **Musée de l'Orangerie** (Paris).
 
-- **Scanner** : scan en direct (CameraX + ML Kit sur Android, VisionKit sur iOS) ou photo importée → OCR → **isolation du cartel** → nettoyage du texte → lecture vocale hors ligne. La langue du cartel est devinée ; sur un **cartel bilingue**, l'app ne propose que ses langues et lit celle choisie (celle du téléphone par défaut). Le texte lu est **modifiable** avant l'écoute. Si un pack installé contient l'œuvre, elle est reconnue (inventaire, titre, artiste) et sa fiche est proposée.
-- **Rechercher** : par titre, artiste ou numéro d'inventaire, dans les musées téléchargés. Fiche détaillée, lecture à voix haute.
-- **Favoris** : cœur sur une fiche ou sur l'œuvre reconnue, ou « Garder ce cartel » pour un texte sans œuvre connue. Un instantané est gardé : lisibles sans réseau, même si le pack est supprimé. Note personnelle, export en Markdown (feuille de partage, pour Obsidian).
-- **Musées** : téléchargement, mise à jour et suppression des packs (Louvre, Orsay, Orangerie).
-- **Réglages** : vitesse de lecture, **choix de la voix par langue** (qualité standard / améliorée / premium, essai), crédits, vie privée.
+> **Status:** in development, not yet published on the App Store or Google Play. The automated tests pass, but scanning and speech have not yet been checked on a real device (see [What is not verified](#what-is-not-verified)).
 
-## Comment le scan lit un cartel
+## Features
 
-L'OCR ne rend pas du texte à plat mais des **lignes avec leur position** (`TextLine`). Ensuite, tout est dans `:core`, testable sans appareil :
+- **Scan**: live scan (CameraX + ML Kit on Android, VisionKit on iOS) or an imported photo, then OCR, **label isolation**, text cleanup and offline speech. The label's language is detected; on a **bilingual label**, the app only offers that label's languages and reads the chosen one (the phone's language by default). The text can be **edited** before listening. If an installed pack contains the artwork, it is recognized (inventory number, title, artist) and its page is offered.
+- **Search**: by title, artist or inventory number, in the downloaded museums. Well-known artworks come first. Detailed artwork page, read aloud.
+- **Stories**: when the artwork has a French Wikipedia article, its introduction is read before the technical details, with attribution (CC BY-SA 4.0) and a link to the article.
+- **Images**: only freely licensed Wikimedia Commons images, loaded online when the page opens and then cached, with author and license.
+- **Favorites**: a heart on an artwork page or on the recognized artwork, or "Keep this label" for text with no known artwork. A snapshot is kept: favorites stay readable offline, even if the pack is deleted. Personal note, Markdown export (share sheet, e.g. to Obsidian).
+- **Museums**: download, update and delete packs.
+- **Settings**: speech rate, **voice per language** (standard / enhanced / premium quality, with a preview), credits, privacy.
 
-1. `LabelReader` : une photo petite ou douteuse est relue en **recadrant sur le texte et en l'agrandissant** (le gain d'OCR le plus net : une bannière de 337 px passe de 0,87 à 1,00 de confiance). Garde la meilleure des deux lectures.
-2. `LabelExtractor` : écarte le bruit (logos, filigranes, adresses web, téléphones, texte vertical, lignes peu sûres), retient la zone de texte principale (la plus fournie, la plus centrée), repère les **colonnes** par leur gouttière, recolle les morceaux d'une même ligne colonne par colonne et rebâtit les **paragraphes d'après l'interligne** (mesuré sur le centre des lignes : une photo de biais fausse la hauteur des boîtes).
-3. `LabelLanguages` : une langue par colonne (ou ligne à ligne si les colonnes n'ont pas été reconnues), puis `CartelCleaner` nettoie chaque version (n° d'inventaire, dates, abréviations).
-4. `SpeechText` : ponctuation finale, capitales adoucies (« GAUGUIN » → « Gauguin »), puis les synthétiseurs marquent **une pause entre les paragraphes**.
+UI in French and English, five tabs, dark mode. Once a pack is downloaded, everything works offline except artwork images.
 
-Les fixtures `core/src/jvmTest/resources/ocr/*.json` sont de vraies sorties d'OCR (texte anonymisé) de trois cartels photographiés : elles protègent les réglages de l'extracteur.
+## How a label is read
 
-## Structure
+OCR returns **lines with their position** (`TextLine`), not flat text. Everything after that lives in `:core` and is testable without a device:
+
+1. `LabelReader`: a small or doubtful photo is read again **cropped to the text and enlarged** (the biggest OCR gain: a 337 px banner goes from 0.87 to 1.00 confidence). Keeps the better of the two reads.
+2. `LabelExtractor`: drops noise (logos, watermarks, web addresses, phone numbers, vertical text, low-confidence lines), keeps the main text area (the densest, most centered one), finds **columns** by their gutter, joins the pieces of a line column by column and rebuilds **paragraphs from line spacing** (measured on line centers, because a skewed photo distorts box heights).
+3. `LabelLanguages`: one language per column (or line by line if no columns were found), then `CartelCleaner` cleans each version (inventory numbers, dates, abbreviations).
+4. `SpeechText`: final punctuation, softened capitals ("GAUGUIN" becomes "Gauguin"), then the synthesizers insert **a pause between paragraphs**.
+
+The fixtures in `core/src/jvmTest/resources/ocr/*.json` are real OCR outputs (anonymized text) of three photographed labels: they protect the extractor's tuning.
+
+## Project structure
 
 ```
-core/          KMP sans interface : domaine du cartel, catalogue, favoris, réglages, format des packs
-shared/        Compose Multiplatform (écrans, navigation, thème) + accès natifs (OCR, voix, caméra, partage)
-androidApp/    Application Android
-iosApp/        Projet Xcode (SwiftUI qui embarque Compose + scanner VisionKit en Swift)
-pack-builder/  Outil JVM : fabrique les packs à partir de la base Joconde
-tools/         make-icons.py : régénère l'icône (Pillow)
-packs/         Packs générés (ignorés par git)
+core/          KMP, no UI: label domain, catalog, favorites, settings, pack format
+shared/        Compose Multiplatform (screens, navigation, theme) + native access (OCR, speech, camera, sharing)
+androidApp/    Android application
+iosApp/        Xcode project (SwiftUI hosting Compose + VisionKit scanner in Swift)
+pack-builder/  JVM tool: builds the packs from the Joconde database
+tools/         make-icons.py: regenerates the icon (Pillow)
+packs/         Generated packs (ignored by git)
 ```
 
-Un nouvel onglet se déclare dans `TopLevel` (`shared/.../ui/navigation/Navigation.kt`).
+OCR and speech are native, behind interfaces injected with Koin. Storage uses bundled `androidx.sqlite`; networking uses Ktor; images use Coil 3. A new tab is declared in `TopLevel` (`shared/.../ui/navigation/Navigation.kt`).
 
-## Commandes
+## Build and test
 
-JDK 21 requis (le JDK par défaut de la machine est un build Valhalla expérimental). Le démon Gradle est épinglé sur un JDK 25 (`gradle/gradle-daemon-jvm.properties`) : `:core` vise donc explicitement Java 11 pour que `:pack-builder` (JDK 21) puisse le charger.
+Requires JDK 21 (for `:pack-builder`) and JDK 25 (the Gradle daemon is pinned in `gradle/gradle-daemon-jvm.properties`; `:core` targets Java 11 so that `:pack-builder` can load it). Android: minSdk 24. iOS: 16.0 or later.
 
 ```bash
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)   # macOS
 ./gradlew :core:jvmTest :core:iosSimulatorArm64Test :pack-builder:test :shared:jvmTest   # tests
-./gradlew :androidApp:assembleDebug                                                      # APK debug
+./gradlew :androidApp:assembleDebug                                                      # debug APK
 ```
 
 ```bash
@@ -53,45 +61,48 @@ xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator 
   CODE_SIGNING_ALLOWED=NO build
 ```
 
-`local.properties` (ignoré par git) doit contenir `sdk.dir=/Users/<toi>/Library/Android/sdk`.
+`local.properties` (ignored by git) must contain `sdk.dir=` pointing to your Android SDK.
 
-## Fabriquer et servir les packs
+CI (`.github/workflows/ci.yml`) runs the JVM tests, the debug APK and the iOS simulator tests on every push and pull request.
+
+## Building and serving packs
 
 ```bash
-./gradlew :pack-builder:run --args="--out packs --cache build/pack-cache"   # tous les musées
-./gradlew :pack-builder:run --args="--museum orsay"                          # un seul
-python3 -m http.server 8080 --directory packs                                # serveur de développement
+./gradlew :pack-builder:run --args="--out packs --cache build/pack-cache"   # all museums
+./gradlew :pack-builder:run --args="--museum orsay"                          # a single one
+python3 -m http.server 8080 --directory packs                                # development server
 ```
 
-Les packs sortent dans `packs/` avec `manifest.json`.
+Packs are written to `packs/` along with `manifest.json`. `--stories no` builds packs without stories.
 
-**Adresse du serveur de packs** : Android, propriété Gradle `-PpackBaseUrl=https://…` (pour un serveur local depuis l'émulateur : `-PpackBaseUrl=http://10.0.2.2:8080/`, le Mac vu de l'émulateur ; ce n'est pas joignable depuis un vrai téléphone). iOS, `PACK_BASE_URL` dans `iosApp/Configuration/Config.xcconfig` (`http:/$()/localhost:8080/` en debug : `$()` évite que `//` soit pris pour un commentaire). Par défaut, Android (debug et release) et iOS en release pointent vers `https://github.com/anishda/cartel/releases/latest/download/`.
+**Pack server address**: on Android, the Gradle property `-PpackBaseUrl=https://…` (for a local server seen from the emulator: `-PpackBaseUrl=http://10.0.2.2:8080/`; not reachable from a real phone). On iOS, `PACK_BASE_URL` in `iosApp/Configuration/Config.xcconfig` (`http:/$()/localhost:8080/` in debug: `$()` prevents `//` from being read as a comment). By default, Android (debug and release) and iOS release point to `https://github.com/anishda/cartel/releases/latest/download/`.
 
-**Publication des packs** : le workflow `.github/workflows/packs.yml` régénère les packs chaque jeudi (Joconde est mise à jour le mercredi) et les publie dans une release `packs-AAAA-MM-JJ` marquée « latest ». Lancement manuel : onglet Actions, « Packs musée », Run workflow. `.github/workflows/ci.yml` lance les tests JVM, l'APK debug et les tests iOS à chaque push et pull request.
+**Publishing**: the workflow `.github/workflows/packs.yml` rebuilds the packs every Thursday (Joconde is updated on Wednesdays) and publishes them in a `packs-YYYY-MM-DD` release marked "latest". Manual run: Actions tab, "Packs musée", Run workflow.
 
-Android 17 : pour que l'émulateur joigne le Mac, accorder la permission réseau local au build debug :
+On Android 17, to let the emulator reach your computer, grant the local network permission to the debug build:
 
 ```bash
 adb shell pm grant io.github.anishda.cartel android.permission.ACCESS_LOCAL_NETWORK
 ```
 
-## Sources et licences
+## Data sources and licenses
 
-Code sous licence Apache-2.0 (`LICENSE`). Les packs ont leurs propres licences, par source.
+The code is licensed under Apache-2.0 (`LICENSE`). Packs carry their own licenses, per source.
 
+- **Artwork records**: the Joconde database (French Ministry of Culture, via POP), Licence Ouverte 2.0. Source and date are shown in the app (artwork pages and Settings). Texts written by the Louvre and Orsay are not reused.
+- **Stories (pack format v2)**: `pack-builder` links each artwork to Wikidata by its inventory number (P217) in a museum collection (P195), confirmed by a close artist name or title (one number sometimes refers to two objects: RF 644 is both Olympia and a bust). The introduction of the French Wikipedia article becomes the story, under CC BY-SA 4.0 with a link to the article. Notability (number of Wikimedia articles) ranks well-known artworks first in search. Packs of 2026-11-17: Louvre 6,883 linked artworks and 640 stories, Orsay 2,209 and 324, Orangerie 11 and 7.
+- **Images (pack format v3)**: Wikidata gives the artwork's image (P18); `pack-builder` queries Commons and keeps only **free licenses** (public domain, CC0, CC BY, CC BY-SA; CC BY and CC BY-SA require an author). The pack only holds the file name, author and license. The app loads the thumbnail (500 px, about 100 KB) when the page opens, caches it on disk, and shows the author and license under the image with a link to its Commons page. Offline, an artwork never opened has no image; the rest of the page is unchanged. No image is embedded in the packs (embedding thumbnails would cost about 150 MB for the Louvre). Packs of 2026-11-17: Louvre 3,508 images, Orsay 1,119, Orangerie 9.
 
-Les fiches viennent de la base Joconde (ministère de la Culture), Licence Ouverte 2.0 : la source et la date sont affichées dans l'app (fiches et écran Réglages). Aucune image n'est embarquée dans les packs. Les textes du Louvre et d'Orsay ne sont pas repris (pas de demande d'autorisation, décision du 2026-11-17).
+No generative AI is used to write artwork stories: only sourced open data. Pack formats v1, v2 and v3 remain readable by the app.
 
-**Récits (format de pack v2)** : `pack-builder` relie chaque œuvre à Wikidata par son numéro d'inventaire (P217) dans une collection du musée (P195), confirmé par un nom d'artiste ou un titre proche (un même numéro désigne parfois deux objets : RF 644 est Olympia et un buste). Quand l'œuvre a un article sur Wikipédia en français, son introduction devient le récit de la fiche, lu avant la fiche technique, avec l'attribution (CC BY-SA 4.0) et un lien vers l'article. La notoriété (nombre d'articles Wikimedia) fait remonter les œuvres connues dans la recherche. Packs du 2026-11-17 : Louvre 6 883 œuvres reliées et 640 récits, Orsay 2 209 et 324, Orangerie 11 et 7. `--stories no` fabrique des packs sans récits. Les packs v1 et v2 restent lisibles par l'app.
-
-**Images (format de pack v3)** : Wikidata donne l'image de l'œuvre (P18) ; `pack-builder` interroge Commons et ne garde que les **licences libres** (domaine public, CC0, CC BY, CC BY-SA ; CC BY et CC BY-SA exigent un auteur). Le pack ne contient que le nom du fichier, l'auteur et la licence : l'app charge la miniature (500 px, environ 100 Ko) quand la fiche s'ouvre, avec **Coil 3** (nouvelle dépendance, `coil-compose` et `coil-network-ktor3`), la garde dans son cache disque, et affiche l'auteur et la licence sous l'image avec un lien vers sa page Commons. Sans réseau, une œuvre jamais ouverte n'a pas d'image ; le reste de la fiche ne change pas. Embarquer les miniatures coûterait environ 150 Mo pour le Louvre. Packs du 2026-11-17 : Louvre 3 508 images, Orsay 1 119, Orangerie 9.
+## What is not verified
 
 **Phonèmes pour la voix neuronale (format de pack v4)** : la voix Piper (sherpa-onnx, Apache-2.0) ne transforme plus le texte en phonèmes elle-même, car espeak-ng est sous GPL-3. `pack-builder --phonemizer "<commande>"` phonétise donc à la fabrication les textes lus des œuvres qui ont un récit (écoute courte et complète, segment de lecture par segment) avec `tools/phonemize.py` (`pip install piper-tts`, voix `fr_FR-siwis-medium` ; espeak-ng reste dans l'outil, jamais dans l'app), et les range dans la table `narration_phoneme`, clé = empreinte FNV-1a du segment (`NarrationPhonemes.key`). Les nombres sont déjà écrits en lettres et les corrections de prononciation (`PiperPronunciations`) appliquées. Pour le Louvre : 2 334 segments, +0,8 Mo (+14 %). Sans `--phonemizer`, les packs n'ont pas la table et l'app lit à la voix du système. Les packs v1 à v3 restent lisibles.
 
 ## Ce qui n'est pas vérifié
 
-Rien de ce qui touche l'OCR et la voix **sur un appareil** : ML Kit et Vision n'ont été exercés que via les fixtures et le calibrage sur des photos (OCR du Mac), pas dans l'app ; le scan en direct (cadence, résolution 1080p, VisionKit) et l'import de photo sur un vrai cartel ; la qualité des voix à l'oreille et la liste des voix installées. Les tests automatiques (JVM, iOS, Gradle) couvrent le cœur de `:core` et la session de scan.
+Work in progress in open pull requests, not yet merged: an optional natural voice on Android (Piper via sherpa-onnx), precomputed phonemes in packs (format v4), numbers spelled out for French speech, thumbnails and a player in favorites.
 
-## Identifiants
+## Identifiers
 
-Application Android et bundle iOS : `io.github.anishda.cartel` (décidé le 2026-11-17). Le package Kotlin reste `app.audioguide` : il n'est pas visible des stores.
+Android application and iOS bundle: `io.github.anishda.cartel`. The Kotlin package remains `app.audioguide` (not visible on the stores). Cartel was previously developed under the working name "Audioguide Musées".
