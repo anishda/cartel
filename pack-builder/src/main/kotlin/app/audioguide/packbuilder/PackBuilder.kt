@@ -1,6 +1,9 @@
 package app.audioguide.packbuilder
 
+import app.audioguide.catalog.ArtworkDraft
 import app.audioguide.catalog.JocondeMapper
+import app.audioguide.catalog.NarrationPhonemes
+import app.audioguide.catalog.toArtwork
 import app.audioguide.catalog.PackInfo
 import app.audioguide.catalog.PackWriter
 import app.audioguide.packs.PackManifest
@@ -19,6 +22,8 @@ class PackBuilder(
     private val log: (String) -> Unit = ::println,
     /** Source des liens Wikidata et des récits Wikipedia ; `null` : pack sans récits. */
     private val wikimedia: WikimediaSource? = null,
+    /** Phonèmes des textes lus pour la voix neuronale ; `null` : packs sans phonèmes (voix du système seulement). */
+    private val phonemizer: Phonemizer? = null,
 ) {
     /** Fabrique le pack de [museum] et retourne son entrée de manifeste. */
     fun build(museum: MuseumSpec, sourceUpdatedAt: String?): PackManifestEntry {
@@ -43,8 +48,10 @@ class PackBuilder(
 
         // Date et heure (UTC) : l'app propose la mise à jour quand cette valeur change, même pour deux builds le même jour.
         val version = DateTimeFormatter.ofPattern("yyyy-MM-dd.HHmm").format(LocalDateTime.now(ZoneOffset.UTC))
+        val phonemes = phonemizer?.let { phonemize(museum, drafts, it) }.orEmpty()
         val count = PackWriter.create(file.toString()).use { writer ->
             drafts.forEach(writer::add)
+            phonemes.forEach { (key, value) -> writer.addPhonemes(key, value) }
             writer.finish(
                 PackInfo(
                     museumId = museum.id,
@@ -75,6 +82,19 @@ class PackBuilder(
             source = JocondeSource.NAME,
             license = JocondeSource.LICENSE,
         )
+    }
+
+    /**
+     * Phonèmes des textes lus des œuvres qui ont un récit (clé de segment → phonèmes). Les autres œuvres n'ont que
+     * l'en-tête et la technique, que la voix du système lit très bien : elles ne grossissent pas le pack.
+     */
+    internal fun phonemize(museum: MuseumSpec, drafts: List<ArtworkDraft>, phonemizer: Phonemizer): Map<String, String> {
+        val segments = drafts.filter { it.story != null }
+            .flatMap { NarrationPhonemes.segments(it.toArtwork(museum.id), museum.name) }
+            .distinct()
+        log("${museum.name} : phonétisation de ${segments.size} segments de lecture…")
+        val phonemes = phonemizer.phonemize(segments.map(NarrationPhonemes::textToPhonemize))
+        return segments.indices.associate { NarrationPhonemes.key(segments[it]) to phonemes[it] }.filterValues { it.isNotBlank() }
     }
 
     /** Fabrique les packs de [museums] et écrit `manifest.json` à côté. */

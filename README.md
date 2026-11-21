@@ -97,7 +97,9 @@ No generative AI is used to write artwork stories: only sourced open data. Pack 
 
 ## What is not verified
 
-Nothing involving OCR and speech **on a device**: ML Kit and Vision were only exercised through fixtures and calibration on photos (macOS OCR), not in the app; live scanning (frame rate, 1080p resolution, VisionKit) and photo import on a real label; voice quality by ear and the list of installed voices. The automated tests (JVM, iOS, Gradle) cover the core of `:core` and the scan session.
+**Phonèmes pour la voix neuronale (format de pack v4)** : la voix Piper (sherpa-onnx, Apache-2.0) ne transforme plus le texte en phonèmes elle-même, car espeak-ng est sous GPL-3. `pack-builder --phonemizer "<commande>"` phonétise donc à la fabrication les textes lus des œuvres qui ont un récit (écoute courte et complète, segment de lecture par segment) avec `tools/phonemize.py` (`pip install piper-tts`, voix `fr_FR-siwis-medium` ; espeak-ng reste dans l'outil, jamais dans l'app), et les range dans la table `narration_phoneme`, clé = empreinte FNV-1a du segment (`NarrationPhonemes.key`). Les nombres sont déjà écrits en lettres et les corrections de prononciation (`PiperPronunciations`) appliquées. Pour le Louvre : 2 334 segments, +0,8 Mo (+14 %). Sans `--phonemizer`, les packs n'ont pas la table et l'app lit à la voix du système. Les packs v1 à v3 restent lisibles.
+
+## Ce qui n'est pas vérifié
 
 Work in progress in open pull requests, not yet merged: an optional natural voice on Android (Piper via sherpa-onnx), precomputed phonemes in packs (format v4), numbers spelled out for French speech, thumbnails and a player in favorites.
 

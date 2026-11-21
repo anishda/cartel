@@ -103,4 +103,17 @@ class CartelCleanerTest {
     fun aParagraphEmptiedByCleaningDisappears() {
         assertEquals("Texte", CartelCleaner.clean("Texte\n\nINV 779\n\n"))
     }
+
+    @Test
+    fun jocondeDatesReadAsSentences() {
+        assertEquals("premier quart du seizième siècle", CartelCleaner.clean("1er quart XVIe siècle"))
+        assertEquals("troisième quart du dix-septième siècle", CartelCleaner.clean("3e quart XVIIe siècle"))
+        assertEquals("deuxième tiers du dix-neuvième siècle", CartelCleaner.clean("2e tiers XIXe siècle"))
+        assertEquals("première moitié du dix-huitième siècle", CartelCleaner.clean("1ère moitié XVIIIe siècle"))
+        assertEquals("deuxième moitié du dix-neuvième siècle", CartelCleaner.clean("2e moitié du XIXe siècle"))
+        assertEquals("début du vingtième siècle", CartelCleaner.clean("début XXe siècle"))
+        assertEquals("milieu du dix-septième siècle", CartelCleaner.clean("milieu XVIIe siècle"))
+        assertEquals("fin du siècle dernier", CartelCleaner.clean("fin du siècle dernier"))
+    }
 }
+

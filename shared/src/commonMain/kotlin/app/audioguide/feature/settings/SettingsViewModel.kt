@@ -48,7 +48,7 @@ class SettingsViewModel(
         synthesizer.setRate(store.settings.value.speechRate)
         val saved = store.settings.value.preferredVoices[languageTag]
         synthesizer.setPreferredVoice(languageTag, voiceId ?: saved)
-        synthesizer.speak(SpeechText.prepare(text), languageTag)
+        synthesizer.speak(SpeechText.prepare(text, languageTag), languageTag)
         // La voix est prise au moment de lancer la lecture : on remet celle des réglages pour la suite.
         synthesizer.setPreferredVoice(languageTag, saved)
         return true

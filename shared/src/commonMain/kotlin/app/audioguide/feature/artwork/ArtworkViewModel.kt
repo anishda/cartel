@@ -94,7 +94,7 @@ class ArtworkViewModel(
 
     private fun plan(artwork: Artwork, museumName: String?, full: Boolean, rate: Float): ReadingPlan {
         val text = if (full) ArtworkNarration.build(artwork, museumName.orEmpty()) else ArtworkNarration.buildShort(artwork)
-        return ReadingPlan.build(SpeechText.prepare(text), rate)
+        return ReadingPlan.build(SpeechText.prepare(text, ArtworkNarration.LANGUAGE_TAG), rate)
     }
 
     /** [full] : tout le récit et la fiche ; sinon l'écoute courte, celle qu'on lance devant l'œuvre. */

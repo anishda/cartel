@@ -3,10 +3,11 @@ package app.audioguide.catalog
 /**
  * Format SQLite d'un pack musée. Toute modification du format incrémente [VERSION].
  * v2 : liaison Wikidata, notoriété et récit Wikipedia. v3 : image libre sur Wikimedia Commons (nom du fichier,
- * auteur, licence ; l'image n'est pas dans le pack). Les packs v1 et v2 restent lisibles.
+ * auteur, licence ; l'image n'est pas dans le pack). v4 : phonèmes précalculés des textes lus, pour la voix neuronale
+ * (table `narration_phoneme`). Les packs v1, v2 et v3 restent lisibles.
  */
 object PackSchema {
-    const val VERSION = 3
+    const val VERSION = 4
     const val MIN_READABLE_VERSION = 1
 
     object Meta {
@@ -60,6 +61,8 @@ object PackSchema {
         """CREATE UNIQUE INDEX idx_artwork_reference ON artwork(reference)""",
         """CREATE INDEX idx_artwork_inventory ON artwork(inventory_norm)""",
         """CREATE INDEX idx_artwork_title ON artwork(title_norm)""",
+        // Un segment de texte lu (voir NarrationPhonemes.key) et ses phonèmes, une phrase par ligne.
+        """CREATE TABLE narration_phoneme (key TEXT PRIMARY KEY NOT NULL, phonemes TEXT NOT NULL) WITHOUT ROWID""",
     )
 
     private const val BASE_COLUMNS = "id, reference, inventory_no, title, artist, date_text, domain, denomination, school, " +
