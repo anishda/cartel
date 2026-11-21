@@ -8,7 +8,6 @@ object CartelCleaner {
     private val hyphenatedBreak = Regex("""([A-Za-zÀ-ÿ])-\n([a-zà-ÿ])""")
     // Un « de » déjà présent devant la période est absorbé, pour ne pas lire « de de 1503 à 1519 ».
     private val yearRange = Regex("""(?:\bde\s+)?\b(\d{3,4})\s*[-–—]\s*(\d{3,4})\b""")
-    private val century = Regex("""\b([IVX]+)(er|re|e|ème|eme|è)\b""")
     // Dates de Joconde : « 1er quart XVIe siècle », « 2e moitié XIXe siècle », « début XVIIe siècle ». Appliqué après la
     // conversion des siècles en lettres, pour dire « premier quart du seizième siècle ».
     private val part = Regex("""\b(\d)(?:er|ère|re|e|ème|è)\s+(quart|tiers|moiti[ée])\s+(?:du\s+)?(?!du\b)(\p{L}+(?:-\p{L}+)?(?: et unième)? siècle)""", RegexOption.IGNORE_CASE)
@@ -53,14 +52,8 @@ object CartelCleaner {
             val to = match.groupValues[2].toInt()
             if (from in 500..2100 && to in 500..2100 && from < to) "de $from à $to" else match.value
         }
-        text = century.replace(text) { match ->
-            val value = romanToInt(match.groupValues[1])
-            when {
-                value == 1 && match.groupValues[2] == "er" -> "premier"
-                value in 2..21 && match.groupValues[2] != "er" -> ordinals[value - 1]
-                else -> match.value
-            }
-        }
+        // Siècles en lettres, y compris les formes de l'OCR (« XVIII e », « XVIIIᵉ », « XVIII° siècle ») : voir RomanNumerals.
+        text = RomanNumerals.frenchCenturies(text)
         text = part.replace(text) { match ->
             val rank = match.groupValues[1].toInt()
             val portion = match.groupValues[2].lowercase().replace("moitie", "moitié")
@@ -100,16 +93,5 @@ object CartelCleaner {
             out.append(if (!endsSentence && continues) ' ' else '\n')
         }
         return out.toString()
-    }
-
-    private fun romanToInt(roman: String): Int {
-        val values = mapOf('I' to 1, 'V' to 5, 'X' to 10)
-        var total = 0
-        for ((i, c) in roman.withIndex()) {
-            val value = values.getValue(c)
-            val next = roman.getOrNull(i + 1)?.let { values.getValue(it) } ?: 0
-            total += if (value < next) -value else value
-        }
-        return total
     }
 }

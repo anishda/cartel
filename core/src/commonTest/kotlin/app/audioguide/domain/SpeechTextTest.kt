@@ -40,4 +40,14 @@ class SpeechTextTest {
         assertEquals("Fin de phrase.", SpeechText.prepare("Fin de phrase."))
         assertEquals("Il demande : « pourquoi ? »", SpeechText.prepare("Il demande : « pourquoi ? »"))
     }
+
+    @Test
+    fun spellsRomanNumeralsInFrenchAndEnglish() {
+        assertEquals(
+            "Peint au dix-huitième siècle pour Louis quinze.",
+            SpeechText.prepare("Peint au XVIII e siècle pour Louis XV", "fr-FR"),
+        )
+        assertEquals("Painted in the eighteenth century.", SpeechText.prepare("Painted in the XVIIIth century", "en-GB"))
+        assertEquals("Le XVIII e siècle.", SpeechText.prepare("Le XVIII e siècle", "de-DE"))
+    }
 }
