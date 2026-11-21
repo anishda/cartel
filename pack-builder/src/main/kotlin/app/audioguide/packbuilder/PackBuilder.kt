@@ -24,6 +24,8 @@ class PackBuilder(
     private val wikimedia: WikimediaSource? = null,
     /** Phonèmes des textes lus pour la voix neuronale ; `null` : packs sans phonèmes (voix du système seulement). */
     private val phonemizer: Phonemizer? = null,
+    /** Reçoit les œuvres de chaque pack fabriqué (vocabulaire du lexique de la voix). */
+    private val onDrafts: (List<ArtworkDraft>) -> Unit = {},
 ) {
     /** Fabrique le pack de [museum] et retourne son entrée de manifeste. */
     fun build(museum: MuseumSpec, sourceUpdatedAt: String?): PackManifestEntry {
@@ -49,6 +51,7 @@ class PackBuilder(
         // Date et heure (UTC) : l'app propose la mise à jour quand cette valeur change, même pour deux builds le même jour.
         val version = DateTimeFormatter.ofPattern("yyyy-MM-dd.HHmm").format(LocalDateTime.now(ZoneOffset.UTC))
         val phonemes = phonemizer?.let { phonemize(museum, drafts, it) }.orEmpty()
+        onDrafts(drafts)
         val count = PackWriter.create(file.toString()).use { writer ->
             drafts.forEach(writer::add)
             phonemes.forEach { (key, value) -> writer.addPhonemes(key, value) }

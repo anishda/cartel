@@ -5,6 +5,8 @@ import android.media.AudioFormat
 import android.media.AudioTrack
 import android.util.Log
 import app.audioguide.catalog.NarrationPhonemes
+import app.audioguide.domain.FrenchPhonemizer
+import app.audioguide.domain.PiperPronunciations
 import app.audioguide.domain.SpeechSynthesizer
 import app.audioguide.domain.VoiceOption
 import app.audioguide.domain.VoiceStatus
@@ -123,9 +125,30 @@ class PiperSpeechSynthesizer(
         return synthesizeText(text)
     }
 
-    /** Phonèmes du pack, puis synthèse du segment en entier : pas de coupure au milieu, à la différence d'un flux. */
+    @Volatile private var phonemizer: FrenchPhonemizer? = null
+    @Volatile private var lexiconRequested = false
+
+    /**
+     * Phonèmes d'un texte absent des packs (cartel scanné, favori…), avec le lexique de la voix. Sans lexique, on lance
+     * son téléchargement pour la prochaine fois et la voix du système lit ce texte-ci.
+     */
+    private fun lexiconPhonemes(text: String): String? {
+        val current = phonemizer ?: model.lexicon()?.let { FrenchPhonemizer(it) }?.also { phonemizer = it }
+        if (current == null) {
+            if (!lexiconRequested) {
+                lexiconRequested = true
+                scope.launch { runCatching { model.downloadLexicon() } }
+            }
+            return null
+        }
+        return current.phonemize(PiperPronunciations.apply(text)).ifBlank { null }
+    }
+
+    /** Phonèmes du pack (ou du lexique), puis synthèse du segment en entier : pas de coupure au milieu. */
     private suspend fun synthesizeText(text: String): FloatArray? {
-        val phonemeText = phonemes(NarrationPhonemes.key(text)) ?: return null
+        val fromPack = phonemes(NarrationPhonemes.key(text))
+        val phonemeText = fromPack ?: lexiconPhonemes(text) ?: return null
+        if (fromPack == null) Log.d(TAG, "Piper : texte absent du pack, phonèmes du lexique")
         val config = GenerationConfig(
             speed = rate,
             phonemeCodepoints = phonemeText.lines().filter { it.isNotBlank() }
