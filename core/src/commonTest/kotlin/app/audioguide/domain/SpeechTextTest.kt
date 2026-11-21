@@ -50,4 +50,21 @@ class SpeechTextTest {
         assertEquals("Painted in the eighteenth century.", SpeechText.prepare("Painted in the XVIIIth century", "en-GB"))
         assertEquals("Le XVIII e siècle.", SpeechText.prepare("Le XVIII e siècle", "de-DE"))
     }
+
+    @Test
+    fun readsOnlyTheBaseOfInclusiveOrOptionalEndings() {
+        assertEquals("Prêt par un collectionneur.", SpeechText.prepare("Prêt(e) par un collectionneur", "fr-FR"))
+        assertEquals("Les artiste nés à Paris.", SpeechText.prepare("Les artiste(s) né(e)s à Paris", "fr-FR"))
+        assertEquals("Prêté par l'auteur.", SpeechText.prepare("Prêté·e par l'auteur.ice", "fr-FR"))
+        assertEquals("Les invités sont là.", SpeechText.prepare("Les invité·e·s sont là", "fr-FR"))
+        assertEquals("Lent by the artist.", SpeechText.prepare("Lent by the artist(s)", "en-GB"))
+        // Une vraie fin de phrase ou une abréviation ne bouge pas.
+        assertEquals("Fin de la salle. Entrée libre.", SpeechText.prepare("Fin de la salle. Entrée libre.", "fr-FR"))
+    }
+
+    @Test
+    fun fixesTildesReadByTheOcrInFrench() {
+        assertEquals("Ils fonctionnent grâce à l'ombre.", SpeechText.prepare("Ils fonctionnent grãce à l'ombre", "fr-FR"))
+        assertEquals("São Paulo.", SpeechText.prepare("São Paulo", "pt-BR"))
+    }
 }

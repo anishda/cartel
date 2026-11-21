@@ -160,4 +160,18 @@ class LabelExtractorTest {
         val label = LabelExtractor.extract(RecognizedText.fromPlainText("Olympia\n1863\nHuile sur toile et un peu plus de texte pour la ligne"))
         assertTrue(label.text.contains("Olympia"), label.text)
     }
+
+    @Test
+    fun aHeadingInsideTheTextBecomesItsOwnParagraph() {
+        val label = extract(
+            line("Ils ne se dérèglent jamais puisqu'ils fonctionnent", 0.2f, 0.30f, 0.5f),
+            line("grâce à l'ombre que projette le soleil.", 0.2f, 0.33f, 0.4f),
+            line("La bonne heure dans le bon sens", 0.2f, 0.36f, 0.3f),
+            line("En observant le ciel, on voit que le soleil", 0.2f, 0.39f, 0.5f),
+            line("ne se trouve pas à la même place le soir.", 0.2f, 0.42f, 0.5f),
+        )
+        val paragraphs = label.text.split("\n\n")
+        assertEquals(3, paragraphs.size, label.text)
+        assertEquals("La bonne heure dans le bon sens", paragraphs[1])
+    }
 }

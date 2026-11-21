@@ -10,6 +10,14 @@ object SpeechText {
     private val roman = Regex("""[IVXLCDM]+""")
     private val paragraphBreak = Regex("""\n[ \t]*\n+""")
 
+    // Écriture inclusive ou pluriel facultatif : « prêt(e) », « né(e)s », « artiste(s) », « prêt·e », « auteur.ice ».
+    // La voix lirait « prêt eux » ou « prêt point e » : on ne dit que le mot de base.
+    /** L'OCR confond l'accent circonflexe avec un tilde (« grãce ») : le tilde n'existe pas en français. */
+    private fun ocrAccents(text: String) = text.replace('ã', 'â').replace('õ', 'ô').replace('ẽ', 'ê').replace('ĩ', 'î').replace('ũ', 'û')
+
+    private val dottedPlural = Regex("""(?<=\p{Ll})[·•.]s(?![\p{L}\d])""")
+    private val optionalEnding = Regex("""(?<=\p{Ll})(?:\((?:e|s|es|x|ne|le|se|ice|rice|trice|euse|ère)\)|[·•.](?:e|es|s|ne|ice|rice|trice|euse)(?=[·•.]s\b|(?![\p{L}\d]))[·•.]?)""")
+
     /**
      * [languageTag] : langue du texte (`fr-FR`…). En français, les nombres sont écrits en toutes lettres
      * ([FrenchNumbers]) ; sans langue, ou dans une autre, le texte garde ses chiffres. En français et en anglais, les
@@ -19,10 +27,10 @@ object SpeechText {
         val french = languageTag?.startsWith("fr", ignoreCase = true) == true
         val english = languageTag?.startsWith("en", ignoreCase = true) == true
         fun spoken(paragraph: String) = when {
-            french -> FrenchNumbers.spellNumbersIn(RomanNumerals.spellFrench(paragraph))
+            french -> FrenchNumbers.spellNumbersIn(RomanNumerals.spellFrench(ocrAccents(paragraph)))
             english -> RomanNumerals.spellEnglish(paragraph)
             else -> paragraph
-        }
+        }.let { optionalEnding.replace(it, "").replace(dottedPlural, "s") }
         return text.split(paragraphBreak)
             .map { paragraph -> paragraph.lines().map { it.trim() }.filter { it.isNotEmpty() }.joinToString(" ") }
             .filter { it.isNotEmpty() }

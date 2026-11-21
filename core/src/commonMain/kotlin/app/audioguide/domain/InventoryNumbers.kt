@@ -14,8 +14,11 @@ internal object InventoryNumbers {
     /** Numéro à l'intérieur d'une phrase. Sensible à la casse : les codes sont en majuscules. */
     val inline = Regex("""\b(?:$CODES)\s?$DIGITS""")
 
-    /** Mention « Inv. », « Inventaire : » devant un numéro. */
-    val prefix = Regex("""\b(?:inv(?:entaire)?\.?\s*:?\s*)""", RegexOption.IGNORE_CASE)
+    /**
+     * Mention « Inv. », « Inventaire : » restée seule après le retrait du numéro. Un mot entier suivi d'un point, de
+     * deux-points ou de la fin : « inventé » et « l'inventaire du roi » ne bougent pas.
+     */
+    val prefix = Regex("""\b(?:inventaire|inv)\b(?:\s*[.:]+\s*|\s*$)""", RegexOption.IGNORE_CASE)
 
     fun find(text: String): List<String> = inline.findAll(text).map { it.value.trim() }.toList()
 }

@@ -122,4 +122,13 @@ class CartelCleanerTest {
         assertEquals("Commode, dix-huitième siècle", CartelCleaner.clean("Commode, XVIIIᵉ siècle"))
         assertEquals("premier quart du dix-neuvième siècle", CartelCleaner.clean("1er quart XIX° siècle"))
     }
+
+    @Test
+    fun keepsWordsThatStartLikeInventory() {
+        assertEquals(
+            "L'homme a inventé plusieurs objets, d'après l'inventaire du roi.",
+            CartelCleaner.clean("L'homme a inventé plusieurs objets, d'après l'inventaire du roi."),
+        )
+        assertEquals("Portrait", CartelCleaner.clean("Portrait\nInventaire : RF 1960-10"))
+    }
 }

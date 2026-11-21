@@ -265,7 +265,7 @@ object LabelExtractor {
             if (startsNew) paragraphs += mutableListOf(line) else paragraphs.last() += line
         }
 
-        val texts = paragraphs.map { paragraph ->
+        val texts = paragraphs.flatMap(::splitAtHeadings).map { paragraph ->
             paragraph.fold("") { text, line ->
                 when {
                     text.isEmpty() -> line.text
@@ -276,6 +276,30 @@ object LabelExtractor {
             }
         }
         return mergeTitles(texts).joinToString("\n\n")
+    }
+
+    /**
+     * Un intertitre au milieu d'un paragraphe (« La bonne heure dans le bon sens ») : ligne courte sans ponctuation,
+     * après une phrase finie et avant une ligne qui commence par une majuscule. Il devient un paragraphe à lui seul,
+     * pour que la voix marque une pause au lieu d'enchaîner le titre et la phrase suivante.
+     */
+    private fun splitAtHeadings(lines: List<Box>): List<List<Box>> {
+        val parts = mutableListOf(mutableListOf<Box>())
+        for ((i, line) in lines.withIndex()) {
+            val previous = lines.getOrNull(i - 1)
+            val next = lines.getOrNull(i + 1)
+            val heading = previous != null && next != null &&
+                previous.text.last() in SENTENCE_END &&
+                line.text.length <= TITLE_MAX_CHARS && line.text.first().isUpperCase() && line.text.last().isLetterOrDigit() &&
+                next.text.first().isUpperCase()
+            if (heading) {
+                parts += mutableListOf(line)
+                parts += mutableListOf<Box>()
+            } else {
+                parts.last() += line
+            }
+        }
+        return parts.filter { it.isNotEmpty() }
     }
 
     /** Des lignes de titre courtes, sans point final, qui se suivent (nom, dates, métier) ne font qu'un bloc. */
