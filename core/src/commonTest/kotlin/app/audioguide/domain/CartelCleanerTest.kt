@@ -115,5 +115,11 @@ class CartelCleanerTest {
         assertEquals("milieu du dix-septième siècle", CartelCleaner.clean("milieu XVIIe siècle"))
         assertEquals("fin du siècle dernier", CartelCleaner.clean("fin du siècle dernier"))
     }
-}
 
+    @Test
+    fun spellsCenturiesReadByTheOcr() {
+        assertEquals("Commode, dix-huitième siècle", CartelCleaner.clean("Commode, XVIII e siècle"))
+        assertEquals("Commode, dix-huitième siècle", CartelCleaner.clean("Commode, XVIIIᵉ siècle"))
+        assertEquals("premier quart du dix-neuvième siècle", CartelCleaner.clean("1er quart XIX° siècle"))
+    }
+}
